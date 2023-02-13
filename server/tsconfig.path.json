@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@article/*": ["src/app/article/*"],
+      "@bbs/*": ["src/app/bbs/*"],
+      "@auth/*": ["src/app/auth/*"],
+      "@common/*": ["src/app/common/*"],
+      "@file/*": ["src/app/file/*"],
+      "@user/*": ["src/app/user/*"],
+      "@campus/*": ["src/app/campus/*"],
+      "@note/*": ["src/app/note/*"],
+      "@soon/*": ["src/app/soon/*"],
+      "@config/*": ["config/*"],
+      "@lib/*": ["src/lib/*"],
+      "@utils/*": ["src/utils/*"],
+      "@routes/*": ["src/routes/*"],
+      "@api/*": ["src/routes/api/*"],
+      "@error/*": ["src/error/*"]
+    }
+  }
+}

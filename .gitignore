@@ -1,0 +1,11 @@
+node_modules
+logs
+yarn-error.log
+yarn.lock
+ormconfig.*.json
+haqqaton.json
+server/src/dump.ts
+.env
+server/src/jwt.ts
+server/dist
+server/src/test.ts

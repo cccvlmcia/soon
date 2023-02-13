@@ -1,0 +1,190 @@
+import React, { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import Error from "components/Error/Error";
+import axios from "axios";
+import {
+  Box,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  SelectChangeEvent,
+  Checkbox,
+  ListItemText,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
+import { getCampusListQuery } from "@recoils/api/User";
+import Loading from "react-loading";
+import { api } from "@recoils/consonants";
+import { getStorage } from "utils/SecureStorage";
+
+type FormData = {
+  name: string;
+  campus: string;
+  sid: string;
+  major: string;
+  cccyn: string;
+  gender: string;
+};
+
+const Register: React.FC = () => {
+  const { isLoading, isError, data, error } = getCampusListQuery();
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<FormData>();
+  const [campusList, setCampusList] = useState<object[]>([]);
+  const [campusSelected, setCampusSelected] = useState<string[]>([]);
+  const [genderSelected, setGenderSelected] = useState<string>();
+  const [cccYNSelected, setCccYNSelected] = useState<string>();
+
+  const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
+    const value = event.target.value as string;
+    setCampusSelected(typeof value === "string" ? value.split(",") : value);
+  };
+  const handleGednerReceive = (event: SelectChangeEvent<never>) => {
+    const value = event.target.value;
+    console.log("gender : ", genderSelected);
+    setGenderSelected(value);
+  };
+  const handleCCCYNReceive = (event: SelectChangeEvent<never>) => {
+    const value = event.target.value;
+    console.log("cccyn : ", cccYNSelected);
+    setCccYNSelected(value);
+  };
+
+  const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
+    // params.list = selected;
+    console.log("params >> ", params);
+    const userGoogleInfo = JSON.parse(getStorage("#user"));
+    console.log(userGoogleInfo);
+    const userRegistInfo = {
+      nickname: params.name,
+      gender: params.gender,
+      cccyn: params.cccyn,
+      campusid: params.campus, //FIXME: 단일 선택 문제 해결되면 지우도록
+      major: params.major,
+      sid: params.sid,
+      ssoid: userGoogleInfo.ssoid,
+      email: userGoogleInfo.email,
+      type: userGoogleInfo.type,
+    };
+    console.log("userRegist data", userRegistInfo);
+    const userRegist = await api.post("/user", userRegistInfo);
+    console.log(userRegist);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoading) return <Loading />;
+      if (isError) return <Error error={error} />;
+      setCampusList(data);
+    };
+    fetchData();
+  }, [data]);
+
+  return (
+    //FIXME: form에 데이터 반영되지 않는 문제 발생, 상태 관리 문제 인듯
+    <Box component="form" onSubmit={handleSubmit(writeRegister)}>
+      <Box>
+        <Box sx={{ fontSize: "16px" }}>이름</Box>
+        <Box>
+          <TextField {...register("name")} />
+        </Box>
+      </Box>
+      <Box>
+        <Box>캠퍼스</Box>
+        <Box>
+          <Select
+            {...register("campus")}
+            value={campusSelected as never}
+            fullWidth
+            multiple
+            onChange={handleCampusReceive}
+            renderValue={(selected) => selected.join(", ")}
+          >
+            {campusList.map((campus: any, index: number) => (
+              //TODO: 캠퍼스 하나만 선택 되도록 하고, 이름 설정하도록, state를 2개 써야 하나 아니면 세트로 묶어서 가져와야 하나
+
+              <MenuItem key={index} value={campus.campusid}>
+                <Checkbox
+                  checked={
+                    campusSelected.indexOf(campus.campusid.toString()) > -1
+                  }
+                />
+                <ListItemText primary={campus.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      </Box>
+      <Box>
+        <Box>학번</Box>
+        <Box>
+          <TextField {...register("sid")} />
+        </Box>
+      </Box>
+      <Box>
+        <Box>학과</Box>
+        <Box>
+          <TextField {...register("major")} />
+        </Box>
+      </Box>
+      <Box>
+        <Box>ccc 여부</Box>
+        <Box>
+          <RadioGroup
+            {...register("cccyn")}
+            row
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue="Y"
+            // name="radio-buttons-group"
+            value={(cccYNSelected as never) || null}
+            onChange={handleCCCYNReceive}
+          >
+            <FormControlLabel
+              value="Y"
+              control={<Radio value="N" />}
+              label="YES"
+            />
+            <FormControlLabel
+              value="N"
+              control={<Radio value="Y" />}
+              label="NO"
+            />
+          </RadioGroup>
+        </Box>
+      </Box>
+      <Box>
+        <Box>성별</Box>
+        <Box>
+          <RadioGroup
+            {...register("gender")}
+            row
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue="female"
+            value={(genderSelected as never) || null}
+            onChange={handleGednerReceive}
+          >
+            <FormControlLabel
+              value="female"
+              control={<Radio value="male" />}
+              label="여자"
+            />
+            <FormControlLabel
+              value="male"
+              control={<Radio value="female" />}
+              label="남자"
+            />
+          </RadioGroup>
+        </Box>
+      </Box>
+
+      <Box>
+        <Button type="submit">저장</Button>
+      </Box>
+    </Box>
+  );
+};
+export default Register;
