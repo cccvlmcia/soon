@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { createTheme, ThemeProvider } from "@mui/material";
 import App from "./App";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 function Init() {
   return (
     <React.StrictMode>
-      <GoogleOAuthProvider clientId={"948373234906-avr2p1att0h7q7iof09q54i9f9ntnhom.apps.googleusercontent.com"}>
+      <GoogleOAuthProvider clientId={clientId}>
         <BrowserRouter>
           <ThemeProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
@@ -42,4 +42,4 @@ function Init() {
       </GoogleOAuthProvider>
     </React.StrictMode>
   );
-};
+}

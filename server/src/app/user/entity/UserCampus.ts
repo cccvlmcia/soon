@@ -1,6 +1,6 @@
 import {COLUMN_TYPE_BIGINT, COLUMN_TYPE_ENUM, CommonYN} from "@common/CommonConstants";
 import Campus from "@campus/entity/Campus";
-import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn, OneToMany} from "typeorm";
+import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn} from "typeorm";
 import User from "./User";
 @Entity()
 export default class UserCampus extends BaseEntity {

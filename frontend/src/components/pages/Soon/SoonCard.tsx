@@ -6,7 +6,3 @@ export default function SoonCard() {
   //순원정보
   //
 }
-
-
-
-

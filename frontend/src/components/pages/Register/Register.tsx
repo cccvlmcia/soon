@@ -15,18 +15,21 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  FormControl,
 } from "@mui/material";
 import { getCampusListQuery } from "@recoils/api/User";
 import Loading from "react-loading";
 import { api } from "@recoils/consonants";
 import { getStorage } from "utils/SecureStorage";
+import { useRecoilState } from "recoil";
+import { userState } from "@recoils/user/state";
 
 type FormData = {
   name: string;
   campus: string;
   sid: string;
   major: string;
-  cccyn: string;
+  cccYN: string;
   gender: string;
 };
 
@@ -38,6 +41,7 @@ const Register: React.FC = () => {
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
+  const [storedUser, setStoredUser] = useRecoilState(userState);
 
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const value = event.target.value as string;
@@ -45,24 +49,28 @@ const Register: React.FC = () => {
   };
   const handleGednerReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
-    console.log("gender : ", genderSelected);
+
+    console.log("gender : ", value);
     setGenderSelected(value);
   };
   const handleCCCYNReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
-    console.log("cccyn : ", cccYNSelected);
+    console.log("cccYN : ", value);
     setCccYNSelected(value);
   };
 
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
     console.log("params >> ", params);
-    const userGoogleInfo = JSON.parse(getStorage("#user"));
+    const userGoogleInfo = JSON.parse(
+      storedUser ? storedUser : JSON.stringify("localstorage is null")
+    );
+    console.log("userGoogleInfo : ", userGoogleInfo);
     console.log(userGoogleInfo);
     const userRegistInfo = {
       nickname: params.name,
-      gender: params.gender,
-      cccyn: params.cccyn,
+      gender: genderSelected,
+      cccyn: cccYNSelected,
       campusid: params.campus, //FIXME: 단일 선택 문제 해결되면 지우도록
       major: params.major,
       sid: params.sid,
@@ -82,7 +90,7 @@ const Register: React.FC = () => {
       setCampusList(data);
     };
     fetchData();
-  }, [data]);
+  }, [data, genderSelected, cccYNSelected]);
 
   return (
     //FIXME: form에 데이터 반영되지 않는 문제 발생, 상태 관리 문제 인듯
@@ -135,24 +143,16 @@ const Register: React.FC = () => {
         <Box>ccc 여부</Box>
         <Box>
           <RadioGroup
-            {...register("cccyn")}
+            // {...register("cccYN")}
             row
             aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="Y"
+            // defaultValue="Y"
             // name="radio-buttons-group"
             value={(cccYNSelected as never) || null}
             onChange={handleCCCYNReceive}
           >
-            <FormControlLabel
-              value="Y"
-              control={<Radio value="N" />}
-              label="YES"
-            />
-            <FormControlLabel
-              value="N"
-              control={<Radio value="Y" />}
-              label="NO"
-            />
+            <FormControlLabel value="Y" control={<Radio />} label="Y" />
+            <FormControlLabel value="N" control={<Radio />} label="N" />
           </RadioGroup>
         </Box>
       </Box>
@@ -160,23 +160,18 @@ const Register: React.FC = () => {
         <Box>성별</Box>
         <Box>
           <RadioGroup
-            {...register("gender")}
+            // {...register("gender")}
             row
             aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
             value={(genderSelected as never) || null}
             onChange={handleGednerReceive}
           >
             <FormControlLabel
               value="female"
-              control={<Radio value="male" />}
-              label="여자"
+              control={<Radio />}
+              label="female"
             />
-            <FormControlLabel
-              value="male"
-              control={<Radio value="female" />}
-              label="남자"
-            />
+            <FormControlLabel value="male" control={<Radio />} label="male" />
           </RadioGroup>
         </Box>
       </Box>

@@ -7,7 +7,7 @@ export default async function (fastify: FastifyInstance) {
     const campus = await getCampusList();
     reply.send(campus);
   });
-
+// 해당 캠퍼스 유저들 정보 가져 옴
   fastify.get("/:campusid", async (req: FastifyRequest<{Params: {campusid: string}}>, reply: FastifyReply) => {
     const {campusid} = req.params;
     const campusUser = await getCampusUser(campusid);

@@ -19,7 +19,7 @@ export default async function (fastify: FastifyInstance) {
     const soon = await getSoonInfo(swid);
     reply.send(soon);
   });
-
+ // 순 Id 가져오는 용도
   fastify.get("/:sjid/:swid",async (req: FastifyRequest<{Params: {sjid:number, swid: number}}>, reply: FastifyReply) => {
     const{sjid, swid} = req.params;
     const soonId = await getSoonId(sjid, swid);

@@ -1,5 +1,7 @@
 
 import { useQuery } from "react-query";
+
+import axios from "axios";
 import { api } from "@recoils/consonants";
 
 export const options = {
