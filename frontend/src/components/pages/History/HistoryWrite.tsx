@@ -1,34 +1,26 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  SelectChangeEvent,
-  Checkbox,
-  ListItemText,
-} from "@mui/material";
-import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText} from "@mui/material";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
 
 export default function HistoryWrite() {
   const navigate = useNavigate();
-  const { historyid } = useParams();
+  const {historyid} = useParams();
 
   historyid ? console.log("history id >> ", historyid) : "";
-  const { register, handleSubmit } = useForm<FormData>(); //user
+  const {register, handleSubmit} = useForm<FormData>(); //user
   const [userList, setUserList] = useState<Object[]>([]);
-  const [selected, setSelected] = useState<String[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const handleReceive = (event: SelectChangeEvent<never[]>) => {
     const value = event.target.value as string;
     setSelected(typeof value === "string" ? value.split(",") : value);
   };
 
-  const writeHistory = async (params: any) => {
+  const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
+    params.list = selected;
     console.log("params >> ", params);
     const result = await axios.post(`/history`, params);
     if (result) {
@@ -42,9 +34,9 @@ export default function HistoryWrite() {
     category: string;
     progress: string;
     date: string;
-    contens: string;
-    prayer: string;
     contents: string;
+    prayer: string;
+    list: string[];
   };
   // 중간에 발생하는 값의 변화를 탐지하기 위함
   useEffect(() => {
@@ -53,62 +45,63 @@ export default function HistoryWrite() {
 
   const userListFunc = () => {
     setUserList([
-      { userid: "1", name: "김이박" },
-      { userid: "2", name: "고범수" },
-      { userid: "3", name: "주님" },
+      {userid: "1", name: "김이박"},
+      {userid: "2", name: "고범수"},
+      {userid: "3", name: "주님"},
     ]);
   };
   return (
     <Box
       component="form"
       onSubmit={handleSubmit(writeHistory)}
-      sx={[historyid ? styles.mobile.container:styles.web.container,styles.web.writeform]}
-    >
-      <Box>순모임 히스토리 기록</Box>
+      sx={[historyid ? styles.mobile.container : styles.web.container, styles.web.writeform]}>
+      <Box sx={styles.text}>순모임 히스토리 기록</Box>
       <Box>
-        해준 사람 <TextField {...register("soonjang")} />
+        <Box sx={{fontSize: "16px", color: "gray"}}>해준 사람</Box>
+        <Box>
+          <TextField {...register("soonjang")} />
+        </Box>
       </Box>
       <Box>
-        분류 <TextField {...register("category")} />
+        <Box>분류</Box>
+        <Box>
+          <TextField {...register("category")} />
+        </Box>
       </Box>
       <Box>
-        진도 <TextField {...register("progress")} />
+        <Box>진도</Box>
+        <Box>
+          <TextField {...register("progress")} />
+        </Box>
       </Box>
       <Box>
-        받은 사람{" "}
-        {/* {userList.map((user, index) => (
-            <MenuItem key={index} value={user.userid}>
-              {user.name}
-            </MenuItem>
-          ))} */}
-        <Select
-          value={selected as never}
-          fullWidth
-          multiple
-          onChange={handleReceive}
-          renderValue={(selected) => selected.join(", ")}
-        >
+        <Box>받은 사람</Box>
+        <Select value={selected as never} fullWidth multiple onChange={handleReceive} renderValue={selected => selected.join(", ")}>
           {userList.map((user: any, index: number) => (
             <MenuItem key={index} value={user.name}>
-              //TODO: 중괄호와 소괄호의 차이 이 부분이 출력 되네
-              <Checkbox
-                checked={selected.indexOf(user.name.toString()) > -1}
-              ></Checkbox>
-              <ListItemText primary={user.name}></ListItemText>
+              <Checkbox checked={selected.indexOf(user.name.toString()) > -1}></Checkbox>
+              <ListItemText primary={user.name} />
             </MenuItem>
           ))}
         </Select>
       </Box>
       <Box>
-        날짜 <TextField {...register("date")} />{" "}
+        <Box>날짜</Box>
+        <Box>
+          <TextField {...register("date")} />
+        </Box>
       </Box>
-      <Box>내용</Box>
       <Box>
-        <TextField multiline rows={4} {...register("contents")} />
+        <Box>내용</Box>
+        <Box>
+          <TextField multiline rows={4} {...register("contents")} />
+        </Box>
       </Box>
-      <Box>기도제목</Box>
       <Box>
-        <TextField {...register("prayer")} />
+        <Box>기도제목</Box>
+        <Box>
+          <TextField {...register("prayer")} />
+        </Box>
       </Box>
       <Box>
         <Button type="submit">저장</Button>
