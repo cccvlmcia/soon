@@ -18,10 +18,10 @@ import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
 import {api} from "@recoils/consonants";
 import {useRecoilState} from "recoil";
-import {userGoogleAuthState} from "@recoils/Login/state";
-import {postUserRegistAxios} from "@recoils/Login/axios";
+
 import {useNavigate} from "react-router-dom";
-import {postUser} from "@recoils/types";
+import {loginState, userGoogleAuthState} from "@recoils/user/state";
+import {postUserRegistAxios} from "@recoils/user/axios";
 
 type FormData = {
   name: string;
