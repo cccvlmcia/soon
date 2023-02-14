@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 import {Routes, Route} from "react-router-dom";
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/Login/state";
+import {userState} from "@recoils/User/state";
 
 import Layout from "@layout/Layout";
 import Home from "@pages/Home";

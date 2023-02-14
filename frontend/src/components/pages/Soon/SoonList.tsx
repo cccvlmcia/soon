@@ -2,7 +2,7 @@ import {Box, Stack} from "@mui/material";
 import {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
 import UserCard from "@layout/Card";
-import { addSoonQuery, getSoonListQuery } from "@recoils/api/Soon";
+import { addSoonQuery, getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 
@@ -110,13 +110,20 @@ function SoonDeleteButton(userid: number) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      // const response = await axios.delete("http://13.125.79.139/", {Body: {sjid: "내 순장id", swid: Number(text)/*<-순원id로 추가*/}});
-      // console.log(response.data);
       const response = text;
       console.log("순원 삭제 >>", text);
+      const swid = Number(text);
+      const {isLoading, isError, data, error} = getSoonIdQuery(userid, swid);
+      if (isLoading) {
+        return <Loading />;
+      }
+      if (isError) {
+        return <Error error={error} />;
+      }
     } catch (error) {
       console.error(error);
     }
+    // console.log("data >>", data);
   };
 
   return (
