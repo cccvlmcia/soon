@@ -1,5 +1,7 @@
 import {atom, AtomEffect} from "recoil";
 import {getStorage, setStorage} from "utils/SecureStorage";
+import {recoilPersist} from "recoil-persist";
+const {persistAtom} = recoilPersist();
 
 const localStorageEffect =
   (key: string) =>
@@ -14,8 +16,14 @@ const localStorageEffect =
       console.log("newvalue, isReset : ", newValue, isReset);
     });
   };
-export const userState = atom({
-  key: "userState",
+export const loginState = atom({
+  key: "loginState",
   default: getStorage("#user") || null,
   effects: [localStorageEffect("#user")],
+});
+
+export const userGoogleAuthState = atom({
+  key: "userLoginState",
+  default: null,
+  effects_UNSTABLE: [persistAtom],
 });

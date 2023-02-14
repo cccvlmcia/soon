@@ -1,7 +1,7 @@
 import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
-import {getGoogleInfoAxios} from "@recoils/Login/axios";
-import {userGoogleAuthState} from "@recoils/Login/state";
+import {getGoogleInfoAxios} from "@recoils/user/axios";
+import {userGoogleAuthState} from "@recoils/user/state";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState} from "recoil";
@@ -14,7 +14,7 @@ const Login = () => {
     const data = (await result)?.data || "GoogleInfo is missing";
     const status = data?.status;
     setGoogleAuth(data?.auth);
-    console.log("set Google Auth : ",googleAuth);
+    console.log("set Google Auth : ", googleAuth);
     if (status == "REGISTER") {
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");

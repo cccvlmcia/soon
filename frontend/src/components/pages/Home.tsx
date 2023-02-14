@@ -5,11 +5,12 @@ import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {getSoonListQuery} from "@recoils/api/Soon";
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/user/state";
+import { loginState } from "@recoils/user/state";
+
 
 export default function Home() {
   //FIXME: loginUser로 변경
-  const loginUser = useRecoilValue(userState);
+  const loginUser = useRecoilValue(loginState);
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
   const userid = 1; //TODO: #user
   const {isLoading, isError, data, error} = getUserInfoQuery(userid);

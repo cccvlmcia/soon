@@ -10,13 +10,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {getUserInfoQuery} from "@recoils/api/User";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
-import {userState} from "@recoils/user/state";
 import {useRecoilValue} from "recoil";
+import {loginState} from "@recoils/user/state";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   //FIXME: loginUser로 변경
-  const loginUser = useRecoilValue(userState);
+  const loginUser = useRecoilValue(loginState);
   const navigate = useNavigate();
   const userid = 1; //TODO: user#
   const {isLoading, isError, data, error} = getUserInfoQuery(userid);

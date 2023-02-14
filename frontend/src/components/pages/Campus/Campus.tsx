@@ -4,12 +4,13 @@ import Error from "components/Error/Error";
 import Loading from "react-loading";
 
 import UserCard from "@layout/Card";
-import {userState} from "@recoils/user/state";
+
 import {useRecoilValue} from "recoil";
+import { loginState } from "@recoils/user/state";
 
 export default function Campus() {
   // csmpudif : #user에 사용자 기본 정보 (USER, auth, campus) campusid
-  const loginUser = useRecoilValue(userState);
+  const loginUser = useRecoilValue(loginState);
   //FIXME: loginUser에서 userid, campusid, auth 꺼내야 함.
   const campusid = "UNIV001";
   const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
