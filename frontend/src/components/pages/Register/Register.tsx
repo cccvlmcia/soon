@@ -19,7 +19,8 @@ import Loading from "react-loading";
 import {api} from "@recoils/consonants";
 import {useRecoilState} from "recoil";
 import {userGoogleAuthState, userState} from "@recoils/Login/state";
-import { postUserRegistAxios } from "@recoils/Login/axios";
+import {postUserRegistAxios} from "@recoils/Login/axios";
+import { useNavigate } from "react-router-dom";
 
 type FormData = {
   name: string;
@@ -46,7 +47,7 @@ const Register: React.FC = () => {
   const [storedUser, setStoredUser] = useRecoilState(userState);
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
-
+  const navigate = useNavigate();
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const selectedNames = event.target.value as string[];
     const selectedIds = selectedNames.map(name => {
@@ -82,8 +83,8 @@ const Register: React.FC = () => {
       type: auth.type,
     };
     console.log("userRegist data", userRegistInfo);
-    const userRegist = postUserRegistAxios(userRegistInfo)
-    console.log(userRegist);
+    const userRegist = postUserRegistAxios(userRegistInfo);
+    navigate("/");
   };
 
   const fetchData = () => {
