@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {useNavigate, useParams} from "react-router-dom";
 import Error from "components/Error/Error";
 import axios from "axios";
 import {
@@ -17,12 +17,12 @@ import {
   RadioGroup,
   FormControl,
 } from "@mui/material";
-import { getCampusListQuery } from "@recoils/api/User";
+import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
-import { api } from "@recoils/consonants";
-import { getStorage } from "utils/SecureStorage";
-import { useRecoilState } from "recoil";
-import { userState } from "@recoils/user/state";
+import {api} from "@recoils/consonants";
+import {getStorage} from "utils/SecureStorage";
+import {useRecoilState} from "recoil";
+import {userState} from "@recoils/user/state";
 
 type FormData = {
   name: string;
@@ -34,9 +34,9 @@ type FormData = {
 };
 
 const Register: React.FC = () => {
-  const { isLoading, isError, data, error } = getCampusListQuery();
+  const {isLoading, isError, data, error} = getCampusListQuery();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<FormData>();
+  const {register, handleSubmit} = useForm<FormData>();
   const [campusList, setCampusList] = useState<object[]>([]);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
@@ -62,11 +62,10 @@ const Register: React.FC = () => {
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
     console.log("params >> ", params);
-    const userGoogleInfo = JSON.parse(
-      storedUser ? storedUser : JSON.stringify("localstorage is null")
-    );
-    console.log("userGoogleInfo : ", userGoogleInfo);
-    console.log(userGoogleInfo);
+    const {auth} = JSON.parse(storedUser);
+
+    console.log("userGoogleInfo : ", auth);
+    // console.log(userGoogleInfo);
     const userRegistInfo = {
       nickname: params.name,
       gender: genderSelected,
@@ -74,9 +73,9 @@ const Register: React.FC = () => {
       campusid: params.campus, //FIXME: 단일 선택 문제 해결되면 지우도록
       major: params.major,
       sid: params.sid,
-      ssoid: userGoogleInfo.ssoid,
-      email: userGoogleInfo.email,
-      type: userGoogleInfo.type,
+      ssoid: auth.ssoid,
+      email: auth.email,
+      type: auth.type,
     };
     console.log("userRegist data", userRegistInfo);
     const userRegist = await api.post("/user", userRegistInfo);
@@ -96,7 +95,7 @@ const Register: React.FC = () => {
     //FIXME: form에 데이터 반영되지 않는 문제 발생, 상태 관리 문제 인듯
     <Box component="form" onSubmit={handleSubmit(writeRegister)}>
       <Box>
-        <Box sx={{ fontSize: "16px" }}>이름</Box>
+        <Box sx={{fontSize: "16px"}}>이름</Box>
         <Box>
           <TextField {...register("name")} />
         </Box>
@@ -110,17 +109,12 @@ const Register: React.FC = () => {
             fullWidth
             multiple
             onChange={handleCampusReceive}
-            renderValue={(selected) => selected.join(", ")}
-          >
+            renderValue={selected => selected.join(", ")}>
             {campusList.map((campus: any, index: number) => (
               //TODO: 캠퍼스 하나만 선택 되도록 하고, 이름 설정하도록, state를 2개 써야 하나 아니면 세트로 묶어서 가져와야 하나
 
               <MenuItem key={index} value={campus.campusid}>
-                <Checkbox
-                  checked={
-                    campusSelected.indexOf(campus.campusid.toString()) > -1
-                  }
-                />
+                <Checkbox checked={campusSelected.indexOf(campus.campusid.toString()) > -1} />
                 <ListItemText primary={campus.name} />
               </MenuItem>
             ))}
@@ -149,8 +143,7 @@ const Register: React.FC = () => {
             // defaultValue="Y"
             // name="radio-buttons-group"
             value={(cccYNSelected as never) || null}
-            onChange={handleCCCYNReceive}
-          >
+            onChange={handleCCCYNReceive}>
             <FormControlLabel value="Y" control={<Radio />} label="Y" />
             <FormControlLabel value="N" control={<Radio />} label="N" />
           </RadioGroup>
@@ -164,13 +157,8 @@ const Register: React.FC = () => {
             row
             aria-labelledby="demo-radio-buttons-group-label"
             value={(genderSelected as never) || null}
-            onChange={handleGednerReceive}
-          >
-            <FormControlLabel
-              value="female"
-              control={<Radio />}
-              label="female"
-            />
+            onChange={handleGednerReceive}>
+            <FormControlLabel value="female" control={<Radio />} label="female" />
             <FormControlLabel value="male" control={<Radio />} label="male" />
           </RadioGroup>
         </Box>

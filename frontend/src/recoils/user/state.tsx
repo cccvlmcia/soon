@@ -1,9 +1,9 @@
-import { atom, AtomEffect } from "recoil";
-import { getStorage, setStorage } from "utils/SecureStorage";
+import {atom, AtomEffect} from "recoil";
+import {getStorage, setStorage} from "utils/SecureStorage";
 
 const localStorageEffect =
   (key: string) =>
-  ({ setSelf, onSet }: any) => {
+  ({setSelf, onSet}: any) => {
     const savedValue = getStorage(key);
     if (savedValue !== null) {
       setSelf(savedValue);
