@@ -10,8 +10,6 @@ export default async function (fastify: FastifyInstance) {
   fastify.get("/callback", async (req: FastifyRequest<{Querystring: {code: string}}>, reply: FastifyReply) => {
     console.log("req.query >>", req.query);
     try {
-      // const {access_token, refresh_token} = await kakaoOAuth2.getAccessTokenFromAuthorizationCodeFlow(req);
-      // const {data} = await axios.get("https://kapi.kakao.com/v2/user/me", {headers: {Authorization: `Bearer ${access_token}`}});
       const data: any = await kakaoOAuth2.getAccessTokenFromAuthorizationCodeFlow(req);
       console.log("data >>", data);
       const ssoid = data.id;

@@ -15,7 +15,8 @@ export default function Loading() {
         zIndex: "20000",
         top: 0,
         left: 0,
-      }}>
+      }}
+    >
       <ReactLoading type="spin" color="#A593E0" />
     </Box>
   );

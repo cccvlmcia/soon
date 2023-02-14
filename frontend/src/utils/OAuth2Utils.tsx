@@ -1,4 +1,4 @@
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 // const {token} = haqqaton;
 
 export function parseJWT(token: string) {

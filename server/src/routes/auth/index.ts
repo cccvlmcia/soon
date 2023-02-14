@@ -48,11 +48,13 @@ export default async function (fastify: FastifyInstance) {
     let refreshToken = user?.user?.refresh_token || "";
     if (refreshToken) {
       // refresh 토큰이 있다면 복호화하고 검증한다
+      console.log("Refresh Token : ", refreshToken);
       try {
         const decryptStr = decrypted(refreshToken);
         await verifyJWT(decryptStr);
       } catch (err) {
         // 유효하지 않은 토큰이 있다면 다시 업데이트 한다
+        console.log("Token is expired");
         const refresh = await signJWT({userid: userId, ssoid, email}, "30d");
         refreshToken = encrypted(refresh);
         await editUserRefresh(userId, {refresh_token: refreshToken});
@@ -94,7 +96,7 @@ export default async function (fastify: FastifyInstance) {
       const access_token = encrypted(access);
       reply.cookie("access_token", access_token, {path: "/", signed: true});
       addLoginHistory({userid, ssoid, token: access_token});
-      return reply.send("");
+      return reply.send("USER_AUTHENTICATED");
     } catch (err) {
       return reply.code(ERROR_AUTH_REFRESH_EXPIRED).send("ERROR_AUTH_REFRESH_EXPIRED");
     }

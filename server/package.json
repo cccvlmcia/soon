@@ -36,8 +36,7 @@
     "typeorm": "^0.3.6",
     "uuid": "^9.0.0",
     "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.5",
-    "yarn": "^1.22.19"
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
     "@types/ejs": "^3.1.1",

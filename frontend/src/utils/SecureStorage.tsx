@@ -1,6 +1,8 @@
-import CryptoJS from "crypto-js";
-import {LocalStorage} from "typescript-web-storage";
-const SECRET_KEY = "ciabootcamp2023";
+
+import CryptoJS from "crypto-js"; // Import the CryptoJS library for encryption/decryption
+import {LocalStorage} from "typescript-web-storage"; // Import the third-party typescript-web-storage library for working with local storage in TypeScript
+const SECRET_KEY = import.meta.env.VITE_STORAGE_SECRET_KEY;
+// Function to generate a hash value for a given input string using SHA256
 
 export function getHash(value: string) {
   const key = CryptoJS.SHA256(value, {SECRET_KEY});

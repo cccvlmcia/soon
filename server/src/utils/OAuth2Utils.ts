@@ -41,7 +41,8 @@ export const verifyJWT = async (_token: string): Promise<any> => {
 export const checkSSO = async (type: string, ssoid: string, params: {email?: string; nickname?: string}) => {
   const oauth = await getUserLogin(ssoid);
   if (oauth) {
-    return {status: LOGIN_STATUS.LOGIN, userid: oauth.userid, ssoid};
+  //FIXME: 로그인 하는데 파라미터를 더 받기 위해 가져옵니다 - 범수
+    return {status: LOGIN_STATUS.LOGIN, userid: oauth.userid, ssoid, type, ...params};
   } else {
     return {status: LOGIN_STATUS.REGISTER, auth: {type, ssoid, ...params}};
   }

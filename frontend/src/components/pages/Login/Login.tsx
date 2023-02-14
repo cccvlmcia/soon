@@ -1,19 +1,28 @@
+
+import {Token} from "@mui/icons-material";
 import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
+import {api} from "@recoils/consonants";
+import {userState} from "@recoils/user/state";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-import {setStorage} from "utils/SecureStorage";
+import {stat} from "fs";
+import {useEffect} from "react";
+import {Navigate, useNavigate} from "react-router-dom";
+import {useRecoilState} from "recoil";
+import {getStorage, setStorage} from "utils/SecureStorage";
 
 const Login = () => {
+  const [storedUser, setStoredUser] = useRecoilState(userState);
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
     const {data} = await axios.post("http://localhost:4000/auth/google/callback", {code});
-    console.log("data >> ", data);
 
+    //FIXME: 유저가 등록되어 있지 않은 경우 미리 데이터 저장하면, user id가 누락 됨
+    setStoredUser(data);
     const {status} = data;
     const {ssoid, userid} = data;
-    console.log("auth : ", ssoid, userid);
-    setStorage("#user", JSON.stringify(data));
+    console.log("local storage stored data : ", userid);
+    
     if (status == "REGISTER") {
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");
@@ -30,7 +39,7 @@ const Login = () => {
         {withCredentials: true},
       );
       console.log("result : ", result);
-      // navigate("/");
+      navigate("/");
     }
   };
 
