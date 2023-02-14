@@ -1,32 +1,31 @@
 import {Box, Stack} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {getUserInfoQuery} from "@recoils/api/User";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
-import { getSoonListQuery } from "@recoils/api/Soon";
+import {getSoonListQuery} from "@recoils/api/Soon";
+import {useRecoilValue} from "recoil";
+import {userState} from "@recoils/User/state";
 
 export default function Home() {
+  const loginUser = useRecoilValue(userState);
+  console.log("loginUser >", loginUser);
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
-  const userid = 1;//TODO: #user
-  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (isError) {
-    return <Error error={error} />;
-  }
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
-        <Box><LeftPanel data = {data}/></Box>
-        <Box><RightPanel data = {data}/></Box>
+        <Box>
+          <LeftPanel data={loginUser} />
+        </Box>
+        <Box>
+          <RightPanel data={loginUser} />
+        </Box>
       </Box>
     </Box>
   );
 }
 
 function MySoon(userid: any) {
-  const {isLoading, isError, data, error} = getSoonListQuery(userid)
+  const {isLoading, isError, data, error} = getSoonListQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
@@ -36,7 +35,7 @@ function MySoon(userid: any) {
   return (
     <Box>
       <Stack direction={"column"} spacing={1}>
-        {data.map(({soonwon}:any) => {
+        {data.map(({soonwon}: any) => {
           return (
             <Box key="{soonwon}" bgcolor="pink">
               {soonwon.nickname}
@@ -79,7 +78,7 @@ function RightPanel({data}: any) {
     <Box>
       <Box sx={{width: 150}}>
         <Box fontSize={12}>
-          {MyImage()}
+          <MyImage />
           <Stack direction="row" spacing={1}>
             <Box>
               <Stack direction="row">
