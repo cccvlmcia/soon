@@ -26,14 +26,13 @@ const avatar =
 type UserCard = {
   userid: number;
   nickname: string;
-  pictureUrl: string;
+  pictureUrl?: string;
   campus: string;
   major: string;
   sid: number;
-  auth: [];
+  auth: string[];
 };
 export default function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid, auth}: UserCard) {
-
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
