@@ -18,7 +18,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UserCard({userid, nickname, pictureUrl, campus, major, sid}: any) {
+
+const avatar ='https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340';
+export default function UserCard({userid, nickname, pictureUrl=avatar, campus, major, sid}: any) {
   const classes = useStyles();
   const navigate = useNavigate();
   return (
