@@ -26,14 +26,13 @@ const avatar =
 type UserCard = {
   userid: number;
   nickname: string;
-  pictureUrl: string;
+  pictureUrl?: string;
   campus: string;
   major: string;
   sid: number;
-  auth: [];
+  auth: string[];
 };
 export default function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid, auth}: UserCard) {
-
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -50,28 +49,16 @@ export default function UserCard({userid, nickname, pictureUrl = avatar, campus,
     {name: "관리자", id: "ADMIN"},
   ];
   //FIXME: 검토 필요
-  const isAdmin = true || auth?.filter((authid: any) => authes?.filter(({id}) => id == authid)?.length || undefined)?.length > 0;
+  // const isAdmin = true || auth?.filter((authid: any) => authes?.filter(({id}) => id == authid)?.length || undefined)?.length > 0;
   return (
     <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
-        <Box sx={{display: "flex"}}>
-          <Box>
-            <Typography variant="body1">ID: {userid}</Typography>
-            <Typography variant="body1">이름: {nickname}</Typography>
-            <Typography variant="body1">캠퍼스: {campus}</Typography>
-            <Typography variant="body1">전공: {major}</Typography>
-            <Typography variant="body1">학번: {sid}</Typography>
-          </Box>
-          {isAdmin && (
-            <Box sx={{marginLeft: "auto"}}>
-              <Button variant="outlined" onClick={openSubMenu}>
-                권한
-              </Button>
-              <SubMenu id={userid} anchorEl={anchorEl} setAnchorEl={setAnchorEl} open={open} setOpen={setOpen} authes={authes} />
-            </Box>
-          )}
-        </Box>
+        <Typography variant="body1">ID: {userid}</Typography>
+        <Typography variant="body1">이름: {nickname}</Typography>
+        {campus && <Typography variant="body1">캠퍼스: {campus}</Typography>}
+        {major && <Typography variant="body1">전공: {major}</Typography>}
+        {sid && <Typography variant="body1">학번: {sid}</Typography>}
       </CardContent>
     </Card>
   );

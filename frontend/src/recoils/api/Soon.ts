@@ -27,8 +27,27 @@ const addSoon = (sjid: Number, swid: Number) =>
   });
 const removeSoon = (soonid: Number) => api.delete(`/soon/${soonid}`);
 
+export const getSoonListQuery = (sjid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("getSoonList", () => getSoonList(sjid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
+
+export const getSoonInfoQuery = (swid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("getSoonInfo", () => getSoonInfo(swid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
+
+export const getSoonIdQuery = (sjid: Number, swid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("getSoonId", () => getSoonId(sjid, swid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
+
 export const addSoonQuery = (sjid: Number, swid: Number) => {
   const {isLoading, isError, data, error} = useQuery("addSoon", () => addSoon(sjid, swid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
 
+export const removeSoonQuery = (soonid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("removeSoon", () => removeSoon(soonid), options);
   return {isLoading, isError, data: data?.data, error};
 };

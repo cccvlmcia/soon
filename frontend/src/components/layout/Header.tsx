@@ -2,7 +2,6 @@ import {Box} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 
-
 import {Drawer} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -11,10 +10,16 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {getUserInfoQuery} from "@recoils/api/User";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
+import {userState} from "@recoils/user/state";
+import {useRecoilValue} from "recoil";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const {isLoading, isError, data, error} = getUserInfoQuery(1);
+  //FIXME: loginUser로 변경
+  const loginUser = useRecoilValue(userState);
+  const navigate = useNavigate();
+  const userid = 1; //TODO: user#
+  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
@@ -32,9 +37,7 @@ export default function Header() {
   );
 }
 
-
 function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleMenuOpen: any}) {
-
   const navigate = useNavigate();
   const move = (route: string) => {
     handleMenuOpen();
@@ -58,7 +61,7 @@ function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleM
           "> div": {padding: "20px", cursor: "pointer", borderBottom: "1px solid #EFEFEF"},
         }}>
         <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
-          {data.nickname ? (
+          {data?.nickname ? (
             <Box sx={{display: "flex"}}>
               <AccountCircleIcon />
               {data.nickname}
