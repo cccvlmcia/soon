@@ -1,4 +1,4 @@
-import { FC } from "react";
+import {FC} from "react";
 export default (SpecificComponent: FC, option: boolean | null) => {
   const Component = () => {
     // T = login, F = Not Login, null = Anyone

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {useNavigate, useParams} from "react-router-dom";
 import Error from "components/Error/Error";
 import axios from "axios";
 import {
@@ -16,10 +16,10 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { getCampusListQuery } from "@recoils/api/User";
+import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
-import { api } from "@recoils/consonants";
-import { getStorage } from "utils/SecureStorage";
+import {api} from "@recoils/consonants";
+import {getStorage} from "utils/SecureStorage";
 
 type FormData = {
   name: string;
@@ -31,9 +31,9 @@ type FormData = {
 };
 
 const Register: React.FC = () => {
-  const { isLoading, isError, data, error } = getCampusListQuery();
+  const {isLoading, isError, data, error} = getCampusListQuery();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<FormData>();
+  const {register, handleSubmit} = useForm<FormData>();
   const [campusList, setCampusList] = useState<object[]>([]);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
@@ -88,7 +88,7 @@ const Register: React.FC = () => {
     //FIXME: form에 데이터 반영되지 않는 문제 발생, 상태 관리 문제 인듯
     <Box component="form" onSubmit={handleSubmit(writeRegister)}>
       <Box>
-        <Box sx={{ fontSize: "16px" }}>이름</Box>
+        <Box sx={{fontSize: "16px"}}>이름</Box>
         <Box>
           <TextField {...register("name")} />
         </Box>
@@ -102,17 +102,12 @@ const Register: React.FC = () => {
             fullWidth
             multiple
             onChange={handleCampusReceive}
-            renderValue={(selected) => selected.join(", ")}
-          >
+            renderValue={selected => selected.join(", ")}>
             {campusList.map((campus: any, index: number) => (
               //TODO: 캠퍼스 하나만 선택 되도록 하고, 이름 설정하도록, state를 2개 써야 하나 아니면 세트로 묶어서 가져와야 하나
 
               <MenuItem key={index} value={campus.campusid}>
-                <Checkbox
-                  checked={
-                    campusSelected.indexOf(campus.campusid.toString()) > -1
-                  }
-                />
+                <Checkbox checked={campusSelected.indexOf(campus.campusid.toString()) > -1} />
                 <ListItemText primary={campus.name} />
               </MenuItem>
             ))}
@@ -141,18 +136,9 @@ const Register: React.FC = () => {
             defaultValue="Y"
             // name="radio-buttons-group"
             value={(cccYNSelected as never) || null}
-            onChange={handleCCCYNReceive}
-          >
-            <FormControlLabel
-              value="Y"
-              control={<Radio value="N" />}
-              label="YES"
-            />
-            <FormControlLabel
-              value="N"
-              control={<Radio value="Y" />}
-              label="NO"
-            />
+            onChange={handleCCCYNReceive}>
+            <FormControlLabel value="Y" control={<Radio value="N" />} label="YES" />
+            <FormControlLabel value="N" control={<Radio value="Y" />} label="NO" />
           </RadioGroup>
         </Box>
       </Box>
@@ -165,18 +151,9 @@ const Register: React.FC = () => {
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="female"
             value={(genderSelected as never) || null}
-            onChange={handleGednerReceive}
-          >
-            <FormControlLabel
-              value="female"
-              control={<Radio value="male" />}
-              label="여자"
-            />
-            <FormControlLabel
-              value="male"
-              control={<Radio value="female" />}
-              label="남자"
-            />
+            onChange={handleGednerReceive}>
+            <FormControlLabel value="female" control={<Radio value="male" />} label="여자" />
+            <FormControlLabel value="male" control={<Radio value="female" />} label="남자" />
           </RadioGroup>
         </Box>
       </Box>

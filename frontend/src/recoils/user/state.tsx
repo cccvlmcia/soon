@@ -1,5 +1,5 @@
-import { atom } from "recoil";
-import { getStorage } from "utils/SecureStorage";
+import {atom} from "recoil";
+import {getStorage} from "utils/SecureStorage";
 
 export const userState = atom({
   key: "userState",
