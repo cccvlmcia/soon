@@ -50,9 +50,17 @@ function MyDropdownMenu({data}: any) {
 
   return (
     <Box>
-      <Button aria-controls="dropdown-menu" aria-haspopup="true" onClick={handleClick}>
-        <Box color="white">{data.nickname}</Box>
-      </Button>
+      <Box>
+        {data.nickname ? (
+          <Box color="white" onClick={handleClick} aria-controls="dropdown-menu" aria-haspopup="true">
+            {data.nickname}
+          </Box>
+        ) : (
+          <Box sx={{color: "white", padding: "17px 10px", cursor: "pointer"}} onClick={handleLogin}>
+            로그인
+          </Box>
+        )}
+      </Box>
       <Menu id="dropdown-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => navigate("/soon/list")}>내 순원</MenuItem>
         <MenuItem onClick={() => navigate("/withdrawal")}>회원탈퇴</MenuItem>
