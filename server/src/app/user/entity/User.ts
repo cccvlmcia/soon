@@ -1,6 +1,7 @@
 import {COLUMN_TYPE_BIGINT, COLUMN_TYPE_ENUM} from "@common/CommonConstants";
 import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, OneToMany} from "typeorm";
 import {Gender, USER_STATUS} from "../UserConstants";
+import UserAuth from "./UserAuth";
 import UserCampus from "./UserCampus";
 import UserConfig from "./UserConfig";
 import UserLogin from "./UserLogin";
@@ -32,4 +33,7 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => UserCampus, campus => campus.user)
   campus: UserCampus;
+
+  @OneToMany(() => UserAuth, auth => auth.user)
+  auth: UserCampus;
 }
