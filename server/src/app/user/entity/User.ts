@@ -36,4 +36,5 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => UserAuth, auth => auth.user)
   auth: UserAuth;
+
 }

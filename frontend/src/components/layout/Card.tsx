@@ -33,6 +33,7 @@ type UserCard = {
   auth: [];
 };
 export default function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid, auth}: UserCard) {
+
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
