@@ -20,8 +20,9 @@ import {api} from "@recoils/consonants";
 import {useRecoilState} from "recoil";
 
 import {useNavigate} from "react-router-dom";
-import {loginState, userGoogleAuthState} from "@recoils/user/state";
-import {postUserRegistAxios} from "@recoils/user/axios";
+import {postUserRegistAxios} from "@recoils/User/axios";
+import {userGoogleAuthState} from "@recoils/Login/state";
+import {postUser} from "@recoils/types";
 
 type FormData = {
   name: string;

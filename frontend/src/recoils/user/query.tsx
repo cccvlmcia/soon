@@ -1,4 +1,3 @@
-import {getGoogleInfoAxios} from "./axios";
 import {useQuery} from "react-query";
 const options = {
   refetchOnWindowFocus: false,

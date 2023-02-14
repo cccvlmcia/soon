@@ -1,29 +1,15 @@
-import {atom, AtomEffect} from "recoil";
-import {getStorage, setStorage} from "utils/SecureStorage";
+import {atom} from "recoil";
+import {getStorage} from "utils/SecureStorage";
 import {recoilPersist} from "recoil-persist";
+import {localStorageEffect} from "@recoils/consonants";
 const {persistAtom} = recoilPersist();
 
-const localStorageEffect =
-  (key: string) =>
-  ({setSelf, onSet}: any) => {
-    const savedValue = getStorage(key);
-    if (savedValue !== null) {
-      setSelf(savedValue);
-    }
-    onSet((newValue: any, _: any, isReset: boolean) => {
-      console.log("new Value : ", newValue);
-      setStorage(key, JSON.stringify(newValue));
-      console.log("newvalue, isReset : ", newValue, isReset);
-    });
-  };
-export const loginState = atom({
-  key: "loginState",
-  default: getStorage("#user") || null,
-  effects: [localStorageEffect("#user")],
-});
+function isEmpty(str: string) {
+  return str == "" || str == undefined || str == null;
+}
 
-export const userGoogleAuthState = atom({
-  key: "userLoginState",
-  default: null,
-  effects_UNSTABLE: [persistAtom],
+export const userState = atom({
+  key: "userState",
+  default: isEmpty(getStorage("#user")) ? null : JSON.parse(getStorage("#user")),
+  effects: [localStorageEffect("#user")],
 });
