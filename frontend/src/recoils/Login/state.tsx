@@ -16,8 +16,8 @@ const localStorageEffect =
       console.log("newvalue, isReset : ", newValue, isReset);
     });
   };
-export const userState = atom({
-  key: "userState",
+export const loginState = atom({
+  key: "loginState",
   default: getStorage("#user") || null,
   effects: [localStorageEffect("#user")],
 });
