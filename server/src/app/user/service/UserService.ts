@@ -8,6 +8,7 @@ import UserLogin from "@user/entity/UserLogin";
 import {setAuthAdmin} from "@utils/AuthUtils";
 
 export async function getUserList() {
+
   return await User.find({relations: {campus: true, login: true, config: true}});
 }
 
