@@ -29,7 +29,6 @@ ormconfig.*.json
 haqqaton.json
 server/src/dump.ts
 .env
-.env.production
 server/src/jwt.ts
 server/dist
 server/src/test.ts
