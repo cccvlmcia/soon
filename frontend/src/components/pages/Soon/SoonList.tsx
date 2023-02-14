@@ -2,62 +2,49 @@ import {Box, Stack} from "@mui/material";
 import {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
 import UserCard from "@layout/Card";
+import { addSoonQuery, getSoonListQuery } from "@recoils/api/Soon";
+import Loading from "components/Loading/Loading";
+import Error from "components/Error/Error";
 
 export default function SoonList() {
+  const userid = 1 //TODO: user#
   return (
     <Box>
       <Stack direction={"row"}>
-        <Box>{MySoon()}</Box>
+        <Box>{MySoon(userid)}</Box>
       </Stack>
       <Stack direction={"row"}>
-        <Box>{SoonAddButton()}</Box>
-        <Box>{SoonDeleteButton()}</Box>
+        <Box>{SoonAddButton(userid)}</Box>
+        <Box>{SoonDeleteButton(userid)}</Box>
       </Stack>
     </Box>
   );
 }
 
-export function MySoon() {
-  const soonwoon = [
-    {
-      swid: 1,
-      nickname: "순원1",
-      pictureUrl:
-        "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340",
-      campus: "충북대",
-      major: "국문",
-      sid: "2021039034",
-    },
-    {
-      swid: 2,
-      nickname: "순원2",
-      pictureUrl:
-        "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340",
-      campus: "충북대",
-      major: "영문",
-      sid: "2021038034",
-    },
-    // ...
-  ];
-
+function MySoon(userid: number) {
+  const {isLoading, isError, data, error} = getSoonListQuery(userid)
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <Error error={error} />;
+  }
+  console.log("data >>", data)
   return (
     <div>
-      {soonwoon.map(soonwoon => (
+      {data?.map((
+        {soonid, soonwon}: any) => (
         <UserCard
-          key={soonwoon.swid}
-          swid={soonwoon.swid}
-          nickname={soonwoon.nickname}
-          pictureUrl={soonwoon.pictureUrl}
-          campus={soonwoon.campus}
-          major={soonwoon.major}
-          sid={soonwoon.sid}
+          key={soonid}
+          userid={soonwon.userid}
+          nickname={soonwon.nickname}
         />
       ))}
     </div>
   );
 }
 
-function SoonAddButton() {
+function SoonAddButton(userid: number) {
   const buttonStyle = {
     size: "small",
     width: "30px",
@@ -74,10 +61,10 @@ function SoonAddButton() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      // const response = await axios.post("http://13.125.79.139/", {Body: {sjid: "내 순장id", swid: Number(text)/*<-순원id로 추가*/}});
-      // console.log(response.data);
-      const response = text;
-      console.log("순원 추가 >>", text);
+      const swid = Number(text);
+      console.log("순원 추가 >>", swid);
+      console.log("id 타입 >>", typeof(swid));
+      addSoonQuery(userid,swid);
     } catch (error) {
       console.error(error);
     }
@@ -106,7 +93,7 @@ function SoonAddButton() {
   );
 }
 
-function SoonDeleteButton() {
+function SoonDeleteButton(userid: number) {
   const buttonStyle = {
     size: "small",
     width: "30px",

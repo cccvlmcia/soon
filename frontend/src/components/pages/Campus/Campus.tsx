@@ -16,23 +16,15 @@ export default function Campus() {
     return <Error error={error} />;
   }
   
-  // let campusUser = [];
-  // console.log("data >>",data)
-  // for(let i = 0; i < data.length; i++){
-  //   campusUser.push({
-  //     id:data[i]?.userid,
-  //     nickname:data[i]?.user?.nickname,
-  //     campus:data[i]?.campus?.name,
-  //     major : data[i]?.major,
-  //     sid :data[i]?.sid
-  //   })
-  //   // campusUser.push({jsonObj});
-  // }
-  // console.log("캠퍼스 유저들 >>",campusUser);
-
-  // userid, nickname, pictureUrl, campus, major, sid
-  const userList = data?.map(({userid,user, campus, major, sid}:any)=><UserCard key={userid} userid={userid} nickname={user?.nickname} campus={campus?.name} major={major} sid={sid}/>)
-
+  const userList = data?.map((
+    {userid,user, campus, major, sid}:any) => <UserCard 
+    key={userid} 
+    userid={userid} 
+    nickname={user?.nickname} 
+    campus={campus?.name} 
+    major={major} 
+    sid={sid}
+    />)
   return(
     <Box>
       <Stack direction={"row"}>

@@ -3,10 +3,12 @@ import {useNavigate} from "react-router-dom";
 import {getUserInfoQuery} from "@recoils/api/User";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
+import { getSoonListQuery } from "@recoils/api/Soon";
 
 export default function Home() {
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
-  const {isLoading, isError, data, error} = getUserInfoQuery(1);
+  const userid = 1;//TODO: #user
+  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
@@ -27,15 +29,21 @@ export default function Home() {
   );
 }
 
-export function MySoon() {
-  const mySoon = ["순원1", "순원2"];
+function MySoon(userid: any) {
+  const {isLoading, isError, data, error} = getSoonListQuery(userid)
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <Error error={error} />;
+  }
   return (
     <Box>
       <Stack direction={"column"} spacing={1}>
-        {mySoon.map((soon, index) => {
+        {data.map(({soonwon}:any) => {
           return (
-            <Box key={index} bgcolor="pink">
-              {soon}
+            <Box key="{soonwon}" bgcolor="pink">
+              {soonwon.nickname}
             </Box>
           );
         })}
@@ -53,7 +61,7 @@ function LeftPanel({data}: any) {
       </Box>
       <Stack direction="row">
         <Box component={"h2"} sx={{height: 2}}>
-          {data.nickname}
+          {data?.nickname}
         </Box>
         <Box component={"h2"} sx={{height: 2}}>
           님, 카토니에 오신것을
@@ -80,22 +88,22 @@ function RightPanel({data}: any) {
             <Box>
               <Stack direction="row">
                 <Box>{data.nickname}</Box>
-                <Box onClick={() => navigate(`/myprofile/${data.userid}`)}>⚙️</Box>
+                <Box onClick={() => navigate(`/myprofile/${data?.userid}`)}>⚙️</Box>
               </Stack>
             </Box>
             <Box>
               <Stack direction="row">
                 <Box>ID=</Box>
-                <Box>{data.userid}</Box>
+                <Box>{data?.userid}</Box>
               </Stack>
             </Box>
           </Stack>
           <Stack direction="row">
-            <Box>{data.campus[0] && data.campus[0].major}</Box>
+            <Box>{data?.campus[0]?.major}</Box>
             <Box>/</Box>
-            <Box>{data.campus[0] && data.campus[0].sid}</Box>
+            <Box>{data?.campus[0]?.sid}</Box>
             <Box>/</Box>
-            <Box>{data.gender}</Box>
+            <Box>{data?.gender}</Box>
           </Stack>
         </Box>
       </Box>
@@ -103,7 +111,7 @@ function RightPanel({data}: any) {
         나의 순원
       </Box>
       <Stack direction={"row"} spacing={1}>
-        <Box>{MySoon()}</Box>
+        <Box>{MySoon(data?.userid)}</Box>
       </Stack>
     </Box>
   );

@@ -8,7 +8,8 @@ import Error from "components/Error/Error";
 
 export default function Header() {
   const navigate = useNavigate();
-  const {isLoading, isError, data, error} = getUserInfoQuery(1);
+  const userid = 1 //TODO: user#
+  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
@@ -63,7 +64,7 @@ function MyDropdownMenu({data}: any) {
       </Box>
       <Menu id="dropdown-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => navigate("/soon/list")}>내 순원</MenuItem>
-        <MenuItem onClick={() => navigate("/withdrawal")}>회원탈퇴</MenuItem>
+        <MenuItem onClick={() => navigate(`/withdrawal/${data.userid}`)}>회원탈퇴</MenuItem>
       </Menu>
     </Box>
   );
