@@ -45,11 +45,21 @@ export default function UserCard({userid, nickname, pictureUrl = avatar, campus,
     <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
-        <Typography variant="body1">ID: {userid}</Typography>
-        <Typography variant="body1">이름: {nickname}</Typography>
-        {campus && <Typography variant="body1">캠퍼스: {campus}</Typography>}
-        {major && <Typography variant="body1">전공: {major}</Typography>}
-        {sid && <Typography variant="body1">학번: {sid}</Typography>}
+        <Box sx={{display: "flex"}}>
+          <Box>
+            <Typography variant="body1">ID: {userid}</Typography>
+            <Typography variant="body1">이름: {nickname}</Typography>
+            {campus && <Typography variant="body1">캠퍼스: {campus}</Typography>}
+            {major && <Typography variant="body1">전공: {major}</Typography>}
+            {sid && <Typography variant="body1">학번: {sid}</Typography>}
+          </Box>
+          <Box sx={{marginLeft: "auto"}}>
+            <Button variant="outlined" onClick={openSubMenu}>
+              권한
+            </Button>
+          </Box>
+          <SubMenu id={userid} anchorEl={anchorEl} setAnchorEl={setAnchorEl} open={open} setOpen={setOpen} authes={authes} />
+        </Box>
       </CardContent>
     </Card>
   );
