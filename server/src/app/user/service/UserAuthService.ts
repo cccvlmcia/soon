@@ -9,10 +9,15 @@ export async function getUserAuthInfo(auth: {authid: string; userid: number}) {
   return await UserAuth.findOne({where: auth});
 }
 
-export async function addUserAuth(userid: number, authid: string) {
+export async function toggleUserAuth(userid: number, authid: string) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(UserAuth);
-    return await repository.save({userid, authid});
+    const auth = await repository.findOne({where: {userid, authid}});
+    if (auth) {
+      return await repository.delete({userid, authid});
+    } else {
+      return await repository.save({userid, authid});
+    }
   });
 }
 export async function addBatchUserAuth(userid: number, authids: string[]) {

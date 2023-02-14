@@ -19,17 +19,7 @@ export async function getUserInfo(userid: number) {
   return await User.findOne({where: {userid}, relations: {campus: true, login: true, config: true, auth: true}});
 }
 
-export async function addUser({
-  nickname,
-  gender,
-  cccyn,
-  campusid,
-  major,
-  sid,
-  ssoid,
-  email,
-  type,
-}: {
+type user = {
   nickname: string;
   gender: Gender;
   cccyn: CommonYN;
@@ -39,7 +29,8 @@ export async function addUser({
   ssoid: string;
   email: string;
   type: string;
-}) {
+};
+export async function addUser({nickname, gender, cccyn, campusid, major, sid, ssoid, email, type}: user) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(User);
     const loginRepository = manager.getRepository(UserLogin);
@@ -54,30 +45,8 @@ export async function addUser({
     return user;
   });
 }
-export async function editUser(
-  userid: number,
-  {
-    nickname,
-    gender,
-    cccyn,
-    campusid,
-    major,
-    sid,
-    ssoid,
-    email,
-    type,
-  }: {
-    nickname: string;
-    gender: Gender;
-    cccyn: CommonYN;
-    campusid: string;
-    major: string;
-    sid: number;
-    ssoid: string;
-    email: string;
-    type: string;
-  },
-) {
+
+export async function editUser(userid: number, {nickname, gender, cccyn, campusid, major, sid, ssoid, email, type}: user) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(User);
     const loginRepository = manager.getRepository(UserLogin);
