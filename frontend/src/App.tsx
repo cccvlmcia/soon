@@ -13,8 +13,8 @@ import SoonCard from "@pages/Soon/SoonCard";
 import SoonList from "@pages/Soon/SoonList";
 import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
-
 import {userState} from "@recoils/user/state";
+import MyProfile from "@pages/MyProfile/MyProfile";
 
 export default function App() {
   const loginUser = useRecoilValue(userState);
@@ -33,6 +33,7 @@ export default function App() {
           <Route path="/soon/list" element={Auth(SoonList, null)}></Route>
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
           <Route path="/admin" element={Auth(Admin, null)}></Route>
+          <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route>
         </Route>
       </Routes>
     </Box>
