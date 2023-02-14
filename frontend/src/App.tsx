@@ -15,6 +15,7 @@ import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
 
 import {userState} from "@recoils/user/state";
+import MyProfile from "@pages/MyProfile/MyProfile";
 
 export default function App() {
   const loginUser = useRecoilValue(userState);
