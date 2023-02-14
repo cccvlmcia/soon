@@ -1,8 +1,12 @@
 import {Box, Stack} from "@mui/material";
 import {MyImage, MyName, MySid, MyMajor, MyGender, MyId} from "@layout/Profile";
 import {useNavigate} from "react-router-dom";
+import {userState} from "@recoils/user/state";
+import {useRecoilValue} from "recoil";
 
 export default function Home() {
+  //FIXME: loginUser로 변경
+  const loginUser = useRecoilValue(userState);
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
   return (
     <Box>
@@ -23,7 +27,7 @@ function LeftPanel() {
       </Box>
       <Stack direction="row">
         <Box component={"h2"} sx={{height: 2}}>
-          {MyName()}
+          {MyName(1)}
         </Box>
         <Box component={"h2"} sx={{height: 2}}>
           님, 카토니에 오신것을
@@ -62,7 +66,7 @@ function UserInfo() {
       <Stack direction="row" spacing={1}>
         <Box>
           <Stack direction="row">
-            <Box>{MyName()}</Box>
+            <Box>{MyName(1)}</Box>
             <Box onClick={() => navigate("/myprofile")}>⚙️</Box>
           </Stack>
         </Box>
