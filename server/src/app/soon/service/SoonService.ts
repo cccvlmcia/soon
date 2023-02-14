@@ -10,7 +10,7 @@ export async function getSoonInfo(swid: number) {
 }
 
 export async function getSoonId(sjid: number,swid: number) {
-  return await Soon.findOne({where: {sjid}&&{swid}, relations: {soonjang: true, soonwon: true}});
+  return await Soon.findOne({where: {sjid, swid}, relations: {soonjang: true, soonwon: true}});
 }
 
 export async function addSoon(soon: {sjid: number; swid: number}) {

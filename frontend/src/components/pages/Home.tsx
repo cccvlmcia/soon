@@ -1,25 +1,59 @@
 import {Box, Stack} from "@mui/material";
-import {MyImage, MyName, MySid, MyMajor, MyGender, MyId} from "@layout/Profile";
 import {useNavigate} from "react-router-dom";
-import {userState} from "@recoils/user/state";
+import {getUserInfoQuery} from "@recoils/api/User";
+import Loading from "components/Loading/Loading";
+import Error from "components/Error/Error";
+import {getSoonListQuery} from "@recoils/api/Soon";
 import {useRecoilValue} from "recoil";
+import {userState} from "@recoils/user/state";
 
 export default function Home() {
   //FIXME: loginUser로 변경
   const loginUser = useRecoilValue(userState);
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
+  const userid = 1; //TODO: #user
+  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <Error error={error} />;
+  }
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
-        <Box>{LeftPanel()}</Box>
-        <Box>{RightPanel()}</Box>
+        <Box>{LeftPanel(data)}</Box>
+        <Box>{RightPanel(data)}</Box>
       </Box>
     </Box>
   );
 }
 
+function MySoon(userid: any) {
+  const {isLoading, isError, data, error} = getSoonListQuery(userid);
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <Error error={error} />;
+  }
+  return (
+    <Box>
+      <Stack direction={"column"} spacing={1}>
+        {data.map(({soonwon}: any) => {
+          return (
+            <Box key="{soonwon}" bgcolor="pink">
+              {soonwon.nickname}
+            </Box>
+          );
+        })}
+      </Stack>
+    </Box>
+  );
+}
+
 // left panel
-function LeftPanel() {
+function LeftPanel({data}: any) {
   return (
     <Box fontSize={8}>
       <Box component={"h2"} sx={{height: 2}}>
@@ -27,7 +61,7 @@ function LeftPanel() {
       </Box>
       <Stack direction="row">
         <Box component={"h2"} sx={{height: 2}}>
-          {MyName(1)}
+          {data?.nickname}
         </Box>
         <Box component={"h2"} sx={{height: 2}}>
           님, 카토니에 오신것을
@@ -43,64 +77,56 @@ function LeftPanel() {
 }
 
 // right panel
-function RightPanel() {
+function RightPanel({data}: any) {
+  const navigate = useNavigate();
   return (
     <Box>
-      <Box sx={{width: 150}}>{UserInfo()}</Box>
+      <Box sx={{width: 150}}>
+        <Box fontSize={12}>
+          {MyImage()}
+          <Stack direction="row" spacing={1}>
+            <Box>
+              <Stack direction="row">
+                <Box>{data.nickname}</Box>
+                <Box onClick={() => navigate(`/myprofile/${data?.userid}`)}>⚙️</Box>
+              </Stack>
+            </Box>
+            <Box>
+              <Stack direction="row">
+                <Box>ID=</Box>
+                <Box>{data?.userid}</Box>
+              </Stack>
+            </Box>
+          </Stack>
+          <Stack direction="row">
+            <Box>{data?.campus[0]?.major}</Box>
+            <Box>/</Box>
+            <Box>{data?.campus[0]?.sid}</Box>
+            <Box>/</Box>
+            <Box>{data?.gender}</Box>
+          </Stack>
+        </Box>
+      </Box>
       <Box component={"h2"} fontSize={8}>
         나의 순원
       </Box>
       <Stack direction={"row"} spacing={1}>
-        <Box>{MySoon()}</Box>
+        <Box>{MySoon(data?.userid)}</Box>
       </Stack>
     </Box>
   );
 }
 
-// userinformation
-function UserInfo() {
-  const navigate = useNavigate();
-  return (
-    <Box fontSize={12}>
-      <Box>{MyImage()}</Box>
-      <Stack direction="row" spacing={1}>
-        <Box>
-          <Stack direction="row">
-            <Box>{MyName(1)}</Box>
-            <Box onClick={() => navigate("/myprofile")}>⚙️</Box>
-          </Stack>
-        </Box>
-        <Box>
-          <Stack direction="row">
-            <Box>ID=</Box>
-            <Box>{MyId()}</Box>
-          </Stack>
-        </Box>
-      </Stack>
-      <Stack direction="row">
-        <Box>{MyMajor()}</Box>
-        <Box>/</Box>
-        <Box>{MySid()}</Box>
-        <Box>/</Box>
-        <Box>{MyGender()}</Box>
-      </Stack>
-    </Box>
-  );
-}
-
-export function MySoon() {
-  const mySoon = ["순원1", "순원2"];
+function MyImage() {
   return (
     <Box>
-      <Stack direction={"column"} spacing={1}>
-        {mySoon.map((soon, index) => {
-          return (
-            <Box key={index} bgcolor="pink">
-              {soon}
-            </Box>
-          );
-        })}
-      </Stack>
+      <Box
+        style={{width: 130, height: 130}}
+        component="img"
+        src={
+          "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340"
+        }
+      />
     </Box>
   );
 }

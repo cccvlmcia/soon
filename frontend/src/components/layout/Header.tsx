@@ -17,7 +17,9 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   //FIXME: loginUser로 변경
   const loginUser = useRecoilValue(userState);
-  const {isLoading, isError, data, error} = getUserInfoQuery(1);
+  const navigate = useNavigate();
+  const userid = 1; //TODO: user#
+  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
