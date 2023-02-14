@@ -6,7 +6,7 @@ export const styles = {
       padding: "20px",
     },
     writeform: {
-      "> div": { display: "flex" },
+      "> div": {display: "flex"},
     },
   },
   mobile: {
@@ -14,5 +14,5 @@ export const styles = {
       width: "100%",
     },
   },
-  text: { fontSize: "16px" },
+  text: {fontSize: "16px"},
 };

@@ -1,9 +1,9 @@
-import { sampleAxios } from "./axios";
-import { useQuery } from "react-query";
+import {sampleAxios} from "./axios";
+import {useQuery} from "react-query";
 const options = {
   refetchOnWindowFocus: false,
   retry: 0,
-  onSuccess: ({ data }: any) => {
+  onSuccess: ({data}: any) => {
     //api 호출 성공
     console.log("onSuccess >>", data);
   },
@@ -14,10 +14,6 @@ const options = {
 };
 
 export const sampleQuery = () => {
-  const { isLoading, isError, data, error } = useQuery(
-    "sampleQuery",
-    sampleAxios,
-    options
-  );
-  return { isLoading, isError, data: data?.data, error };
+  const {isLoading, isError, data, error} = useQuery("sampleQuery", sampleAxios, options);
+  return {isLoading, isError, data: data?.data, error};
 };

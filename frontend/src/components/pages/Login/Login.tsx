@@ -1,3 +1,4 @@
+
 import {Token} from "@mui/icons-material";
 import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
@@ -15,11 +16,13 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
     const {data} = await axios.post("http://localhost:4000/auth/google/callback", {code});
+
     //FIXME: 유저가 등록되어 있지 않은 경우 미리 데이터 저장하면, user id가 누락 됨
     setStoredUser(data);
     const {status} = data;
     const {ssoid, userid} = data;
     console.log("local storage stored data : ", userid);
+    
     if (status == "REGISTER") {
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");
@@ -56,9 +59,7 @@ const Login = () => {
 
   return (
     <Box>
-      <Box>
-        <Button onClick={googleSocialLogin}>Google Button</Button>
-      </Box>
+      <Button onClick={googleSocialLogin}>Google Button</Button>
     </Box>
   );
 };

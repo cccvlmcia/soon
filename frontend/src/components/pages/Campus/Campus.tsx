@@ -1,24 +1,28 @@
-import { Box, Stack } from "@mui/material";
-import { getCampusUserQuery, getUserInfoQuery } from "@recoils/api/User";
+import {Box, Stack} from "@mui/material";
+import {getCampusUserQuery, getUserInfoQuery} from "@recoils/api/User";
 import Error from "components/Error/Error";
 import Loading from "react-loading";
-import { UserInfo } from "@layout/Profile";
+import {UserInfo} from "@layout/Profile";
 import UserCard from "@layout/Card";
 
 function campusData(campusid: string) {
-  const { isLoading, isError, data, error } = getCampusUserQuery(campusid);
+  const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
   if (isLoading) {
     return <Loading />;
   }
   if (isError) {
     return <Error error={error} />;
   }
-  return(data);
+  return data;
 }
 
 function MyCampusId(userid: number) {
   const myData = UserInfo(userid);
-  return myData.campus&&myData.campus[0].campusid
+  if (myData) {
+    return myData.campus && myData.campus[0].campusid;
+  } else {
+    return;
+  }
 }
 
 function CampusUser(userid: number) {
@@ -26,11 +30,7 @@ function CampusUser(userid: number) {
   const data = campusData(campusId);
   console.log("campusId>>", campusId);
   console.log("캠퍼스 지체들>>", data);
-  return (
-    <Box>
-      
-    </Box>
-  );
+  return <Box></Box>;
   // const CampusUser = [];
   // for(let count = 0; count<data; count++){
   //   console.log("didididi")
@@ -55,19 +55,14 @@ function CampusUser(userid: number) {
   //     )) }
   //   </div>
   // );
-};
-
+}
 
 export default function Campus() {
-
   return (
     <Box>
       <Stack direction={"row"}>
-        <Box>
-          {CampusUser(11)}
-        </Box>
+        <Box>{CampusUser(11)}</Box>
       </Stack>
     </Box>
   );
-};
-
+}
