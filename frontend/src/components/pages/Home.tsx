@@ -22,8 +22,8 @@ export default function Home() {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
-        <Box>{LeftPanel(data)}</Box>
-        <Box>{RightPanel(data)}</Box>
+        <LeftPanel data={data} />
+        <RightPanel data={data} />
       </Box>
     </Box>
   );
@@ -87,7 +87,7 @@ function RightPanel({data}: any) {
           <Stack direction="row" spacing={1}>
             <Box>
               <Stack direction="row">
-                <Box>{data.nickname}</Box>
+                <Box>{data?.nickname}</Box>
                 <Box onClick={() => navigate(`/myprofile/${data?.userid}`)}>⚙️</Box>
               </Stack>
             </Box>
