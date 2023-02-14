@@ -1,13 +1,16 @@
-import {Box, Stack} from "@mui/material";
+import {Box} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {Button, Menu, MenuItem} from "@material-ui/core";
+import {Drawer} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {getUserInfoQuery} from "@recoils/api/User";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 
 export default function Header() {
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
   const {isLoading, isError, data, error} = getUserInfoQuery(1);
   if (isLoading) {
     return <Loading />;
@@ -15,56 +18,63 @@ export default function Header() {
   if (isError) {
     return <Error error={error} />;
   }
+  const handleMenuOpen = () => {
+    setOpen(!open);
+  };
   return (
     <Box sx={{background: "black", height: "50px"}}>
-      <Stack color="white" direction={"row"} justifyContent="space-between" sx={{height: 50}}>
-        <Stack direction={"row"} spacing={2} sx={{div: {padding: "17px 0"}}}>
-          <Box onClick={() => navigate("/")}>Logo</Box>
-          <Box onClick={() => navigate("/")}>홈</Box>
-          <Box onClick={() => navigate("/campus")}>캠퍼스지체들</Box>
-          <Box onClick={() => navigate("/admin")}>관리자</Box>
-        </Stack>
-        <Box>
-          <MyDropdownMenu data={data} />
-        </Box>
-      </Stack>
+      <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px"}} />
+      <DrawerMenu data={data} open={open} handleMenuOpen={handleMenuOpen} />
     </Box>
   );
 }
 
-function MyDropdownMenu({data}: any) {
+function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleMenuOpen: any}) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
+  const move = (route: string) => {
+    handleMenuOpen();
+    navigate(route);
   };
 
   const handleLogin = () => {
     navigate("/login");
   };
-
+  const handleLogout = () => {};
   return (
-    <Box>
+    <Drawer open={open} onClose={handleMenuOpen}>
       <Box>
-        {data.nickname ? (
-          <Box color="white" onClick={handleClick} aria-controls="dropdown-menu" aria-haspopup="true">
-            {data.nickname}
-          </Box>
-        ) : (
-          <Box sx={{color: "white", padding: "17px 10px", cursor: "pointer"}} onClick={handleLogin}>
-            로그인
+        <CloseIcon color="primary" sx={{margin: "13px", cursor: "pointer"}} onClick={handleMenuOpen} />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          borderTop: "1px solid #EFEFEF",
+          "> div": {padding: "20px", cursor: "pointer", borderBottom: "1px solid #EFEFEF"},
+        }}>
+        <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
+          {data.nickname ? (
+            <Box sx={{display: "flex"}}>
+              <AccountCircleIcon />
+              {data.nickname}
+            </Box>
+          ) : (
+            <Box sx={{color: "white", padding: "16px 10px", cursor: "pointer"}} onClick={handleLogin}>
+              로그인
+            </Box>
+          )}
+        </Box>
+        <Box onClick={() => move("/")}>홈</Box>
+        <Box onClick={() => move("/campus")}>캠퍼스지체들</Box>
+        <Box onClick={() => move("/admin")}>관리자</Box>
+        {data && (
+          <Box sx={{display: "flex", flexDirection: "column", gap: "10px"}}>
+            <Box onClick={() => handleLogout()}>로그아웃</Box>
+            <Box onClick={() => move("/soon/list")}>내 순원</Box>
+            <Box onClick={() => move("/withdrawal")}>회원탈퇴</Box>
           </Box>
         )}
       </Box>
-      <Menu id="dropdown-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem onClick={() => navigate("/soon/list")}>내 순원</MenuItem>
-        <MenuItem onClick={() => navigate("/withdrawal")}>회원탈퇴</MenuItem>
-      </Menu>
-    </Box>
+    </Drawer>
   );
 }
