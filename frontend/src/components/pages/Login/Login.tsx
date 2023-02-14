@@ -1,23 +1,17 @@
-import { Token } from "@mui/icons-material";
-import { Box, Button } from "@mui/material";
-import { useGoogleLogin } from "@react-oauth/google";
-import { api } from "@recoils/consonants";
+import {Box, Button} from "@mui/material";
+import {useGoogleLogin} from "@react-oauth/google";
 import axios from "axios";
-import { stat } from "fs";
-import { Navigate, useNavigate } from "react-router-dom";
-import { setStorage } from "utils/SecureStorage";
+import {useNavigate} from "react-router-dom";
+import {setStorage} from "utils/SecureStorage";
 
 const Login = () => {
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
-    const { data } = await axios.post(
-      "http://localhost:4000/auth/google/callback",
-      { code }
-    );
+    const {data} = await axios.post("http://localhost:4000/auth/google/callback", {code});
     console.log("data >> ", data);
 
-    const { status } = data;
-    const { ssoid, userid } = data;
+    const {status} = data;
+    const {ssoid, userid} = data;
     console.log("auth : ", ssoid, userid);
     setStorage("#user", JSON.stringify(data));
     if (status == "REGISTER") {
@@ -33,7 +27,7 @@ const Login = () => {
           userid: userid,
           ssoid: ssoid,
         },
-        { withCredentials: true }
+        {withCredentials: true},
       );
       console.log("result : ", result);
       // navigate("/");
@@ -45,10 +39,10 @@ const Login = () => {
   };
   const googleSocialLogin = useGoogleLogin({
     scope: "email profile",
-    onSuccess: async ({ code }) => {
+    onSuccess: async ({code}) => {
       handleLoginSuccess(code);
     },
-    onError: (errorResponse) => {
+    onError: errorResponse => {
       handleLoginError(errorResponse);
     },
     flow: "auth-code",
@@ -56,9 +50,7 @@ const Login = () => {
 
   return (
     <Box>
-      <Box>
-        <Button onClick={googleSocialLogin}>Google Button</Button>
-      </Box>
+      <Button onClick={googleSocialLogin}>Google Button</Button>
     </Box>
   );
 };
