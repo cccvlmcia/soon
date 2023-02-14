@@ -20,14 +20,6 @@ export async function toggleUserAuth(userid: number, authid: string) {
     }
   });
 }
-export async function addBatchUserAuth(userid: number, authids: string[]) {
-  return await txProcess(async manager => {
-    const repository = manager.getRepository(UserAuth);
-    const authes = authids?.map(authid => ({userid, authid}));
-    return await repository.save(authes);
-  });
-}
-
 export async function removeUserAuth(auth: {authid: string; userid: number}) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(UserAuth);

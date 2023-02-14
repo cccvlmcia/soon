@@ -7,32 +7,20 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import {getUserInfoQuery} from "@recoils/api/User";
-import Loading from "components/Loading/Loading";
-import Error from "components/Error/Error";
 import {useRecoilValue} from "recoil";
-import {loginState} from "@recoils/user/state";
+import {userState} from "@recoils/User/state";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  //FIXME: loginUser로 변경
-  const loginUser = useRecoilValue(loginState);
-  const navigate = useNavigate();
-  const userid = 1; //TODO: user#
-  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (isError) {
-    return <Error error={error} />;
-  }
+  const loginUser = useRecoilValue(userState);
+
   const handleMenuOpen = () => {
     setOpen(!open);
   };
   return (
     <Box sx={{background: "black", height: "50px"}}>
       <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px"}} />
-      <DrawerMenu data={data} open={open} handleMenuOpen={handleMenuOpen} />
+      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} />
     </Box>
   );
 }
@@ -64,7 +52,7 @@ function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleM
           {data?.nickname ? (
             <Box sx={{display: "flex"}}>
               <AccountCircleIcon />
-              {data.nickname}
+              {data?.nickname}
             </Box>
           ) : (
             <Box sx={{color: "white", padding: "16px 10px", cursor: "pointer"}} onClick={handleLogin}>

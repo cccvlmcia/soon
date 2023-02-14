@@ -1,30 +1,24 @@
 import {Box, Stack} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {getUserInfoQuery} from "@recoils/api/User";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {getSoonListQuery} from "@recoils/api/Soon";
 import {useRecoilValue} from "recoil";
-import { loginState } from "@recoils/user/state";
-
+import {userState} from "@recoils/User/state";
 
 export default function Home() {
-  //FIXME: loginUser로 변경
-  const loginUser = useRecoilValue(loginState);
+  const loginUser = useRecoilValue(userState);
+  console.log("loginUser >", loginUser);
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
-  const userid = 1; //TODO: #user
-  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (isError) {
-    return <Error error={error} />;
-  }
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
-        <LeftPanel data={data} />
-        <RightPanel data={data} />
+        <Box>
+          <LeftPanel data={loginUser} />
+        </Box>
+        <Box>
+          <RightPanel data={loginUser} />
+        </Box>
       </Box>
     </Box>
   );
@@ -84,11 +78,11 @@ function RightPanel({data}: any) {
     <Box>
       <Box sx={{width: 150}}>
         <Box fontSize={12}>
-          {MyImage()}
+          <MyImage />
           <Stack direction="row" spacing={1}>
             <Box>
               <Stack direction="row">
-                <Box>{data?.nickname}</Box>
+                <Box>{data.nickname}</Box>
                 <Box onClick={() => navigate(`/myprofile/${data?.userid}`)}>⚙️</Box>
               </Stack>
             </Box>

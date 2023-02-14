@@ -20,8 +20,9 @@ import {api} from "@recoils/consonants";
 import {useRecoilState} from "recoil";
 
 import {useNavigate} from "react-router-dom";
-import { loginState, userGoogleAuthState } from "@recoils/user/state";
-import { postUserRegistAxios } from "@recoils/user/axios";
+import {postUserRegistAxios} from "@recoils/User/axios";
+import {userGoogleAuthState} from "@recoils/Login/state";
+import {postUser} from "@recoils/types";
 
 type FormData = {
   name: string;
@@ -45,7 +46,6 @@ const Register: React.FC = () => {
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
-  const [storedUser, setStoredUser] = useRecoilState(loginState);
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
   const navigate = useNavigate();
@@ -72,11 +72,11 @@ const Register: React.FC = () => {
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
     const auth = googleAuth;
-    const userRegistInfo = {
+    const userRegistInfo: postUser = {
       nickname: params.name,
-      gender: genderSelected,
-      cccyn: cccYNSelected,
-      campusid: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
+      gender: genderSelected || "",
+      cccyn: cccYNSelected || "",
+      campus: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
       major: params.major,
       sid: params.sid,
       ssoid: auth.ssoid,
@@ -84,7 +84,9 @@ const Register: React.FC = () => {
       type: auth.type,
     };
     console.log("userRegist data", userRegistInfo);
-    const userRegist = postUserRegistAxios(userRegistInfo);
+    // userInfo: {name: string; campus: string; sid: string; major: string; cccYN: string; gender: string}
+    const userRegist = await postUserRegistAxios(userRegistInfo);
+    console.log("userRegist >", userRegist);
     navigate("/");
   };
 

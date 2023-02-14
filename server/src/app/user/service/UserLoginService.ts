@@ -5,7 +5,7 @@ import UserLogin from "@user/entity/UserLogin";
 import {setAuthAdmin} from "@utils/AuthUtils";
 
 export async function getUserLogin(ssoid: string, userid?: number) {
-  return await UserLogin.findOne({where: {ssoid, userid}, relations: {user: true}});
+  return await UserLogin.findOne({where: {ssoid, userid}, relations: {user: {campus: true, login: true, config: true, auth: true}}});
 }
 export async function addUserLogin(userid: number, login: {ssoid: string; email: string; type: string}) {
   return await txProcess(async manager => {
