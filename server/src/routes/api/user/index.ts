@@ -13,7 +13,6 @@ export default async function (fastify: FastifyInstance) {
   //FIXME: 사용자 목록... 처리 방안 필요
   fastify.get("/", async (req: FastifyRequest, reply: FastifyReply) => {
     const users = await getUserList();
-    console.log("users : ",users)
     reply.send(users);
   });
 
