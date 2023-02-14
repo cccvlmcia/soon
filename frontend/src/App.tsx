@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 import {Routes, Route} from "react-router-dom";
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/user/state";
+import {userState} from "@recoils/Login/state";
 
 import Layout from "@layout/Layout";
 import Home from "@pages/Home";
@@ -35,7 +35,7 @@ export default function App() {
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
           <Route path="/admin" element={Auth(Admin, null)}></Route>
           <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route> 
-          <Route path="/withdrawal/" element={Auth(Withdrawal, null)}></Route>
+          <Route path="/withdrawal" element={Auth(Withdrawal, null)}></Route>
         </Route>
       </Routes>
     </Box>

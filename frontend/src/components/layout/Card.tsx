@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 
 const avatar =
   "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340";
-export default function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid}: any) {
+export default function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid, auth}: any) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -40,7 +40,7 @@ export default function UserCard({userid, nickname, pictureUrl = avatar, campus,
     {name: "관리자", id: "ADMIN"},
   ];
   //FIXME: 검토 필요
-  // const isAdmin = true || auth?.filter((authid: any) => authes?.filter(({id}) => id == authid)?.length || undefined)?.length > 0;
+  const isAdmin = true || auth?.filter((authid: any) => authes?.filter(({id}) => id == authid)?.length || undefined)?.length > 0;
   return (
     <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />

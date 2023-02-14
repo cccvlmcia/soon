@@ -4,7 +4,9 @@ import Error from "components/Error/Error";
 import Loading from "react-loading";
 import UserCard from "@layout/Card";
 
-export default function Campus(campusid: string) {
+
+export default function Campus(){
+  const campusid = "UNIV001" //TODO: localstorage에서 가져온다. user# 
   const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
   if (isLoading) {
     return <Loading />;
@@ -12,7 +14,6 @@ export default function Campus(campusid: string) {
   if (isError) {
     return <Error error={error} />;
   }
-  
   const userList = data?.map((
     {userid,user, campus, major, sid}:any) => <UserCard 
     key={userid} 
@@ -30,3 +31,4 @@ export default function Campus(campusid: string) {
     </Box>
   );
 }
+

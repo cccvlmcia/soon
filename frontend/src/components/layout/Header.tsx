@@ -13,6 +13,7 @@ import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 
 export default function Header() {
+  const [open, setOpen] = useState(false)
   const navigate = useNavigate();
   const userid = 1 //TODO: user#
   const {isLoading, isError, data, error} = getUserInfoQuery(userid);
