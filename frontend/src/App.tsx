@@ -13,7 +13,7 @@ import SoonCard from "@pages/Soon/SoonCard";
 import SoonList from "@pages/Soon/SoonList";
 import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
-
+import MyProfile from "@pages/MyProfile/MyProfile";
 import { userState } from "@recoils/user/state";
 
 export default function App() {
@@ -42,6 +42,7 @@ export default function App() {
           <Route path="/soon/list" element={Auth(SoonList, null)}></Route>
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
           <Route path="/admin" element={Auth(Admin, null)}></Route>
+          <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route>
         </Route>
       </Routes>
     </Box>
