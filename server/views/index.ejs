@@ -1,44 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    Hello World!
-    <button onclick="set()">post token</button>
-    <button onclick="test()">get test(authHandler)</button>
-    <button onclick="refresh()">토큰 재발급 refresh</button>
-  </body>
-  <script src="/node_modules/axios/dist/axios.min.js"></script>
-  <script>
-    async function set() {
-      console.log("hi");
-      try {
-        const {data} = await axios.post("/auth/token", {ssoid: "1", userid: 11});
-        console.log("data >>", data);
-      } catch (err) {
-        console.error(err);
-      }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  Hello World!
+  <button onclick="set()">post token</button>
+  <button onclick="test()">get test(authHandler)</button>
+  <button onclick="refresh()">토큰 재발급 refresh</button>
+</body>
+<script src="/node_modules/axios/dist/axios.min.js"></script>
+<script>
+  async function set() {
+    console.log("hi");
+    try {
+      const { data } = await axios.post("/auth/token", { ssoid: "1", userid: 11 });
+      console.log("data >>", data);
+    } catch (err) {
+      console.error(err);
     }
-    async function test() {
-      console.log("hi");
-      try {
-        const {data} = await axios.get("/test");
-        console.log("data >>", data);
-      } catch (err) {
-        console.error(err);
-      }
+  }
+  async function test() {
+    console.log("hi");
+    try {
+      const { data } = await axios.get("/test");
+      console.log("data >>", data);
+    } catch (err) {
+      console.error(err);
     }
-    async function refresh() {
-      try {
-        const {data} = await axios.post("/auth/refreshToken");
-        console.log("data >>", data);
-      } catch (err) {
-        console.error(err);
-      }
+  }
+  async function refresh() {
+    try {
+      const { data } = await axios.post("/auth/refreshToken");
+      console.log("data >>", data);
+    } catch (err) {
+      console.error(err);
     }
-  </script>
+  }
+</script>
+
 </html>
