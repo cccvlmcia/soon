@@ -18,12 +18,8 @@ export default function Home() {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
-        <Box>
-          <LeftPanel data={data} />
-        </Box>
-        <Box>
-          <RightPanel data={data} />
-        </Box>
+        <Box>{LeftPanel(data)}</Box>
+        <Box>{RightPanel(data)}</Box>
       </Box>
     </Box>
   );

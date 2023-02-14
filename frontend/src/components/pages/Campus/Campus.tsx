@@ -1,14 +1,11 @@
-import { Box, Stack } from "@mui/material";
-import { getCampusUserQuery, getUserInfoQuery } from "@recoils/api/User";
+import {Box, Stack} from "@mui/material";
+import {getCampusUserQuery, getUserInfoQuery} from "@recoils/api/User";
 import Error from "components/Error/Error";
 import Loading from "react-loading";
-
 import UserCard from "@layout/Card";
 
-export default function Campus() {
-  // csmpudif : #user에 사용자 기본 정보 (USER, auth, campus) campusid
-  const campusid ="UNIV001";
-  const { isLoading, isError, data, error } = getCampusUserQuery(campusid);
+export default function Campus(campusid: string) {
+  const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
   if (isLoading) {
     return <Loading />;
   }
@@ -28,11 +25,8 @@ export default function Campus() {
   return(
     <Box>
       <Stack direction={"row"}>
-        <Box>
-          {userList}
-        </Box>
+        <Box>{userList}</Box>
       </Stack>
     </Box>
   );
-};
-
+}

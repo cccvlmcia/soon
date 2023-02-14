@@ -35,7 +35,7 @@ export default function App() {
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
           <Route path="/admin" element={Auth(Admin, null)}></Route>
           <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route> 
-          <Route path="/withdrawal/:userid" element={Auth(Withdrawal, null)}></Route>
+          <Route path="/withdrawal/" element={Auth(Withdrawal, null)}></Route>
         </Route>
       </Routes>
     </Box>
