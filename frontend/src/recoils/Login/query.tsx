@@ -1,4 +1,4 @@
-import {getGoogleInfoAxios, sampleAxios} from "./axios";
+import {getGoogleInfoAxios} from "./axios";
 import {useQuery} from "react-query";
 const options = {
   refetchOnWindowFocus: false,
@@ -12,8 +12,9 @@ const options = {
     console.log("onError >> ", error.message);
   },
 };
-
+/*
 export const sampleQuery = () => {
   const {isLoading, isError, data, error} = useQuery("sampleQuery", sampleAxios, options);
   return {isLoading, isError, data: data?.data, error};
 };
+*/
