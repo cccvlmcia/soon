@@ -74,24 +74,24 @@ const Register: React.FC = () => {
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
     console.log("params >> ", params);
-    const {auth} = JSON.parse(storedUser);
+    // const {auth} = JSON.parse(storedUser);
 
-    console.log("userGoogleInfo : ", auth);
-    // console.log(userGoogleInfo);
-    const userRegistInfo = {
-      nickname: params.name,
-      gender: genderSelected,
-      cccyn: cccYNSelected,
-      campusid: params.campus, //FIXME: 단일 선택 문제 해결되면 지우도록
-      major: params.major,
-      sid: params.sid,
-      ssoid: auth.ssoid,
-      email: auth.email,
-      type: auth.type,
-    };
-    console.log("userRegist data", userRegistInfo);
-    const userRegist = await api.post("/user", userRegistInfo);
-    console.log(userRegist);
+    // console.log("userGoogleInfo : ", auth);
+    // // console.log(userGoogleInfo);
+    // const userRegistInfo = {
+    //   nickname: params.name,
+    //   gender: genderSelected,
+    //   cccyn: cccYNSelected,
+    //   campusid: params.campus, //FIXME: 단일 선택 문제 해결되면 지우도록
+    //   major: params.major,
+    //   sid: params.sid,
+    //   ssoid: auth.ssoid,
+    //   email: auth.email,
+    //   type: auth.type,
+    // };
+    // console.log("userRegist data", userRegistInfo);
+    // const userRegist = await api.post("/user", userRegistInfo);
+    // console.log(userRegist);
   };
 
   const fetchData = () => {
