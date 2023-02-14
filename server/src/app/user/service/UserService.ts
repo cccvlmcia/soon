@@ -17,7 +17,7 @@ export async function getUserInfoByRefreshToken(refresh_token: string) {
 }
 
 export async function getUserInfo(userid: number) {
-  return await User.findOne({where: {userid}, relations: {campus: true, login: true, config: true}});
+  return await User.findOne({where: {userid}, relations: {campus: true, login: true, config: true, auth: true}});
 }
 
 export async function addUser({
@@ -110,10 +110,3 @@ export async function removeUser(userid: number) {
     // return repository.delete({userid});
   });
 }
-
-
-
-
-
-
-
