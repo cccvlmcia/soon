@@ -18,9 +18,9 @@ import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
 import {api} from "@recoils/consonants";
 import {useRecoilState} from "recoil";
-import {userGoogleAuthState, userState} from "@recoils/Login/state";
+import {userGoogleAuthState, loginState} from "@recoils/Login/state";
 import {postUserRegistAxios} from "@recoils/Login/axios";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 type FormData = {
   name: string;
@@ -44,7 +44,7 @@ const Register: React.FC = () => {
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
-  const [storedUser, setStoredUser] = useRecoilState(userState);
+  const [storedUser, setStoredUser] = useRecoilState(loginState);
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
   const navigate = useNavigate();
