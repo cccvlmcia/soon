@@ -25,14 +25,14 @@ export default function UserCard({userid, nickname, pictureUrl=avatar, campus, m
   const navigate = useNavigate();
   return (
     //TODO:id path 바꾸기
-    <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card`)}>
+    <Card className={classes.root} onClick={() => navigate("/soon/11/card")}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
         <Typography variant="body1">ID: {userid}</Typography>
         <Typography variant="body1">이름: {nickname}</Typography>
         <Typography variant="body1">캠퍼스: {campus}</Typography>
         <Typography variant="body1">전공: {major}</Typography>
-        <Typography variant="body1">학번: {sid}</Typography>go
+        <Typography variant="body1">학번: {sid}</Typography>
       </CardContent>
     </Card>
   );
