@@ -13,7 +13,6 @@ import SoonCard from "@pages/Soon/SoonCard";
 import SoonList from "@pages/Soon/SoonList";
 import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
-import MyProfile from "@pages/MyProfile/MyProfile";
 import {userState} from "@recoils/user/state";
 
 export default function App() {

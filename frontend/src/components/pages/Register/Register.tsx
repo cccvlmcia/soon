@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useNavigate, useParams} from "react-router-dom";
 import Error from "components/Error/Error";
-import axios from "axios";
 import {
   Box,
   TextField,
@@ -32,20 +31,33 @@ type FormData = {
   cccYN: string;
   gender: string;
 };
-
+type campusType = {
+  campusid: string;
+  name: string;
+  areaid: string;
+  useyn: string;
+  createdate: string;
+};
 const Register: React.FC = () => {
   const {isLoading, isError, data, error} = getCampusListQuery();
-  const navigate = useNavigate();
+
   const {register, handleSubmit} = useForm<FormData>();
-  const [campusList, setCampusList] = useState<object[]>([]);
+  const [campusList, setCampusList] = useState<campusType[]>([]);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [storedUser, setStoredUser] = useRecoilState(userState);
+  const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
 
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
-    const value = event.target.value as string;
-    setCampusSelected(typeof value === "string" ? value.split(",") : value);
+    const selectedNames = event.target.value as string[];
+    const selectedIds = selectedNames.map(name => {
+      const campus: campusType = campusList.find(campus => campus.name === name) || {campusid: "", name: "", areaid: "", useyn: "", createdate: ""};
+      return campus ? campus.campusid : "0";
+    });
+    console.log("campus name, campus : id >> ", campusIdSelected, campusSelected);
+    setCampusSelected(selectedNames);
+    setCampusIdSelected(selectedIds);
   };
   const handleGednerReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
@@ -82,14 +94,14 @@ const Register: React.FC = () => {
     // console.log(userRegist);
   };
 
+  const fetchData = () => {
+    if (isLoading) return <Loading />;
+    if (isError) return <Error error={error} />;
+    setCampusList(data);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      if (isLoading) return <Loading />;
-      if (isError) return <Error error={error} />;
-      setCampusList(data);
-    };
     fetchData();
-  }, [data, genderSelected, cccYNSelected]);
+  }, [data]);
 
   return (
     <Box component="form" onSubmit={handleSubmit(writeRegister)}>
@@ -109,10 +121,10 @@ const Register: React.FC = () => {
             multiple
             onChange={handleCampusReceive}
             renderValue={selected => selected.join(", ")}>
-            {campusList.map((campus: any, index: number) => (
-              <MenuItem key={index} value={campus.campusid}>
-                <Checkbox checked={campusSelected.indexOf(campus.campusid.toString()) > -1} />
-                <ListItemText primary={campus.name} />
+            {campusList.map(({name, campusid}: any, index: number) => (
+              <MenuItem key={index} value={name}>
+                <Checkbox checked={campusSelected.indexOf(name.toString()) > -1} />
+                <ListItemText primary={name} />
               </MenuItem>
             ))}
           </Select>
