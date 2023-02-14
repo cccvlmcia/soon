@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
-import {useNavigate, useParams} from "react-router-dom";
 import Error from "components/Error/Error";
 import {
   Box,
@@ -14,14 +13,13 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  FormControl,
 } from "@mui/material";
 import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
 import {api} from "@recoils/consonants";
-import {getStorage} from "utils/SecureStorage";
 import {useRecoilState} from "recoil";
-import {userState} from "@recoils/user/state";
+import {userGoogleAuthState, userState} from "@recoils/Login/state";
+import { postUserRegistAxios } from "@recoils/Login/axios";
 
 type FormData = {
   name: string;
@@ -40,7 +38,6 @@ type campusType = {
 };
 const Register: React.FC = () => {
   const {isLoading, isError, data, error} = getCampusListQuery();
-
   const {register, handleSubmit} = useForm<FormData>();
   const [campusList, setCampusList] = useState<campusType[]>([]);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
@@ -48,6 +45,7 @@ const Register: React.FC = () => {
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [storedUser, setStoredUser] = useRecoilState(userState);
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
+  const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
 
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const selectedNames = event.target.value as string[];
@@ -55,7 +53,6 @@ const Register: React.FC = () => {
       const campus: campusType = campusList.find(campus => campus.name === name) || {campusid: "", name: "", areaid: "", useyn: "", createdate: ""};
       return campus ? campus.campusid : "0";
     });
-    console.log("campus name, campus : id >> ", campusIdSelected, campusSelected);
     setCampusSelected(selectedNames);
     setCampusIdSelected(selectedIds);
   };
@@ -70,19 +67,14 @@ const Register: React.FC = () => {
     console.log("cccYN : ", value);
     setCccYNSelected(value);
   };
-
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
-    console.log("params >> ", params);
-    const {auth} = JSON.parse(storedUser);
-
-    console.log("userGoogleInfo : ", auth);
-    // console.log(userGoogleInfo);
+    const auth = googleAuth;
     const userRegistInfo = {
       nickname: params.name,
       gender: genderSelected,
       cccyn: cccYNSelected,
-      campusid: params.campus, //FIXME: 단일 선택 문제 해결되면 지우도록
+      campusid: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
       major: params.major,
       sid: params.sid,
       ssoid: auth.ssoid,
@@ -90,7 +82,7 @@ const Register: React.FC = () => {
       type: auth.type,
     };
     console.log("userRegist data", userRegistInfo);
-    const userRegist = await api.post("/user", userRegistInfo);
+    const userRegist = postUserRegistAxios(userRegistInfo)
     console.log(userRegist);
   };
 
