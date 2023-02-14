@@ -25,13 +25,9 @@ export const getUserListQuery = () => {
   return {isLoading, isError, data: data?.data, error};
 };
 
+//처음 로딩시, 세팅하면 끝!
 export const getCampusListQuery = () => {
   const {isLoading, isError, data, error} = useQuery("getCampusList", getCampusList, options);
-  return {isLoading, isError, data: data?.data, error};
-};
-
-export const getUserInfoQuery = (userid: number) => {
-  const {isLoading, isError, data, error} = useQuery("getUserInfo", () => getUserInfo(userid), options);
   return {isLoading, isError, data: data?.data, error};
 };
 
