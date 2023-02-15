@@ -18,8 +18,10 @@ import {userGoogleAuthState} from "@recoils/Login/state";
 import {useRecoilValue} from "recoil";
 
 export default function App() {
-  const googleAuth = useRecoilValue(userGoogleAuthState);
+  // const googleAuth = useRecoilValue(userGoogleAuthState);
   // const navigate = useNavigate();
+
+
   return (
     <Box>
       <Routes>
@@ -33,7 +35,8 @@ export default function App() {
           <Route path="/login" element={Auth(Login, null)}></Route>
           <Route
             path="/register"
-            element={googleAuth == null || googleAuth?.status != "REGISTER" ? <Navigate to={"/"} /> : Auth(Login, null)}></Route>
+            element={Auth(Register, null)}></Route>
+            {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
