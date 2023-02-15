@@ -82,7 +82,7 @@ function RightPanel({data}: any) {
           <Stack direction="row" spacing={1}>
             <Box>
               <Stack direction="row">
-                <Box>{data.nickname}</Box>
+                <Box>{data?.nickname}</Box>
                 <Box onClick={() => navigate(`/myprofile/${data?.userid}`)}>⚙️</Box>
               </Stack>
             </Box>

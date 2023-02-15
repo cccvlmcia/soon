@@ -1,6 +1,6 @@
 import {addLoginHistory} from "@user/service/LoginHistoryService";
 import {getUserLogin} from "@user/service/UserLoginService";
-import {editUserRefresh, getUserInfoByRefreshToken} from "@user/service/UserService";
+import {editUserRefresh, getUserInfo, getUserInfoByRefreshToken} from "@user/service/UserService";
 import {signJWT, verifyJWT} from "@utils/OAuth2Utils";
 import {decrypted, encrypted} from "@utils/CipherUtils";
 import {FastifyInstance, FastifyRequest, FastifyReply} from "fastify";
@@ -11,6 +11,20 @@ export default async function (fastify: FastifyInstance) {
   // google(fastify);
   fastify.register(google, {prefix: "/google"});
   fastify.register(kakao, {prefix: "/kakao"});
+  type jwt = {
+    userid: number;
+    email: string;
+    iat: number;
+    exp: number;
+  };
+
+  fastify.get("/user", async (req: FastifyRequest<{Body: {jwt: jwt}}>, reply: FastifyReply) => {
+    const {jwt} = req.body;
+    const {userid} = jwt;
+    const user = await getUserInfo(userid);
+    reply.send(user);
+  });
+
   /*
       1. ssoid, userid로 사용자 정보를 조회
       1-1. access있으면 jwt sign {userid, ssoid, email}
