@@ -1,9 +1,8 @@
 import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
-import {getGoogleInfoAxios} from "@recoils/Login/axios";
+import {getGoogleInfoAxios, getToken} from "@recoils/Login/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
-import {userState} from "@recoils/User/state";
-import axios from "axios";
+import {userState} from "@recoils/user/state";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState, useSetRecoilState} from "recoil";
 
@@ -13,11 +12,9 @@ const Login = () => {
 
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
-
     const {
       data: {status, auth, user},
     } = await getGoogleInfoAxios(code);
-    // const status = data?.status;
 
     if (status == "REGISTER") {
       setGoogleAuth(Object.assign(auth, status));
@@ -29,8 +26,8 @@ const Login = () => {
       console.log("로그인 process 진행하시죠", auth);
       const {ssoid} = auth;
       const {userid} = user;
-      const result = await axios.post("/auth/token", {userid, ssoid});
-      // console.log("result : ", result?.data);
+      const result = await getToken({userid, ssoid});
+      console.log("result : ", result?.data);
       setUser(user); // loginUser, #user 통채로 저장하지 않고, access_token으로 가져오도록 수정
       setGoogleAuth(null); //혹시 들어잇을지 모르니 지운다
       navigate("/");
