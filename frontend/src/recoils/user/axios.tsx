@@ -6,3 +6,4 @@ export function postUserRegistAxios(userInfo: postUser) {
 }
 export const getAuthUser = () => server.get("/auth/user");
 export const postLogout = () => server.post("/auth/logout");
+export const removeUser = (userid: number) => api.delete(`/user/${userid}`);
