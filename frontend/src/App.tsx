@@ -31,10 +31,10 @@ export default function App() {
 
           {/*Not Login */}
           <Route path="/login" element={Auth(Login, null)}></Route>
-          {/* <Route
+          <Route
             path="/register"
-            element={googleAuth == null || googleAuth?.status != "REGISTER" ? <Navigate to={"/"} /> : Auth(Register, null)}></Route> */}
-          <Route path="/register" element={Auth(Register, null)}></Route>
+            element={googleAuth == null || googleAuth?.status != "REGISTER" ? <Navigate to={"/"} /> : Auth(Register, null)}></Route>
+          {/* <Route path="/register" element={Auth(Register, null)}></Route> */}
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
