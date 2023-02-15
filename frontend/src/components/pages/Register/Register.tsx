@@ -17,7 +17,7 @@ import {
 import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
 import {api} from "@recoils/consonants";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 
 import {useNavigate} from "react-router-dom";
 import {postUserRegistAxios} from "@recoils/User/axios";
@@ -47,7 +47,7 @@ const Register: React.FC = () => {
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
-  const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
+
   const navigate = useNavigate();
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const selectedNames = event.target.value as string[];
@@ -95,10 +95,10 @@ const Register: React.FC = () => {
     if (isError) return <Error error={error} />;
     setCampusList(data);
   };
+
   useEffect(() => {
     fetchData();
   }, [data]);
-
   return (
     <Box component="form" onSubmit={handleSubmit(writeRegister)}>
       <Box>
