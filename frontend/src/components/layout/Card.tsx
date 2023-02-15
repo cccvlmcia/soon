@@ -12,8 +12,8 @@ import { Stack } from "@mui/system";
 
 const useStyles = makeStyles({
   root: {
-    width: 390,
-    height: 600,
+    width: 290,
+    height: 400,
     display: "flex",
     flexDirection: "column",
   },
@@ -66,9 +66,7 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
     <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
-        <Typography variant="body1">ID: {userid}</Typography>
         <Typography variant="body1">이름: {nickname}</Typography>
-        {campus && <Typography variant="body1">캠퍼스: {campus}</Typography>}
         {major && <Typography variant="body1">전공: {major}</Typography>}
         {sid && <Typography variant="body1">학번: {sid}</Typography>}
       </CardContent>
