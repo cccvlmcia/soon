@@ -15,4 +15,5 @@ export enum LOGIN_STATUS {
 export enum LOGIN_TYPE {
   GOOGLE = "GOOGLE",
   KAKAO = "KAKAO",
+  NAVER = "NAVER",
 }

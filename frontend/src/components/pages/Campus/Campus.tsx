@@ -13,7 +13,7 @@ export default function Campus() {
     return <Box>데이터 없습니다.</Box>;
   }
   const campusid = loginUser?.campus[0]?.campusid || "";
-  const {isLoading, isError, data, error} = getCampusUserQuery("UNIV002");
+  const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102");
   if (isLoading) {
     return <Loading />;
   }
