@@ -21,7 +21,7 @@ import Loading from "components/Loading/Loading";
 import {userState, userSelector} from "@recoils/user/state";
 
 export default function App() {
-  // const navigate = useNavigate();
+
   return (
     //App 최초 로딩 fallback
     <Suspense fallback={<Loading />}>
@@ -56,7 +56,8 @@ function AppRoutes() {
           {/*EveryOne */}
           <Route
             path="/register"
-            element={googleAuth == null || googleAuth?.status != "REGISTER" ? <Navigate to={"/"} /> : Auth(Login, null)}></Route>
+            element={Auth(Register, null)}></Route>
+            {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
