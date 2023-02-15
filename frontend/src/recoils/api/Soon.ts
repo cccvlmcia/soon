@@ -17,15 +17,16 @@ export const options = {
 const getSoonList = (sjid: Number) => api.get(`/soon/sj/${sjid}`);
 const getSoonInfo = (swid: Number) => api.get(`/soon/sj/${swid}`);
 const getSoonId = (sjid: Number, swid: Number) => api.get(`/soon/${sjid}/${swid}`);
-const addSoon = (sjid: Number, swid: Number) =>
-  api.post("/soon", {
-    data: {
-      sjid,
-      swid,
-    },
-    withCredentials: true,
-  });
-const removeSoon = (soonid: Number) => api.delete(`/soon/${soonid}`);
+
+// const addSoon = (sjid: Number, swid: Number) =>
+//   api.post("/soon", {
+//     data: {
+//       sjid,
+//       swid,
+//     },
+//     withCredentials: true,
+//   });
+// const removeSoon = (soonid: Number) => api.delete(`/soon/${soonid}`);
 
 export const getSoonListQuery = (sjid: Number) => {
   const {isLoading, isError, data, error} = useQuery("getSoonList", () => getSoonList(sjid), options);
@@ -42,12 +43,3 @@ export const getSoonIdQuery = (sjid: Number, swid: Number) => {
   return {isLoading, isError, data: data?.data, error};
 };
 
-export const addSoonQuery = (sjid: Number, swid: Number) => {
-  const {isLoading, isError, data, error} = useQuery("addSoon", () => addSoon(sjid, swid), options);
-  return {isLoading, isError, data: data?.data, error};
-};
-
-export const removeSoonQuery = (soonid: Number) => {
-  const {isLoading, isError, data, error} = useQuery("removeSoon", () => removeSoon(soonid), options);
-  return {isLoading, isError, data: data?.data, error};
-};

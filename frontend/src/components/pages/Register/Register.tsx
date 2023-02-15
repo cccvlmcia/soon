@@ -83,7 +83,7 @@ const Register: React.FC = () => {
       type: auth.type,
     };
     console.log("userRegist data", userRegistInfo);
-    const userRegist = postUserRegistAxios(userRegistInfo);
+    // const userRegist = postUserRegistAxios(userRegistInfo);
     navigate("/");
   };
 

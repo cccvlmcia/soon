@@ -25,7 +25,7 @@ export default function Home() {
   );
 }
 
-function MySoon(userid: any) {
+function MySoon({userid}: any) {
   const {isLoading, isError, data, error} = getSoonListQuery(userid)
   if (isLoading) {
     return <Loading />;
@@ -79,7 +79,7 @@ function RightPanel({data}: any) {
     <Box>
       <Box sx={{width: 150}}>
         <Box fontSize={12}>
-          {MyImage()}
+          <MyImage/>
           <Stack direction="row" spacing={1}>
             <Box>
               <Stack direction="row">
@@ -107,7 +107,7 @@ function RightPanel({data}: any) {
         나의 순원
       </Box>
       <Stack direction={"row"} spacing={1}>
-        <Box>{MySoon(data?.userid)}</Box>
+        <Box><MySoon userid = {data?.userid}/></Box>
       </Stack>
     </Box>
   );
