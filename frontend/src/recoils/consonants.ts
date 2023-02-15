@@ -2,11 +2,11 @@ import axios from "axios";
 import {getStorage, setStorage} from "utils/SecureStorage";
 
 export const api = axios.create({
-  baseURL: "http://localhost:4000/api/v1",
+  baseURL: "/api/v1",
   withCredentials: true,
 });
 export const server = axios.create({
-  baseURL: "http://localhost:4000/",
+  baseURL: "/",
   withCredentials: true,
 });
 
