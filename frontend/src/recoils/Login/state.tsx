@@ -9,8 +9,11 @@ export const userGoogleAuthState = atom({
   default: null,
   effects_UNSTABLE: [persistAtom],
 });
-export const loginState = atom({
-  key: "loginState",
-  default: getStorage("#user") || null,
-  effects: [localStorageEffect("#user")],
+export const tokenState = atom({
+  key: "tokenState",
+  default: isEmpty(getStorage("_token")) ? null : JSON.parse(getStorage("_token")),
+  effects: [localStorageEffect("_token")],
 });
+function isEmpty(str: string) {
+  return str == "" || str == undefined || str == null;
+}
