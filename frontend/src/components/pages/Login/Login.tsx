@@ -13,12 +13,11 @@ const Login = () => {
 
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
-
-    const {
-      data: {status, auth, user},
-    } = await getGoogleInfoAxios(code);
+    const data = await getGoogleInfoAxios(code);
+    console.log(data);
     // const status = data?.status;
-
+    const {auth, status, user} = data;
+    // console.log("status , auth , user >> ", status, auth, user);
     if (status == "REGISTER") {
       setGoogleAuth(Object.assign(auth, status));
 
