@@ -2,34 +2,42 @@ import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios} from "@recoils/Login/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
+import {userState} from "@recoils/User/state";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useSetRecoilState} from "recoil";
 
 const Login = () => {
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
+  const setUser = useSetRecoilState(userState);
+
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
-    const result = getGoogleInfoAxios(code);
-    const data = (await result)?.data || "GoogleInfo is missing";
+    const data = await getGoogleInfoAxios(code);
     const status = data?.status;
-    setGoogleAuth(data?.auth);
-    console.log("set Google Auth : ",googleAuth);
     if (status == "REGISTER") {
+      setGoogleAuth(data?.auth);
+
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");
-      // navigate("/register");
+      navigate("/register");
     } else {
-      console.log("로그인 process 진행하시죠");
-      const {ssoid, userid} = data?.auth;
-      const result = await axios.post("http://localhost:4000/auth/token", {
-        userid: userid,
-        ssoid: ssoid,
-      });
-      console.log("result : ", result);
-      // navigate("/");
+      console.log("로그인 process 진행하시죠", data);
+      const {ssoid} = data?.auth;
+      const {userid} = data?.user;
+      const user = data?.user;
+      const result = await axios.post("/auth/token", {userid, ssoid});
+      console.log("result : ", result?.data);
+      setUser(user); // loginUser, #user 통채로 저장하지 않고, access_token으로 가져오도록 수정
+      setGoogleAuth(null); //혹시 들어잇을지 모르니 지운다
+      navigate("/");
     }
   };
+  /*
+    1. header - x_auth Bearer
+    2. storage  access_token, refresh_token
+    3. cookie access_token, refresh_token
+  */
 
   const handleLoginError = (errorResponse: any) => {
     console.error(errorResponse);

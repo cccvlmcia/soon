@@ -2,10 +2,10 @@ import {FastifyReply} from "fastify";
 import {FastifyInstance, FastifyRequest} from "fastify";
 import {apiLogger as logger} from "@config/winston.config";
 import {xssFilter} from "@utils/StringUtils";
-import {ERROR_AUTH_EXPIRED, ERROR_AUTH_MALFORMED, ERROR_AUTH_NOTEXISTS, ERROR_AUTH_TOKEN_NOTEXISTS, ERROR_AUTH_UNVALID} from "@error/AuthCode";
+import {ERROR_AUTH_EXPIRED, ERROR_AUTH_MALFORMED, ERROR_AUTH_NOTEXISTS, ERROR_AUTH_UNVALID} from "@error/AuthCode";
 import {decrypted} from "@utils/CipherUtils";
-import {getUserAuthList} from "@user/service/UserAuthService";
 import {verifyJWT} from "@utils/OAuth2Utils";
+import {EXCEPT_URL} from "@config/haqqaton.config";
 
 export default function (fastify: FastifyInstance) {
   //1. preValidation : xxsFilter
@@ -39,12 +39,14 @@ export default function (fastify: FastifyInstance) {
           return true;
         } catch (err: any) {
           console.error(err);
-          if (err.message == "jwt expired") {
-            //얘만 /auth/refreshToken 호출
-            reply.code(ERROR_AUTH_EXPIRED).send("ERROR_AUTH_EXPIRED");
-          } else if (err.message == "jwt malformed" || err.message == "invalid signature") {
-            // 로그인으로 가야함.
-            reply.code(ERROR_AUTH_MALFORMED).send("ERROR_AUTH_MALFORMED");
+          if (!EXCEPT_URL.includes(req.url)) {
+            if (err.message == "jwt expired") {
+              //얘만 /auth/refreshToken 호출
+              reply.code(ERROR_AUTH_EXPIRED).send("ERROR_AUTH_EXPIRED");
+            } else if (err.message == "jwt malformed" || err.message == "invalid signature") {
+              // 로그인으로 가야함.
+              reply.code(ERROR_AUTH_MALFORMED).send("ERROR_AUTH_MALFORMED");
+            }
           }
         }
       } else {
