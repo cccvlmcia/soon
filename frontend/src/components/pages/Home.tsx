@@ -8,7 +8,6 @@ import {userState} from "@recoils/User/state";
 
 export default function Home() {
   const loginUser = useRecoilValue(userState);
-  console.log("loginUser >", loginUser);
   //TODO: 회원가입 안되어 있으면 로그인 페이지로 이동 getStorage()
   return (
     <Box>
