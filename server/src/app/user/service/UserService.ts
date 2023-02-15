@@ -21,7 +21,7 @@ export async function getUserInfoByRefreshToken(refresh_token: string) {
 }
 
 export async function getUserInfo(userid: number) {
-  return await User.findOne({where: {userid}, relations: {campus: true, login: true, config: true, auth: true}});
+  return await User.findOne({where: {userid}, relations: {campus: {campus: true}, login: true, config: true, auth: true}});
 }
 
 export async function addUser({
@@ -78,9 +78,9 @@ export async function editUser(
     campusid: string;
     major: string;
     sid: number;
-    ssoid: string;
-    email: string;
-    type: string;
+    ssoid?: string;
+    email?: string;
+    type?: string;
   },
 ) {
   return await txProcess(async manager => {
@@ -88,14 +88,15 @@ export async function editUser(
     const loginRepository = manager.getRepository(UserLogin);
     const confRepository = manager.getRepository(UserConfig);
     const campusRepository = manager.getRepository(UserCampus);
-    const result = await repository.save({nickname, gender});
-    const userid = result.userid;
-    await loginRepository.update({userid}, {ssoid, email, type});
+    if (ssoid || email || type) {
+      await loginRepository.update({userid}, {ssoid, email, type});
+    }
     await confRepository.update({userid}, {cccyn});
 
     //FIXME: 단일 캠퍼스만 수정되는 거니까, 나중에 다중 캠퍼스로 가면, 변경되야겠네요
     //TODO: 사용자 변경시, UserHistory에 저장
-    await campusRepository.update({userid}, {campusid, major, sid});
+    await campusRepository.update({userid, campusid}, {major, sid});
+    const result = await repository.update({userid}, {nickname, gender});
     return result;
   });
 }

@@ -13,9 +13,13 @@ export const server = axios.create({
 export async function axiosProcess(caller: Function, isLogin = false) {
   try {
     return await caller();
-  } catch (err) {
-    if (isLogin) {
+  } catch (err: any) {
+    console.log("error.... ", err?.response?.status);
+    if (err?.response?.status == 500) {
+      console.error(err);
+    } else if (isLogin) {
       //refresh token 남아 있으면 갱신?!
+
       const {data} = await server.post("/auth/refreshToken");
       if (data == "USER_AUTHENTICATED") {
         return await caller();
