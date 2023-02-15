@@ -24,24 +24,22 @@
         console.error(err);
       }
     }
-  }
-  async function test() {
-    console.log("hi");
-    try {
-      const { data } = await axios.get("/test");
-      console.log("data >>", data);
-    } catch (err) {
-      console.error(err);
+    async function test() {
+      console.log("hi");
+      try {
+        const {data} = await axios.get("/test");
+        console.log("data >>", data);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
-  async function refresh() {
-    try {
-      const { data } = await axios.post("/auth/refreshToken");
-      console.log("data >>", data);
-    } catch (err) {
-      console.error(err);
+    async function refresh() {
+      try {
+        const {data} = await axios.post("/auth/refreshToken");
+        console.log("data >>", data);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
-</script>
-
+  </script>
 </html>
