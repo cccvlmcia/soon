@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RecoilRoot } from "recoil";
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { createTheme, ThemeProvider } from "@mui/material";
+import {RecoilRoot} from "recoil";
+import {BrowserRouter} from "react-router-dom";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {createTheme, ThemeProvider} from "@mui/material";
 import App from "./App";
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const theme = createTheme({
@@ -25,7 +26,7 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <RecoilRoot>
     <Init />
-  </RecoilRoot>
+  </RecoilRoot>,
 );
 
 function Init() {

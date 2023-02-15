@@ -38,14 +38,14 @@ start();
       - api
       - view {ejs}
  6. log
- 7. 
+ 7.
   app/user/entity/User.ts
   app/user/entity/UserConfig.ts
-  
+
   app/user/service/UserService.ts
     get*Info
     get*List
-    add(txProcess)  
+    add(txProcess)
       - user
       - userConfig
       edit(txProcess)

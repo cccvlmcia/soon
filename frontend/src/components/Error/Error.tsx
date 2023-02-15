@@ -4,7 +4,7 @@ export default function Error(error: any) {
   return (
     <Box>
       {error && (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box sx={{display: "flex", flexDirection: "column"}}>
           <Box component="span">Code : {error.code}</Box>
           <Box component="span">
             Error: {error.response.status} ({error.response.statusText})

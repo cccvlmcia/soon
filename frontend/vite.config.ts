@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
@@ -12,6 +12,9 @@ export default defineConfig(() => {
           target: "http://127.0.0.1:4000/",
         },
         "/public": {
+          target: "http://127.0.0.1:4000/",
+        },
+        "/auth": {
           target: "http://127.0.0.1:4000/",
         },
       },

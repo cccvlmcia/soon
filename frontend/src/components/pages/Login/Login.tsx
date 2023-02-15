@@ -1,56 +1,56 @@
-import { Token } from "@mui/icons-material";
-import { Box, Button } from "@mui/material";
-import { useGoogleLogin } from "@react-oauth/google";
-import { api } from "@recoils/consonants";
-import { userState } from "@recoils/user/state";
+import {Box, Button} from "@mui/material";
+import {useGoogleLogin} from "@react-oauth/google";
+import {getGoogleInfoAxios} from "@recoils/Login/axios";
+import {userGoogleAuthState} from "@recoils/Login/state";
+import {userState} from "@recoils/User/state";
 import axios from "axios";
-import { stat } from "fs";
-import { useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { getStorage, setStorage } from "utils/SecureStorage";
+import {useNavigate} from "react-router-dom";
+import {useRecoilState, useSetRecoilState} from "recoil";
 
 const Login = () => {
-  const [storedUser, setStoredUser] = useRecoilState(userState);
+  const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
+  const setUser = useSetRecoilState(userState);
+
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
-    const { data } = await axios.post(
-      "http://localhost:4000/auth/google/callback",
-      { code }
-    );
 
-    setStoredUser(data);
-    const { status } = data;
-    const { ssoid, userid } = data;
+    const {
+      data: {status, auth, user},
+    } = await getGoogleInfoAxios(code);
+    // const status = data?.status;
+
     if (status == "REGISTER") {
+      setGoogleAuth(Object.assign(auth, status));
+
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");
       navigate("/register");
     } else {
-      //TODO: 바로 로그인
-      console.log("로그인 process 진행하시죠");
-      const result = await axios.post(
-        "http://localhost:4000/auth/token",
-        {
-          userid: userid,
-          ssoid: ssoid,
-        },
-        { withCredentials: true }
-      );
-      console.log("result : ", result);
-      // navigate("/");
+      console.log("로그인 process 진행하시죠", auth);
+      const {ssoid} = auth;
+      const {userid} = user;
+      const result = await axios.post("/auth/token", {userid, ssoid});
+      // console.log("result : ", result?.data);
+      setUser(user); // loginUser, #user 통채로 저장하지 않고, access_token으로 가져오도록 수정
+      setGoogleAuth(null); //혹시 들어잇을지 모르니 지운다
+      navigate("/");
     }
   };
+  /*
+    1. header - x_auth Bearer
+    2. storage  access_token, refresh_token
+    3. cookie access_token, refresh_token
+  */
 
   const handleLoginError = (errorResponse: any) => {
     console.error(errorResponse);
   };
   const googleSocialLogin = useGoogleLogin({
     scope: "email profile",
-    onSuccess: async ({ code }) => {
+    onSuccess: async ({code}) => {
       handleLoginSuccess(code);
     },
-    onError: (errorResponse) => {
+    onError: errorResponse => {
       handleLoginError(errorResponse);
     },
     flow: "auth-code",
@@ -58,9 +58,7 @@ const Login = () => {
 
   return (
     <Box>
-      <Box>
-        <Button onClick={googleSocialLogin}>Google Button</Button>
-      </Box>
+      <Button onClick={googleSocialLogin}>Google Button</Button>
     </Box>
   );
 };

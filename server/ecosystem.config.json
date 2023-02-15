@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "soon",
+      "script": "./node_modules/.bin/ts-node -r tsconfig-paths/register -r src/index.ts",
+      "watch": false,
+      "ignore_watch": ["node_modules", "logs", "config", "dist", "public"],
+      "env_development": {
+        "PORT": 4000,
+        "NODE_ENV": "development"
+      },
+      "env_production": {
+        "PORT": 4000,
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}

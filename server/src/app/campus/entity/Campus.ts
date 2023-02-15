@@ -1,5 +1,7 @@
 import {COLUMN_TYPE_ENUM, CommonYN} from "@common/CommonConstants";
-import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn, PrimaryGeneratedColumn} from "typeorm";
+import User from "@user/entity/User";
+import UserCampus from "@user/entity/UserCampus";
+import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn, PrimaryGeneratedColumn, OneToMany} from "typeorm";
 import Area from "./Area";
 
 @Entity()
@@ -22,4 +24,5 @@ export default class Campus extends BaseEntity {
 
   @CreateDateColumn()
   createdate: Date;
+
 }

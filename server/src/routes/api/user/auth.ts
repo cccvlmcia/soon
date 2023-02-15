@@ -1,4 +1,4 @@
-import {addBatchUserAuth, getUserAuthInfo, getUserAuthList, removeUserAuth} from "@user/service/UserAuthService";
+import {getUserAuthInfo, getUserAuthList, removeUserAuth, toggleUserAuth} from "@user/service/UserAuthService";
 import {FastifyReply} from "fastify";
 import {FastifyInstance, FastifyRequest} from "fastify";
 
@@ -14,10 +14,10 @@ export default async function (fastify: FastifyInstance) {
     reply.send(auth);
   });
 
-  fastify.post("/", async (req: FastifyRequest<{Params: {userid: number}; Body: {authids: string[]}}>, reply: FastifyReply) => {
+  fastify.post("/", async (req: FastifyRequest<{Params: {userid: number}; Body: {authid: string}}>, reply: FastifyReply) => {
     const {userid} = req.params;
-    const {authids} = req.body;
-    const auth = await addBatchUserAuth(userid, authids);
+    const {authid} = req.body;
+    const auth = await toggleUserAuth(userid, authid);
     reply.send(auth);
   });
 
