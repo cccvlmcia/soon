@@ -25,3 +25,8 @@ export const localStorageEffect =
       }
     });
   };
+// "" null undegined
+
+function isEmpty(str: string) {
+  return str == "" || str == undefined || str == null;
+}

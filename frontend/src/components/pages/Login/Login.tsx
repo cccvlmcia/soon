@@ -2,16 +2,13 @@ import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios} from "@recoils/Login/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
-import {tokenState} from "@recoils/Login/state";
 import {userState} from "@recoils/User/state";
-
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState, useSetRecoilState} from "recoil";
 
 const Login = () => {
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
-  const setToken = useSetRecoilState(tokenState);
   const setUser = useSetRecoilState(userState);
 
   const navigate = useNavigate();
@@ -31,12 +28,16 @@ const Login = () => {
       const user = data?.user;
       const result = await axios.post("/auth/token", {userid, ssoid});
       console.log("result : ", result?.data);
-      setToken(result?.data);
-      setUser(user);
-      setGoogleAuth(null);
+      setUser(user); // loginUser, #user 통채로 저장하지 않고, access_token으로 가져오도록 수정
+      setGoogleAuth(null); //혹시 들어잇을지 모르니 지운다
       navigate("/");
     }
   };
+  /*
+    1. header - x_auth Bearer
+    2. storage  access_token, refresh_token
+    3. cookie access_token, refresh_token
+  */
 
   const handleLoginError = (errorResponse: any) => {
     console.error(errorResponse);
