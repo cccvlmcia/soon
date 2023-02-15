@@ -1,5 +1,8 @@
-import {server} from "@recoils/consonants";
+import {axiosProcess, server} from "@recoils/consonants";
 
-export function getGoogleInfoAxios(code: string) {
-  return server.post("/auth/google/callback", {code});
+export async function getGoogleInfoAxios(code: string) {
+  return axiosProcess(async () => {
+    const {data} = await server.post("/auth/google/callback", {code});
+    return data;
+  });
 }
