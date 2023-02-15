@@ -19,7 +19,7 @@ const Login = () => {
     const {auth, status, user} = data;
     // console.log("status , auth , user >> ", status, auth, user);
     if (status == "REGISTER") {
-      setGoogleAuth(Object.assign(auth, status));
+      setGoogleAuth(data);
 
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");
