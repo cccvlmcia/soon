@@ -8,7 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/User/state";
+import {userState} from "@recoils/user/state";
 
 export default function Header() {
   const [open, setOpen] = useState(false);

@@ -4,7 +4,7 @@ import Error from "components/Error/Error";
 import Loading from "react-loading";
 import UserCard from "@layout/Card";
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/User/state";
+import {userState} from "@recoils/user/state";
 
 export default function Campus() {
   const loginUser: any = useRecoilValue(userState);
