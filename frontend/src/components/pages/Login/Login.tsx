@@ -13,7 +13,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
-    const {data} = await getGoogleInfoAxios(code);
+    const data = await getGoogleInfoAxios(code);
     const status = data?.status;
     if (status == "REGISTER") {
       setGoogleAuth(data?.auth);
