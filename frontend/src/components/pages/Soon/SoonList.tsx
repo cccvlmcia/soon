@@ -1,27 +1,29 @@
 import {Box, Stack} from "@mui/material";
 import {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
-import UserCard from "@layout/Card";
-import { addSoonQuery, getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
+import {UserCard} from "@layout/Card";
+import { getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
+import axios from "axios";
+import { api } from "@recoils/consonants";
 
 export default function SoonList() {
   const userid = 1 //TODO: user#
   return (
     <Box>
       <Stack direction={"row"}>
-        <Box>{MySoon(userid)}</Box>
+        <Box><MySoon userid = {userid}/></Box>
       </Stack>
       <Stack direction={"row"}>
-        <Box>{SoonAddButton(userid)}</Box>
-        <Box>{SoonDeleteButton(userid)}</Box>
+        <Box><SoonAddButton userid = {userid}/></Box>
+        <Box><SoonDeleteButton userid = {userid}/></Box>
       </Stack>
     </Box>
   );
 }
 
-function MySoon(userid: number) {
+function MySoon({userid}: any) {
   const {isLoading, isError, data, error} = getSoonListQuery(userid)
   if (isLoading) {
     return <Loading />;
@@ -29,7 +31,6 @@ function MySoon(userid: number) {
   if (isError) {
     return <Error error={error} />;
   }
-  console.log("data >>", data)
   return (
     <div>
       {data?.map((
@@ -44,7 +45,7 @@ function MySoon(userid: number) {
   );
 }
 
-function SoonAddButton(userid: number) {
+function SoonAddButton({userid}: any) {
   const buttonStyle = {
     size: "small",
     width: "30px",
@@ -58,16 +59,12 @@ function SoonAddButton(userid: number) {
     setText(event.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const swid = Number(text);
-      console.log("순원 추가 >>", swid);
-      console.log("id 타입 >>", typeof(swid));
-      addSoonQuery(userid,swid);
-    } catch (error) {
-      console.error(error);
-    }
+    const swid = Number(text);
+    const sjid = userid;
+    api.post("/soon", {sjid, swid})
+
   };
 
   return (
@@ -93,7 +90,7 @@ function SoonAddButton(userid: number) {
   );
 }
 
-function SoonDeleteButton(userid: number) {
+function SoonDeleteButton({userid}: any) {
   const buttonStyle = {
     size: "small",
     width: "30px",
@@ -107,23 +104,11 @@ function SoonDeleteButton(userid: number) {
     setText(event.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const swid = Number(text);
+    const sjid = userid;
+    api.delete(`/soon/${sjid}/${swid}`)
     event.preventDefault();
-    try {
-      const response = text;
-      console.log("순원 삭제 >>", text);
-      const swid = Number(text);
-      const {isLoading, isError, data, error} = getSoonIdQuery(userid, swid);
-      if (isLoading) {
-        return <Loading />;
-      }
-      if (isError) {
-        return <Error error={error} />;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    // console.log("data >>", data);
   };
 
   return (

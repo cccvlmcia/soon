@@ -2,7 +2,7 @@ import {Box, Stack} from "@mui/material";
 import {getCampusUserQuery} from "@recoils/api/User";
 import Error from "components/Error/Error";
 import Loading from "react-loading";
-import UserCard from "@layout/Card";
+import {UserCard} from "@layout/Card";
 import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
 
