@@ -4,7 +4,7 @@ import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {getSoonListQuery} from "@recoils/api/Soon";
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/User/state";
+import {userState} from "@recoils/user/state";
 
 export default function Home() {
   const loginUser = useRecoilValue(userState);

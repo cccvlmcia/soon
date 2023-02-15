@@ -9,7 +9,6 @@ export const localStorageEffect =
     const savedValue = getStorage(key);
     console.log("saveValue : ", savedValue);
     if (isEmpty(savedValue)) {
-
       setSelf(null);
     } else {
       setSelf(JSON.parse(savedValue));

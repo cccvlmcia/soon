@@ -20,7 +20,7 @@ import {api} from "@recoils/consonants";
 import {useRecoilState, useRecoilValue} from "recoil";
 
 import {useNavigate} from "react-router-dom";
-import {postUserRegistAxios} from "@recoils/User/axios";
+import {postUserRegistAxios} from "@recoils/user/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
 

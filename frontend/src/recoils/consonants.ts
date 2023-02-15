@@ -14,7 +14,6 @@ export async function axiosProcess(caller: Function, isLogin = false) {
   try {
     return await caller();
   } catch (err) {
-    console.error("err ... ", err);
     if (isLogin) {
       //refresh token 남아 있으면 갱신?!
       const {data} = await server.post("/auth/refreshToken");
@@ -26,3 +25,15 @@ export async function axiosProcess(caller: Function, isLogin = false) {
     return null;
   }
 }
+export const options = {
+  refetchOnWindowFocus: false,
+  retry: 0,
+  onSuccess: ({data}: any) => {
+    //api 호출 성공
+    console.log("onSuccess >>", data);
+  },
+  onError: (error: any) => {
+    //api 호출 실패
+    console.log("onError >> ", error.message);
+  },
+};
