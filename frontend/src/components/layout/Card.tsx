@@ -23,21 +23,23 @@ const useStyles = makeStyles({
 
 const soonStyles = makeStyles({
   root: {
-    width: 500,
-    height: 100,
+    // width: 500,
+    // height: 100,
     display: "flex",
     flexDirection: "row",
   },
 });
 
-export function SoonCardHeader({nickname, area, campus}: any) {
+// 아니면 가지고 있는 캠퍼스 정보 목록 조회? SoonCardHeader? 이건뭐야?
+export function SoonCardHeader({nickname, campus}: any) {
   const classes = soonStyles();
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography variant="h4">
-          {nickname}/{area}/{campus}
-        </Typography>
+        <Typography variant="h6">이름: {nickname}</Typography>
+        <Typography variant="h6">캠퍼스: {campus?.campus?.name}</Typography>
+        <Typography variant="h6">전공: {campus?.major}</Typography>
+        <Typography variant="h6">학번: {campus?.sid}</Typography>
       </CardContent>
     </Card>
   );

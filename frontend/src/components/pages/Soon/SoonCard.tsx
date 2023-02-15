@@ -15,11 +15,11 @@ export default function SoonCard() {
   if (isError) {
     return <Error error={error} />;
   }
-  console.log("data >>", data);
 
+  const campus = data?.campus && data?.campus?.length > 0 && data?.campus[0];
   return (
     <Box>
-      <SoonCardHeader nickname={data.nickname} area={"a"} campus={"c"} />
+      <SoonCardHeader nickname={data.nickname} campus={campus} />
     </Box>
   );
 
