@@ -7,8 +7,11 @@ import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/User/state";
 
 export default function Campus() {
-  const loginUser:any = useRecoilValue(userState);
-  console.log("loginUser >", loginUser);
+  const loginUser: any = useRecoilValue(userState);
+  if (loginUser?.campus?.length == 0) {
+    // <NoData/> 필요
+    return <Box>데이터 없습니다.</Box>;
+  }
   const campusid = loginUser?.campus[0]?.campusid || "";
   const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
   if (isLoading) {
