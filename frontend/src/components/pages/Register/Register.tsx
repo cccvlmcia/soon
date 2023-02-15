@@ -16,13 +16,13 @@ import {
 } from "@mui/material";
 import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
-import {api} from "@recoils/consonants";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 
 import {useNavigate} from "react-router-dom";
-import {postUserRegistAxios} from "@recoils/User/axios";
+import {postLogout, postUserRegistAxios} from "@recoils/user/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
+import {userState} from "@recoils/user/state";
 
 type FormData = {
   name: string;
@@ -42,6 +42,7 @@ type campusType = {
 const Register: React.FC = () => {
   const {isLoading, isError, data, error} = getCampusListQuery();
   const {register, handleSubmit} = useForm<FormData>();
+  const setLoginUser = useSetRecoilState(userState);
   const [campusList, setCampusList] = useState<campusType[]>([]);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
@@ -89,6 +90,10 @@ const Register: React.FC = () => {
     // userInfo: {name: string; campus: string; sid: string; major: string; cccYN: string; gender: string}
     const userRegist = await postUserRegistAxios(userRegistInfo);
     console.log("userRegist >", userRegist);
+    // 기존 사용자 정보 삭제 및 로그아웃 처리
+    await postLogout();
+    setLoginUser(null);
+
     navigate("/");
   };
 

@@ -20,6 +20,11 @@ const getUserInfo = (userid: number) => api.get(`/user/${userid}`);
 const getCampusList = () => api.get("/campus");
 const getCampusUser = (campusid: string) => api.get(`/campus/${campusid}`);
 
+export const getUserInfoQuery = (userid: number) => {
+  const {isLoading, isError, data, error} = useQuery("getUserInfo", () => getUserInfo(userid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
+
 export const getUserListQuery = () => {
   const {isLoading, isError, data, error} = useQuery("getUserList", getUserList, options);
   return {isLoading, isError, data: data?.data, error};

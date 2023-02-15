@@ -1,3 +1,4 @@
+import {Suspense, useEffect} from "react";
 import {Box} from "@mui/material";
 import {Routes, Route, Navigate, useNavigate} from "react-router-dom";
 
@@ -15,24 +16,44 @@ import Admin from "@pages/Admin/Admin";
 import MyProfile from "@pages/MyProfile/MyProfile";
 import Withdrawal from "@pages/Withdrawal/Withdrawal";
 import {userGoogleAuthState} from "@recoils/Login/state";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
+import Loading from "components/Loading/Loading";
+import {userState, userSelector} from "@recoils/user/state";
 
 export default function App() {
-  // const googleAuth = useRecoilValue(userGoogleAuthState);
-  // const navigate = useNavigate();
 
+  return (
+    //App 최초 로딩 fallback
+    <Suspense fallback={<Loading />}>
+      <AppRoutes />
+    </Suspense>
+  );
+}
+
+function AppRoutes() {
+  const googleAuth = useRecoilValue(userGoogleAuthState);
+  const [loginUser, setLoginUser] = useRecoilState(userState);
+  const authUser = useRecoilValue(userSelector);
+  useEffect(() => {
+    if (loginUser == null || loginUser == "") {
+      setLoginUser(authUser);
+    }
+  }, [authUser]);
 
   return (
     <Box>
       <Routes>
         <Route element={<Layout />}>
           {/*Login */}
-          <Route path="/" element={Auth(Home, true)}></Route>
-          <Route path="/campus" element={Auth(Campus, true)}></Route>
+          <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
+          <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
           {/*Login */}
 
           {/*Not Login */}
-          <Route path="/login" element={Auth(Login, null)}></Route>
+          <Route path="/login" element={Auth(Login, false)}></Route>
+          {/*Not Login */}
+
+          {/*EveryOne */}
           <Route
             path="/register"
             element={Auth(Register, null)}></Route>
@@ -46,7 +67,7 @@ export default function App() {
           <Route path="/admin" element={Auth(Admin, null)}></Route>
           <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route>
           <Route path="/withdrawal" element={Auth(Withdrawal, null)}></Route>
-          {/*Not Login */}
+          {/*EveryOne */}
         </Route>
       </Routes>
     </Box>

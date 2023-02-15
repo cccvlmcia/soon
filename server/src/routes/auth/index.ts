@@ -25,6 +25,10 @@ export default async function (fastify: FastifyInstance) {
     reply.send(user);
   });
 
+  fastify.post("/logout", async (req: FastifyRequest, reply: FastifyReply) => {
+    reply.cookie("access_token", "", {path: "/", signed: true, expires: new Date()});
+    reply.cookie("refresh_token", "", {path: "/", signed: true, expires: new Date()});
+  });
   /*
       1. ssoid, userid로 사용자 정보를 조회
       1-1. access있으면 jwt sign {userid, ssoid, email}
