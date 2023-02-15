@@ -9,6 +9,7 @@ export const server = axios.create({
   baseURL: "/",
   withCredentials: true,
 });
+
 export async function axiosProcess(caller: Function, isLogin = false) {
   try {
     return await caller();
