@@ -16,17 +16,17 @@ import {
 } from "@mui/material";
 import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
-import {api} from "@recoils/consonants";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 
 import {useNavigate} from "react-router-dom";
-import {postUserRegistAxios} from "@recoils/User/axios";
+import {postLogout, postUserRegistAxios} from "@recoils/user/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
+import {userState} from "@recoils/user/state";
 
 type FormData = {
   name: string;
-  campus: string;
+  campusid: string;
   sid: string;
   major: string;
   cccYN: string;
@@ -42,12 +42,13 @@ type campusType = {
 const Register: React.FC = () => {
   const {isLoading, isError, data, error} = getCampusListQuery();
   const {register, handleSubmit} = useForm<FormData>();
+  const setLoginUser = useSetRecoilState(userState);
   const [campusList, setCampusList] = useState<campusType[]>([]);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
-
+  const googleAuth = useRecoilValue(userGoogleAuthState);
   const navigate = useNavigate();
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const selectedNames = event.target.value as string[];
@@ -71,12 +72,14 @@ const Register: React.FC = () => {
   };
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
-    const auth = googleAuth;
+    // console.log(googleAuth);
+    const {auth} = googleAuth;
+    // const auth = {ssoid: "test", email: "test", type: "test"};
     const userRegistInfo: postUser = {
       nickname: params.name,
       gender: genderSelected || "",
       cccyn: cccYNSelected || "",
-      campus: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
+      campusid: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
       major: params.major,
       sid: params.sid,
       ssoid: auth.ssoid,
@@ -87,10 +90,17 @@ const Register: React.FC = () => {
     // userInfo: {name: string; campus: string; sid: string; major: string; cccYN: string; gender: string}
     const userRegist = await postUserRegistAxios(userRegistInfo);
     console.log("userRegist >", userRegist);
+    // 기존 사용자 정보 삭제 및 로그아웃 처리
+    await postLogout();
+    setLoginUser(null);
+
     navigate("/");
   };
 
   const fetchData = () => {
+    if (googleAuth == null || googleAuth?.status != "REGISTER") {
+      navigate("/");
+    }
     if (isLoading) return <Loading />;
     if (isError) return <Error error={error} />;
     setCampusList(data);
@@ -111,7 +121,7 @@ const Register: React.FC = () => {
         <Box>캠퍼스</Box>
         <Box>
           <Select
-            {...register("campus")}
+            {...register("campusid")}
             value={campusSelected as never}
             fullWidth
             multiple

@@ -20,9 +20,9 @@ export async function addSoon(soon: {sjid: number; swid: number}) {
   });
 }
 
-export async function removeSoon(soonid: number) {
+export async function removeSoon(soon: {sjid: number; swid: number}) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(Soon);
-    return await repository.delete(soonid);
+    return await repository.delete(soon);
   });
 }

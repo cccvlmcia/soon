@@ -6,6 +6,11 @@ import UserCampus from "@user/entity/UserCampus";
 import {Gender} from "@user/UserConstants";
 import UserLogin from "@user/entity/UserLogin";
 import {setAuthAdmin} from "@utils/AuthUtils";
+import UserAuth from "@user/entity/UserAuth";
+import UserHistory from "@user/entity/UserHistory";
+import Soon from "@soon/entity/Soon";
+import SoonHistory from "@soon/entity/SoonHistory";
+import pray from "@routes/api/soon/pray";
 
 export async function getUserList() {
   return await User.find({relations: {campus: true, login: true, config: true}});
@@ -105,7 +110,34 @@ export async function editUserRefresh(userid: number, params: {refresh_token: st
 export async function removeUser(userid: number) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(User);
-    return repository.update({userid}, {status: "BAN"});
+    const configRepository = manager.getRepository(UserConfig);
+    const loginRepository = manager.getRepository(UserLogin);
+    const historyRepository = manager.getRepository(UserHistory);
+    const authRepository = manager.getRepository(UserAuth);
+    const campusRepository = manager.getRepository(UserCampus);
+    const soonRepository = manager.getRepository(Soon);
+    const prayRepository = manager.getRepository(pray);
+    const soonHistoryRepository = manager.getRepository(SoonHistory);
+
+    /*
+      article이랑은 삭제 안만듦..
+    */
+    await configRepository.delete({userid});
+    await loginRepository.delete({userid});
+    await historyRepository.delete({userid});
+    await authRepository.delete({userid});
+    await campusRepository.delete({userid});
+
+    await soonRepository.delete({sjid: userid});
+    await soonRepository.delete({swid: userid});
+    const histories = await soonHistoryRepository.find({where: [{sjid: userid}, {swid: userid}]});
+    if (histories?.length > 0) {
+      const ids = histories?.map(({historyid}) => historyid);
+      await prayRepository.delete({historyid: ids});
+    }
+    await soonHistoryRepository.delete({sjid: userid});
+    await soonHistoryRepository.delete({swid: userid});
+    return repository.delete({userid});
     // return repository.delete({userid});
   });
 }

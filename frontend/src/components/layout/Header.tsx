@@ -7,12 +7,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/User/state";
+import {useRecoilState} from "recoil";
+import {userState} from "@recoils/user/state";
+import {postLogout} from "@recoils/user/axios";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const loginUser = useRecoilValue(userState);
+  const [loginUser, setLoginUser] = useRecoilState(userState);
 
   const handleMenuOpen = () => {
     setOpen(!open);
@@ -20,12 +21,12 @@ export default function Header() {
   return (
     <Box sx={{background: "black", height: "50px"}}>
       <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px"}} />
-      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} />
+      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
     </Box>
   );
 }
 
-function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleMenuOpen: any}) {
+function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open: any; handleMenuOpen: any; setLoginUser: any}) {
   const navigate = useNavigate();
   const move = (route: string) => {
     handleMenuOpen();
@@ -35,7 +36,12 @@ function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleM
   const handleLogin = () => {
     navigate("/login");
   };
-  const handleLogout = () => {};
+  const handleLogout = async () => {
+    await postLogout();
+    setLoginUser(null);
+    handleMenuOpen();
+    navigate("/login");
+  };
   return (
     <Drawer open={open} onClose={handleMenuOpen}>
       <Box>

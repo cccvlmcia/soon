@@ -4,7 +4,7 @@ import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {getSoonListQuery} from "@recoils/api/Soon";
 import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/User/state";
+import {userState} from "@recoils/user/state";
 
 export default function Home() {
   const loginUser = useRecoilValue(userState);
@@ -23,8 +23,8 @@ export default function Home() {
   );
 }
 
-function MySoon(userid: any) {
-  const {isLoading, isError, data, error} = getSoonListQuery(userid);
+function MySoon({userid}: any) {
+  const {isLoading, isError, data, error} = getSoonListQuery(userid)
   if (isLoading) {
     return <Loading />;
   }
@@ -105,7 +105,7 @@ function RightPanel({data}: any) {
         나의 순원
       </Box>
       <Stack direction={"row"} spacing={1}>
-        <Box>{MySoon(data?.userid)}</Box>
+        <Box><MySoon userid = {data?.userid}/></Box>
       </Stack>
     </Box>
   );
