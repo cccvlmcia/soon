@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-import {api, server} from "@recoils/consonants";
+import {api, server} from "../consonants";
 
 export const sampleAxios = () => {
   return axios.get("https://dummyjson.com/products/");
