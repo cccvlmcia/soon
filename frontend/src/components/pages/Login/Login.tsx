@@ -2,20 +2,25 @@ import {Box, Button} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios} from "@recoils/Login/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
+import {tokenState} from "@recoils/Login/state";
 import {userState} from "@recoils/User/state";
+
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState, useSetRecoilState} from "recoil";
 
 const Login = () => {
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
-  const setLoginUser = useSetRecoilState(userState);
+  const setToken = useSetRecoilState(tokenState);
+  const setUser = useSetRecoilState(userState);
+
   const navigate = useNavigate();
   const handleLoginSuccess = async (code: string) => {
     const {data} = await getGoogleInfoAxios(code);
     const status = data?.status;
     if (status == "REGISTER") {
       setGoogleAuth(data?.auth);
+
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");
       navigate("/register");
@@ -24,10 +29,11 @@ const Login = () => {
       const {ssoid} = data?.auth;
       const {userid} = data?.user;
       const user = data?.user;
-      const result = await axios.post("http://localhost:4000/auth/token", {userid: userid, ssoid: ssoid});
-      setLoginUser(user);
+      const result = await axios.post("/auth/token", {userid, ssoid});
+      console.log("result : ", result?.data);
+      setToken(result?.data);
+      setUser(user);
       setGoogleAuth(null);
-      console.log("result : ", result);
       navigate("/");
     }
   };
