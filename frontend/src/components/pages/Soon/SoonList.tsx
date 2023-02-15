@@ -1,7 +1,7 @@
 import {Box, Stack} from "@mui/material";
 import {useState} from "react";
 import {Button, makeStyles, TextField} from "@material-ui/core";
-import UserCard from "@layout/Card";
+import {UserCard} from "@layout/Card";
 import { getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
