@@ -1,6 +1,5 @@
 import {atom} from "recoil";
 import {getStorage} from "utils/SecureStorage";
-import {recoilPersist} from "recoil-persist";
 import {localStorageEffect} from "@recoils/consonants";
 
 function isEmpty(str: string) {
