@@ -31,9 +31,8 @@ export default async function (fastify: FastifyInstance) {
     reply.send(soon);
   });
 
-  fastify.delete("/:soonid", async (req: FastifyRequest<{Params: {soonid: number}}>, reply: FastifyReply) => {
-    const {soonid} = req.params;
-    const soon = await removeSoon(soonid);
+  fastify.delete("/:sjid/:swid", async (req: FastifyRequest<{Params: {sjid: number, swid: number}}>, reply: FastifyReply) => {
+    const soon = await removeSoon(req.params);
     reply.send(soon);
   });
 }

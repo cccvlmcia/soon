@@ -26,7 +26,7 @@ const getSoonId = (sjid: Number, swid: Number) => api.get(`/soon/${sjid}/${swid}
 //     },
 //     withCredentials: true,
 //   });
-// const removeSoon = (soonid: Number) => api.delete(`/soon/${soonid}`);
+// const removeSoon = (sjid: Number, swid: Number) => api.delete(`/soon/${sjid}/${swid}`);
 
 export const getSoonListQuery = (sjid: Number) => {
   const {isLoading, isError, data, error} = useQuery("getSoonList", () => getSoonList(sjid), options);

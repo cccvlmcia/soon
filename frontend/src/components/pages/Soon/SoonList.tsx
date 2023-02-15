@@ -6,6 +6,7 @@ import { getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import axios from "axios";
+import { api } from "@recoils/consonants";
 
 export default function SoonList() {
   const userid = 1 //TODO: user#
@@ -58,14 +59,12 @@ function SoonAddButton({userid}: any) {
     setText(event.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const swid = Number(text);
-      const data = {userid, swid}
-    } catch (error) {
-      console.error(error);
-    }
+    const swid = Number(text);
+    const sjid = userid;
+    api.post("/soon", {sjid, swid})
+
   };
 
   return (
@@ -105,15 +104,11 @@ function SoonDeleteButton({userid}: any) {
     setText(event.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const swid = Number(text);
+    const sjid = userid;
+    api.delete(`/soon/${sjid}/${swid}`)
     event.preventDefault();
-    try {
-      const swid = Number(text);
-      console.log("swid>>", swid);
-    } catch (error) {
-      console.error(error);
-    }
-
   };
 
   return (
