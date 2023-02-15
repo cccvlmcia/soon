@@ -110,16 +110,22 @@ const Register: React.FC = () => {
     fetchData();
   }, [data]);
   return (
-    <Box component="form" onSubmit={handleSubmit(writeRegister)}>
-      <Box>
-        <Box sx={{fontSize: "16px"}}>이름</Box>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(writeRegister)}
+      sx={{
+        ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
+        ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
+      }}>
+      <Box className="row">
+        <Box className="header">이름</Box>
         <Box>
           <TextField {...register("name")} />
         </Box>
       </Box>
-      <Box>
-        <Box>캠퍼스</Box>
-        <Box>
+      <Box className="row">
+        <Box className="header">캠퍼스</Box>
+        <Box sx={{width: "calc(100% - 80px)", paddingRight: "10px"}}>
           <Select
             {...register("campusid")}
             value={campusSelected as never}
@@ -136,20 +142,23 @@ const Register: React.FC = () => {
           </Select>
         </Box>
       </Box>
-      <Box>
-        <Box>학번</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">학번</Box>
         <Box>
           <TextField {...register("sid")} />
         </Box>
       </Box>
-      <Box>
-        <Box>학과</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">학과</Box>
         <Box>
           <TextField {...register("major")} />
         </Box>
       </Box>
-      <Box>
-        <Box>ccc 여부</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">ccc 여부</Box>
         <Box>
           <RadioGroup
             // {...register("cccYN")}
@@ -164,8 +173,9 @@ const Register: React.FC = () => {
           </RadioGroup>
         </Box>
       </Box>
-      <Box>
-        <Box>성별</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">성별</Box>
         <Box>
           <RadioGroup
             // {...register("gender")}
@@ -179,8 +189,10 @@ const Register: React.FC = () => {
         </Box>
       </Box>
 
-      <Box>
-        <Button type="submit">저장</Button>
+      <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}>
+        <Button variant="outlined" type="submit">
+          저장
+        </Button>
       </Box>
     </Box>
   );
