@@ -44,7 +44,7 @@ export const checkSSO = async (type: string, ssoid: string, params: {email?: str
   if (oauth) {
     const user = oauth.user;
     //FIXME: 로그인 하는데 파라미터를 더 받기 위해 가져옵니다 - 범수
-    return {status: LOGIN_STATUS.LOGIN, auth: {type, ssoid, ...params}, user};
+    return {status: LOGIN_STATUS.LOGIN, auth: {type, ssoid, ...params}, user};// 있으면 유저를 가저 온다.
   } else {
     return {status: LOGIN_STATUS.REGISTER, auth: {type, ssoid, ...params}};
   }

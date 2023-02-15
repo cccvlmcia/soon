@@ -7,7 +7,7 @@ import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/User/state";
 
 export default function Campus() {
-  const loginUser = useRecoilValue(userState);
+  const loginUser:any = useRecoilValue(userState);
   console.log("loginUser >", loginUser);
   const campusid = loginUser?.campus[0]?.campusid || "";
   const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
