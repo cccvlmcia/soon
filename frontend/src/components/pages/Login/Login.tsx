@@ -7,6 +7,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState, useSetRecoilState} from "recoil";
 
+
 const Login = () => {
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
   const setUser = useSetRecoilState(userState);
@@ -17,9 +18,10 @@ const Login = () => {
     console.log(data);
     // const status = data?.status;
     const {auth, status, user} = data;
+
     // console.log("status , auth , user >> ", status, auth, user);
     if (status == "REGISTER") {
-      setGoogleAuth(Object.assign(auth, status));
+      setGoogleAuth(data);
 
       //TODO: 회원 가입 폼 이동
       console.log("회원 가입하시죠");

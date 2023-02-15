@@ -25,15 +25,16 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           {/*Login */}
-          <Route path="/" element={Auth(Home, true)}></Route>
-          <Route path="/campus" element={Auth(Campus, true)}></Route>
+          <Route path="/" element={Auth(Home, null)}></Route>
+          <Route path="/campus" element={Auth(Campus, null)}></Route>
           {/*Login */}
 
           {/*Not Login */}
           <Route path="/login" element={Auth(Login, null)}></Route>
-          <Route
+          {/* <Route
             path="/register"
-            element={googleAuth == null || googleAuth?.status != "REGISTER" ? <Navigate to={"/"} /> : Auth(Login, null)}></Route>
+            element={googleAuth == null || googleAuth?.status != "REGISTER" ? <Navigate to={"/"} /> : Auth(Register, null)}></Route> */}
+          <Route path="/register" element={Auth(Register, null)}></Route>
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>

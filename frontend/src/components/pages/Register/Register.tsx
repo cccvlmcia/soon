@@ -47,7 +47,7 @@ const Register: React.FC = () => {
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
-
+  const googleAuth = useRecoilValue(userGoogleAuthState);
   const navigate = useNavigate();
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const selectedNames = event.target.value as string[];
@@ -71,12 +71,12 @@ const Register: React.FC = () => {
   };
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     // params.list = selected;
-    const auth = googleAuth;
+    const {auth} = googleAuth;
     const userRegistInfo: postUser = {
       nickname: params.name,
       gender: genderSelected || "",
       cccyn: cccYNSelected || "",
-      campus: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
+      campusid: campusIdSelected[0], //FIXME: 단일 선택 문제 해결되면 지우도록
       major: params.major,
       sid: params.sid,
       ssoid: auth.ssoid,
