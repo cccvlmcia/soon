@@ -25,14 +25,12 @@ export default function Campus() {
   ));
 
   return (
-    <Box>
+    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
       <Box>
-        
         <h1>00대학교 C맨들 족보</h1>
-        </Box>
+      </Box>
       {/* 항목들 정렬 - flex 를 사용 */}
-
-      <Box sx={{display: "flex", gap: 1, flexFlow: "row wrap"}}>{userList}</Box>
+      <Box sx={{display: "flex", gap: 1, flexFlow: "row wrap", justifyContent: "center"}}>{userList}</Box>
     </Box>
   );
 }
