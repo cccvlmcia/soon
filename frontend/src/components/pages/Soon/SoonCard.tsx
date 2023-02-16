@@ -6,6 +6,7 @@ import Error from "components/Error/Error";
 import {Card, CardMedia, CardContent, makeStyles, Typography} from "@material-ui/core";
 import {useNavigate, useParams} from "react-router-dom";
 import {format, parse} from "date-fns";
+import NoData from "components/common/NoData";
 const soonHeaderStyles = makeStyles({
   root: {
     display: "flex",
@@ -96,8 +97,12 @@ function SoonHistorySW({swid}: any) {
   const soonHistorySW = data?.map(({historyid, soonjang, soonwon, kind, progress, historydate}: any) => (
     <SoonHistoryCard key={historyid} historyid={historyid} user={soonjang} kind={kind} progress={progress} historydate={historydate} />
   ));
-
-  return <List>{soonHistorySW}</List>;
+  return (
+    <>
+      {data.length > 0 && <List>{soonHistorySW}</List>}
+      {data.length == 0 && <NoData />}
+    </>
+  );
 }
 
 function SoonHistorySJ({sjid}: any) {
@@ -109,9 +114,13 @@ function SoonHistorySJ({sjid}: any) {
     return <Error error={error} />;
   }
   //TODO: id => nickname
-  const soonHistorySJ = data?.map(({historyid, soonjang, soonwon, kind, progress, historydate}: any) => (
+  const soonHistorySJ = data?.map(({historyid, soonwon, kind, progress, historydate}: any) => (
     <SoonHistoryCard key={historyid} historyid={historyid} user={soonwon} kind={kind} progress={progress} historydate={historydate} />
   ));
-
-  return <List>{soonHistorySJ}</List>;
+  return (
+    <>
+      {data.length > 0 && <List>{soonHistorySJ}</List>}
+      {data.length == 0 && <NoData />}
+    </>
+  );
 }
