@@ -50,6 +50,14 @@ function AppRoutes() {
           <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
           <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
+          <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
+          <Route path="/history" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
+          <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
+          <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
+          <Route path="/soon/:userid/card" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
+          <Route path="/soon/list" element={Auth(SoonList, true, loginUser || authUser)}></Route>
+          <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser || authUser)}></Route>
+          <Route path="/withdrawal" element={Auth(Withdrawal, true, loginUser || authUser)}></Route>
 
           {/*Login */}
 
@@ -61,14 +69,6 @@ function AppRoutes() {
           <Route path="/register" element={Auth(Register, null)}></Route>
           {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
-          <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
-          <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
-          <Route path="/history/:historyid/view" element={Auth(HistoryContents, null)}></Route>
-          <Route path="/soon/:userid/card" element={Auth(SoonCard, null)}></Route>
-          <Route path="/soon/list" element={Auth(SoonList, null)}></Route>
-          <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
-          <Route path="/admin" element={Auth(Admin, null)}></Route>
-          <Route path="/withdrawal" element={Auth(Withdrawal, null)}></Route>
           {/*EveryOne */}
         </Route>
       </Routes>
