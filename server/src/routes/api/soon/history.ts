@@ -6,6 +6,7 @@ import {
   getSoonHistorySJListNotMe,
   getSoonHistorySWList,
   removeSoonHistory,
+  editSoonHistory,
 } from "@soon/service/SoonHistoryService";
 import {getUserCampus} from "@user/service/UserCampusService";
 import {authHandler} from "@utils/OAuth2Utils";
@@ -71,6 +72,33 @@ export default async function (fastify: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const history = await addSoonHistory(req.body);
+      reply.send(history);
+    },
+  );
+
+  fastify.put(
+    "/:historyid",
+    async (
+      req: FastifyRequest<{
+        Params: {historyid: number};
+        Body: {
+          userid?: number;
+          sjid: number;
+          swid: number;
+          kind: string;
+          progress: string;
+          historydate: Date;
+          contents?: string;
+          prays?: {
+            pray: string;
+            publicyn: string;
+          }[];
+        };
+      }>,
+      reply: FastifyReply,
+    ) => {
+      const {historyid} = req.params;
+      const history = await editSoonHistory(historyid,req.body);
       reply.send(history);
     },
   );

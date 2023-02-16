@@ -75,7 +75,7 @@ function RightPanel({data}: any) {
   return (
     <Box sx={{width: "100%", display: "flex", alignItems: "center", flexDirection: "column", fontSize: "20px"}}>
       <Box sx={{display: "flex", justifyContent: "center", flexDirection: "column", maxWidth: "400px"}}>
-        <MyImage />
+        <MyImage userid={data?.userid}/>
       </Box>
       <Stack direction="row" spacing={1}>
         <Box>{data?.nickname}</Box>
@@ -93,7 +93,8 @@ function RightPanel({data}: any) {
   );
 }
 
-function MyImage() {
+function MyImage({userid}: any) {
+  const navigate = useNavigate();
   return (
     <Box>
       <Box
@@ -102,7 +103,7 @@ function MyImage() {
         src={
           "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340"
         }
-      />
+      onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}/>
     </Box>
   );
 }

@@ -75,7 +75,7 @@ function SoonHistorySW({swid}: any) {
   }
   //TODO: id => nickname
   const soonHistorySW = data?.map(({historyid, sjid, swid , kind, progress}: any) => (
-    <SoonHistoryCard key={historyid} sjid={sjid} swid={swid} kind={kind} progress={progress} />
+    <SoonHistoryCard key={historyid} historyid={historyid} sjid={sjid} swid={swid} kind={kind} progress={progress} />
   ));
 
   return(
