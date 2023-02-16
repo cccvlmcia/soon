@@ -121,7 +121,7 @@ export default function MyProfile() {
           // alignItems: "center",
           justifyContent: "left",
           ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-          ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
+          ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
           ".value": {minWidth: "200px"},
         }}>
         <Box className="row">
