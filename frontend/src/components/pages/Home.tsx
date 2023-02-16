@@ -6,7 +6,6 @@ import {getSoonListQuery} from "@recoils/soon/query";
 import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-
 export default function Home() {
   const loginUser = useRecoilValue(userState);
   const navigate = useNavigate();
@@ -106,7 +105,7 @@ function MyImage({userid, navigate}: any) {
 function MoveHistory({navigate}: any) {
   return (
     <Box sx={{position: "absolute", bottom: "20px", right: "20px"}} onClick={() => navigate("/history")}>
-      <AddCircleIcon fontSize="large" sx={{color: "#ebe159", borderRadius: "50%", cursor: "pointer"}} />
+      <AddCircleIcon sx={{color: "#000000", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px"}} />
     </Box>
   );
 }
