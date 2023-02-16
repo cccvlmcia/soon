@@ -1,15 +1,16 @@
-import { Box } from "@mui/material";
+import {Box} from "@mui/material";
 
-export default function Error(error: any) {
+export default function Error({error}: any) {
+  console.log("error >>", error);
   return (
     <Box>
       {error && (
         <Box sx={{display: "flex", flexDirection: "column"}}>
-          <Box component="span">Code : {error.code}</Box>
+          <Box component="span">Code : {error?.code}</Box>
           <Box component="span">
-            Error: {error.response.status} ({error.response.statusText})
+            Error: {error?.response?.status} ({error?.response?.statusText})
           </Box>
-          <Box component="span">Message: {error.response.data.message}</Box>
+          <Box component="span">Message: {error?.response?.data?.message}</Box>
         </Box>
       )}
     </Box>
