@@ -8,11 +8,11 @@ export async function getSoonHistory(historyid: number) {
 }
 
 export async function getSoonHistorySWList(swid: number) {
-  return await SoonHistory.find({where: {swid}});
+  return await SoonHistory.find({where: {swid}, relations: {soonjang: true, soonwon: true}});
 }
 
 export async function getSoonHistorySJList(sjid: number) {
-  return await SoonHistory.find({where: {sjid}});
+  return await SoonHistory.find({where: {sjid}, relations: {soonjang: true, soonwon: true}});
 }
 export async function getSoonHistorySJListNotMe(sjid: number, campues: string[]) {
   return await SoonHistory.find({
@@ -25,19 +25,22 @@ export async function getSoonHistorySJListNotMe(sjid: number, campues: string[])
 //   return await SoonHistory.find({where: {sjid, soonwon: {campus: {campusid: In(campues)}}}, relations: {soonwon: {campus: true}}});
 // }
 
-export async function editSoonHistory(historyid: number, history: {
-  userid?: number;
-  sjid: number;
-  swid: number;
-  kind: string;
-  progress: string;
-  historydate: Date;
-  contents?: string;
-  prays?: {
-    pray: string;
-    publicyn: string;
-  }[];
-}) {
+export async function editSoonHistory(
+  historyid: number,
+  history: {
+    userid?: number;
+    sjid: number;
+    swid: number;
+    kind: string;
+    progress: string;
+    historydate: Date;
+    contents?: string;
+    prays?: {
+      pray: string;
+      publicyn: string;
+    }[];
+  },
+) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(SoonHistory);
     const prayRepository = manager.getRepository(SoonPray);
@@ -55,8 +58,6 @@ export async function editSoonHistory(historyid: number, history: {
     return historyData;
   });
 }
-
-
 
 export async function addSoonHistory(history: {
   userid?: number;
