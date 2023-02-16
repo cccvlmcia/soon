@@ -2,6 +2,7 @@ import {Box} from "@mui/material";
 import ReactLoading from "react-loading";
 
 export default function Loading() {
+  // 이미 있으면 안그리기... 처리 해야함 나중에
   return (
     <Box
       sx={{
@@ -15,8 +16,7 @@ export default function Loading() {
         zIndex: "20000",
         top: 0,
         left: 0,
-      }}
-    >
+      }}>
       <ReactLoading type="spin" color="#A593E0" />
     </Box>
   );
