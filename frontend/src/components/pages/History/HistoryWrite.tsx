@@ -7,13 +7,16 @@ import {api} from "@recoils/consonants";
 import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
 import dayjs, {Dayjs} from "dayjs";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {FlashAuto} from "@mui/icons-material";
-
+import Loading from "react-loading";
+import Error from "components/Error/Error";
+import {getCampusUserQuery} from "@recoils/api/User";
+import HistoryCampusDialog from "./HistoryCampusDialog";
+import {useRecoilValue} from "recoil";
+import {userSelector, userState} from "@recoils/user/state";
 type Prayer = {
   pray: string;
   publicyn: string;
 };
-
 type FormData = {
   soonjang: string;
   category: string;
@@ -26,7 +29,7 @@ type FormData = {
 
 type User = {
   userid: string;
-  name: string;
+  nickname: string;
 };
 
 type Category = {
@@ -35,6 +38,7 @@ type Category = {
 };
 
 export default function HistoryWrite() {
+  // const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
   const {historyid} = useParams();
   const [date, setDate] = useState<Dayjs | null>(dayjs("2023-08-18T21:11:54"));
@@ -44,11 +48,18 @@ export default function HistoryWrite() {
   const [selected, setSelected] = useState<string[]>([]);
   const [categorySelected, setCategorySelected] = useState<string>("");
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "true"}]);
+
+  //FIXME: 현재 유저의 모든 정보를 가져 오는게 옳지 않은 듯?
+  const authUser = useRecoilValue(userSelector);
+  const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102");
+
   const handleChange = (newValue: Dayjs | null) => {
     setDate(newValue);
   };
+
   const handleTextFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
+
     newValues[index].pray = event.target.value;
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
@@ -97,14 +108,20 @@ export default function HistoryWrite() {
   useEffect(() => {
     userListFunc();
     categoryFunc();
+    fetchData();
   }, [historyid]);
 
+  const handleUser = (user: any) => {};
+  function fetchData() {
+    if (isLoading) return <Loading />;
+    if (isError) return <Error error={error} />;
+  }
   const userListFunc = () => {
-    setUserList([
-      {userid: "1", name: "김이박"},
-      {userid: "2", name: "고범수"},
-      {userid: "3", name: "주님"},
-    ]);
+    const userList: User[] = data?.map(({user}: {user: User}) => {
+      return {userid: user.userid, name: user.nickname};
+    });
+    console.log(userList);
+    setUserList(userList || []);
   };
   // 순모임 종류 선택 사항
   const categoryFunc = () => {
@@ -132,11 +149,12 @@ export default function HistoryWrite() {
         <Box className="header">해준 사람</Box>
         {/* 선택방법.. 사용자 선택 */}
         <Box>
+          {/* <HistoryCampusDialog open={open} setOpen={setOpen} items={data} campusid="UNIV102" handleUser={handleUser} /> */}
           <TextField {...register("soonjang")} />
         </Box>
       </Box>
       <Box className="row">
-        {/* 선택방법.. 분류 종류 */}give
+        {/* 선택방법.. 분류 종류 */}
         <Box className="header">분류</Box>
         <Box sx={{width: "calc(100% - 100px)"}}>
           <Select value={categorySelected as never} fullWidth onChange={handleCategoryReceive} renderValue={selected => selected}>
