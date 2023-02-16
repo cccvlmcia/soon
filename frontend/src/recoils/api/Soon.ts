@@ -1,5 +1,5 @@
 import {useQuery} from "react-query";
-import { api } from "@recoils/consonants";
+import {api} from "@recoils/consonants";
 
 export const options = {
   refetchOnWindowFocus: false,
@@ -20,15 +20,6 @@ const getSoonId = (sjid: Number, swid: Number) => api.get(`/soon/${sjid}/${swid}
 const  getSoonHistory = (historyid: Number) => api.get(`/soon/history/${historyid}`);
 const getSoonHistorySWList = (swid: Number) => api.get(`/soon/history/sw/${swid}`);
 const getSoonHistorySJList = (sjid: Number) => api.get(`/soon/history/sj/${sjid}`);
-
-// const addSoon = (sjid: Number, swid: Number) =>
-//   api.post("/soon", {
-//     data: {
-//       sjid,
-//       swid,
-//     },
-//   });
-// const removeSoon = (sjid: Number, swid: Number) => api.delete(`/soon/${sjid}/${swid}`);
 
 export const getSoonListQuery = (sjid: Number) => {
   const {isLoading, isError, data, error} = useQuery("getSoonList", () => getSoonList(sjid), options);
