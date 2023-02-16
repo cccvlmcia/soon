@@ -22,6 +22,7 @@ import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
 import {campusState} from "@recoils/campus/state";
+import CampusDialog from "./modal/CampusDialog";
 
 type FormData = {
   name: string;
@@ -44,13 +45,14 @@ export default function MyProfile() {
   const [loginUser, setLoginUser]: any = useRecoilState(userState);
   const campuses = loginUser?.campus?.map(({campus}: any) => campus);
   const [campusList, setCampusList] = useState(campuses);
-  const [campusSelected, setCampusSeleceted]: any = useState(campuses && campuses[0]);
+  const [campusSelected, setCampusSelected]: any = useState(campuses && campuses[0]);
   const [genderSelected, setGenderSelected] = useState<string>(loginUser?.gender);
   const [cccYNSelected, setCccYNSelected] = useState<string>(loginUser?.config?.cccyn);
   const [name, setName] = useState<string>(loginUser?.nickname);
   const [sid, setSid] = useState<string>(getSid(campusSelected?.campusid));
   const [major, setMajor] = useState<string>(getMajor(campusSelected?.campusid));
   const [user, setUser]: any = useState(null);
+  const [open, setOpen]: any = useState(false);
   //{campusid, cccyn,gender, major,nickname,sid}
   const navigate = useNavigate();
 
@@ -66,13 +68,12 @@ export default function MyProfile() {
     }
   }, [loginUser]);
   //FIXME: set 하는 방식을 id > obj로 변경 필요
-  const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
-    const campus: any = event.target.value;
-    setCampusSeleceted(campus);
+  const handleCampus = (campus: any) => {
+    setCampusSelected(campus);
     setSid(getSid(campus?.campusid));
     setMajor(getMajor(campus?.campusid));
-    // loginUser?.campus?.find(({campusid}: any) => campusid == campusSelected?.campusid)?.sid
   };
+
   const handleGednerReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
 
@@ -105,6 +106,11 @@ export default function MyProfile() {
   const handleMajor = (e: any) => {
     setMajor(e.target.value);
   };
+
+  const onChangeCampus = (e: any) => {
+    setOpen(true);
+  };
+
   return (
     <Box
       component="form"
@@ -121,7 +127,13 @@ export default function MyProfile() {
       </Box>
       <Box className="row">
         <Box className="header">캠퍼스</Box>
-        <Box sx={{width: "calc(100% - 80px)", paddingRight: "10px"}}>
+        <Box>
+          <Button variant="outlined" onClick={onChangeCampus}>
+            캠퍼스 선택
+          </Button>
+          <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
+        </Box>
+        {/* <Box sx={{width: "calc(100% - 80px)", paddingRight: "10px"}}>
           <Select
             {...register("campusid")}
             value={campusSelected}
@@ -135,7 +147,7 @@ export default function MyProfile() {
               </MenuItem>
             ))}
           </Select>
-        </Box>
+        </Box> */}
       </Box>
 
       <Box className="row">
