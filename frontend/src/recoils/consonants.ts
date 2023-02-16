@@ -14,7 +14,6 @@ export async function axiosProcess(caller: Function, isLogin = false) {
   try {
     return await caller();
   } catch (err: any) {
-    console.log("error.... ", err?.response?.status);
     if (err?.response?.status == 500) {
       console.error(err);
     } else if (isLogin) {
@@ -24,6 +23,8 @@ export async function axiosProcess(caller: Function, isLogin = false) {
       if (data == "USER_AUTHENTICATED") {
         return await caller();
       }
+    } else {
+      console.error("access_token 있지만, 만료되어 재접속");
     }
     //FIXME: alert으로 알려주고 넘어가야하는지 확인
     return null;

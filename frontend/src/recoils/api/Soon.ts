@@ -17,7 +17,7 @@ export const options = {
 const getSoonList = (sjid: Number) => api.get(`/soon/sj/${sjid}`);
 const getSoonInfo = (swid: Number) => api.get(`/soon/sj/${swid}`);
 const getSoonId = (sjid: Number, swid: Number) => api.get(`/soon/${sjid}/${swid}`);
-const  getSoonHistory = (historyid: Number) => api.get(`/soon/history/${historyid}`);
+const getSoonHistory = (historyid: Number) => api.get(`/soon/history/${historyid}`);
 const getSoonHistorySWList = (swid: Number) => api.get(`/soon/history/sw/${swid}`);
 const getSoonHistorySJList = (sjid: Number) => api.get(`/soon/history/sj/${sjid}`);
 
