@@ -4,7 +4,7 @@ import {getSoonHistorySJListQuery, getSoonHistorySWListQuery} from "@recoils/api
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const soonHeaderStyles = makeStyles({
   root: {
