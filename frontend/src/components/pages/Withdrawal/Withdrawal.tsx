@@ -49,7 +49,6 @@ export default function Withdrawal() {
 
   return (
     <Box>
-      회원탈퇴
       <Box sx={{display: "flex", alignItems: "center", width: "100%", height: "300px", justifyContent: "center"}}>
         <GoogleButton onClick={googleSocialLogin} />
       </Box>
