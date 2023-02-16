@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import {useNavigate} from "react-router-dom";
 import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import Popover from "@mui/material/Popover";
-import {api} from "@recoils/consonants";
+import {api} from "@recoils/constants";
 import {useRecoilValue} from "recoil";
 import {authState} from "@recoils/auth/state";
 

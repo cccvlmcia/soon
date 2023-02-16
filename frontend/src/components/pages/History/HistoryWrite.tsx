@@ -3,13 +3,12 @@ import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, L
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
-import {api} from "@recoils/consonants";
+import {api} from "@recoils/constants";
 import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
 import dayjs, {Dayjs} from "dayjs";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import Loading from "react-loading";
 import Error from "components/Error/Error";
-// import {getCampusUserQuery} from "@recoils/api/User";
 import HistoryCampusDialog from "./HistoryCampusDialog";
 import {useRecoilValue} from "recoil";
 import {userSelector, userState} from "@recoils/user/state";

@@ -1,11 +1,10 @@
 import {atom, selector} from "recoil";
-import {axiosProcess, server} from "@recoils/consonants";
+import {axiosProcess, server} from "@recoils/constants";
 export const userSelector = selector({
   key: "userSelector",
   get: async ({get}) => {
     const user = get(userState);
     //접속중일때, 갱신하는 상황인지, 토큰만료 후 로그인 하는 상황인지 판단
-    console.log("user >", user);
     return await axiosProcess(
       async () => {
         const {data} = await server.get("/auth/user");
