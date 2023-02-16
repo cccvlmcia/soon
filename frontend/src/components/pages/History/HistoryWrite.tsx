@@ -38,7 +38,7 @@ type Category = {
 };
 
 export default function HistoryWrite() {
-  // const [open, setOpen]: any = useState(false);
+  const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
   const {historyid} = useParams();
   const [date, setDate] = useState<Dayjs | null>(dayjs("2023-08-18T21:11:54"));
@@ -53,7 +53,7 @@ export default function HistoryWrite() {
   const authUser = useRecoilValue(userSelector);
   const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102");
 
-  const handleChange = (newValue: Dayjs | null) => {
+  const handleDateChange = (newValue: Dayjs | null) => {
     setDate(newValue);
   };
 
@@ -87,6 +87,9 @@ export default function HistoryWrite() {
     newValues.splice(index, 1);
     setPrayers(newValues);
     setValue("prays", newValues);
+  };
+  const onChangeUser = (e: any) => {
+    setOpen(true);
   };
 
   //error 처리....
@@ -147,10 +150,12 @@ export default function HistoryWrite() {
       <Box sx={styles.text}>순모임 히스토리 기록</Box>
       <Box className="row">
         <Box className="header">해준 사람</Box>
-        {/* 선택방법.. 사용자 선택 */}
+        <Button variant="outlined" onClick={onChangeUser}>
+          해준 사람 선택
+        </Button>
         <Box>
-          {/* <HistoryCampusDialog open={open} setOpen={setOpen} items={data} campusid="UNIV102" handleUser={handleUser} /> */}
-          <TextField {...register("soonjang")} />
+          <HistoryCampusDialog open={open} setOpen={setOpen} users={userList} userid="" handleUser={handleUser} />
+          {/* <TextField {...register("soonjang")} /> */}
         </Box>
       </Box>
       <Box className="row">
@@ -194,7 +199,7 @@ export default function HistoryWrite() {
             label="Date mobile"
             inputFormat="MM/DD/YYYY"
             value={date}
-            onChange={handleChange}
+            onChange={handleDateChange}
             renderInput={params => <TextField {...params} />}
           />
         </LocalizationProvider>
