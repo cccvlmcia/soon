@@ -3,6 +3,10 @@ import SoonHistory from "@soon/entity/SoonHistory";
 import SoonPray from "@soon/entity/SoonPray";
 import {In} from "typeorm";
 
+export async function getSoonHistory(historyid: number) {
+  return await SoonHistory.findOne({where: {historyid}});
+}
+
 export async function getSoonHistorySWList(swid: number) {
   return await SoonHistory.find({where: {swid}});
 }

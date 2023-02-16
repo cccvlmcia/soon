@@ -13,6 +13,7 @@ export default function HistoryWrite() {
   historyid ? console.log("history id >> ", historyid) : "";
   const {register, handleSubmit} = useForm<FormData>(); //user
   const [userList, setUserList] = useState<Object[]>([]);
+  const [kindList, setKindList] = useState<Object[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
   const handleReceive = (event: SelectChangeEvent<never[]>) => {
@@ -22,7 +23,7 @@ export default function HistoryWrite() {
 
   //error 처리....
   const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
-    params.list = selected;
+    params.list = selected; //
     console.log("params >> ", params);
     const result = await api.post(`/history`, params);
     if (result) {
@@ -50,6 +51,14 @@ export default function HistoryWrite() {
       {userid: "1", name: "김이박"},
       {userid: "2", name: "고범수"},
       {userid: "3", name: "주님"},
+    ]);
+  };
+  const kindFunc = () => {
+    setKindList([
+      // {soon: "soon",name:}, //순모임
+      // {coffee: "coffee"}, //커피타임
+      // {activity: "activity"}, //외부활동
+      // {unity: "unity"}, //연합 순모임
     ]);
   };
   return (

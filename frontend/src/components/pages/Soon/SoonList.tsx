@@ -1,36 +1,23 @@
+import {useState, useEffect} from "react";
+import {useRecoilValue} from "recoil";
+
 import {Box, Stack} from "@mui/material";
-import {useState} from "react";
 import {Button, TextField} from "@mui/material";
-import {UserCard} from "@layout/Card";
-import {getSoonListQuery} from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
+import {UserCard} from "@layout/Card";
 import {api} from "@recoils/consonants";
-import {useRecoilValue} from "recoil";
+import {getSoonListQuery} from "@recoils/api/Soon";
 import {userState} from "@recoils/user/state";
+import {styles} from "@layout/styles";
 
 export default function SoonList() {
   const loginUser: any = useRecoilValue(userState);
   console.log("loginUser >", loginUser?.userid);
-  const userid = loginUser?.userid || 1; //TODO: user#
-  return (
-    <Box>
-      <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "10px"}}>
-        <MySoon userid={userid} />
-      </Box>
-      <Stack direction={"row"}>
-        <Box>
-          <SoonAddButton userid={userid} />
-        </Box>
-        <Box>
-          <SoonDeleteButton userid={userid} />
-        </Box>
-      </Stack>
-    </Box>
-  );
-}
-
-function MySoon({userid}: any) {
+  const userid = loginUser?.userid || 1;
+  const [soonlist, setSoonlist] = useState([]);
+  const [addOpen, setAddOpen] = useState(false);
+  const [delOpen, setDelOpen] = useState(false);
   const {isLoading, isError, data, error} = getSoonListQuery(userid);
   if (isLoading) {
     return <Loading />;
@@ -38,34 +25,52 @@ function MySoon({userid}: any) {
   if (isError) {
     return <Error error={error} />;
   }
+  const datalist: never[] = data;
+  useEffect(() => {
+    if (datalist) {
+      listFunc();
+    }
+  }, [data, setSoonlist]);
+  const listFunc = () => {
+    setSoonlist([...datalist]);
+  };
   return (
     <Box>
-      {data?.map(({soonid, soonwon}: any) => (
-        <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
-      ))}
+      <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "10px"}}>
+        {soonlist?.map(({soonid, soonwon}: any) => (
+          <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
+        ))}
+      </Box>
+      <Stack direction={"row"}>
+        <SoonAddButton sjid={userid} setSoonlist={setSoonlist} textFieldOpen={addOpen} setTextFieldOpen={setAddOpen} />
+        <SoonDeleteButton sjid={userid} setSoonlist={setSoonlist} textFieldOpen={delOpen} setTextFieldOpen={setDelOpen} />
+      </Stack>
     </Box>
   );
 }
 
-function SoonAddButton({userid}: any) {
-  const buttonStyle = {
-    size: "small",
-    width: "30px",
-    height: "23px",
-  };
-
-  const [textFieldOpen, setTextFieldOpen] = useState(false);
+function SoonAddButton({
+  sjid,
+  setSoonlist,
+  textFieldOpen,
+  setTextFieldOpen,
+}: {
+  sjid: number;
+  setSoonlist: any;
+  textFieldOpen: boolean;
+  setTextFieldOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [text, setText] = useState("");
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleAdd = async () => {
     const swid = Number(text);
-    const sjid = userid;
-    api.post("/soon", {sjid, swid});
+    const result = await api.post("/soon", {sjid, swid});
+    if (result) {
+      setSoonlist((list: any) => [...list, result.data]);
+    }
   };
 
   return (
@@ -73,7 +78,7 @@ function SoonAddButton({userid}: any) {
       <Button
         variant="contained"
         color="primary"
-        style={buttonStyle}
+        sx={styles.soon.button}
         onClick={() => {
           setTextFieldOpen(!textFieldOpen);
         }}>
@@ -81,36 +86,38 @@ function SoonAddButton({userid}: any) {
       </Button>
       {/* FIXME: 순원추가 버튼 > Full-screen dialogs에서 전체 캠퍼스 사용자 중에 선택하는 걸로 */}
       {textFieldOpen && (
-        <form onSubmit={handleSubmit}>
+        <Box onClick={handleAdd}>
           <TextField label="순원id를 입력해주세요" value={text} onChange={handleChange} />
           <Button type="submit" variant="contained">
             순원추가
           </Button>
-        </form>
+        </Box>
       )}
     </Box>
   );
 }
 
-function SoonDeleteButton({userid}: any) {
-  const buttonStyle = {
-    size: "small",
-    width: "30px",
-    height: "23px",
-  };
-
-  const [textFieldOpen, setTextFieldOpen] = useState(false);
+function SoonDeleteButton({
+  sjid,
+  setSoonlist,
+  textFieldOpen,
+  setTextFieldOpen,
+}: {
+  sjid: number;
+  setSoonlist: any;
+  textFieldOpen: boolean;
+  setTextFieldOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [text, setText] = useState("");
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleDelete = async () => {
     const swid = Number(text);
-    const sjid = userid;
-    api.delete(`/soon/${sjid}/${swid}`);
-    event.preventDefault();
+    const result = await api.delete(`/soon/${sjid}/${swid}`);
+    if (result) {
+      setSoonlist((list: any) => list.filter((soon: any) => soon.swid != swid));
+    }
   };
 
   return (
@@ -118,19 +125,17 @@ function SoonDeleteButton({userid}: any) {
       <Button
         variant="contained"
         color="primary"
-        style={buttonStyle}
+        sx={styles.soon.button}
         onClick={() => {
           setTextFieldOpen(!textFieldOpen);
         }}>
         -
       </Button>
       {textFieldOpen && (
-        <form onSubmit={handleSubmit}>
+        <Box onClick={handleDelete}>
           <TextField label="순원id를 입력해주세요" value={text} onChange={handleChange} />
-          <Button type="submit" variant="contained">
-            순원삭제
-          </Button>
-        </form>
+          <Button variant="contained">순원삭제</Button>
+        </Box>
       )}
     </Box>
   );
