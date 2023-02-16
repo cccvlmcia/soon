@@ -59,6 +59,7 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
   };
   const handleLogout = async () => {
     await postLogout();
+    alert("로그아웃 되었습니다.");
     setLoginUser(null);
     handleMenuOpen();
     navigate("/login");

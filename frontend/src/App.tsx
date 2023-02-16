@@ -68,11 +68,8 @@ function AppRoutes() {
               <PrevHeader />
             </Layout>
           }>
-          {/* profile은 버튼도 필요 */}
           <Route path="/soon/:userid/card" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
 
-          {/* historyWrite 버튼 필요 */}
-          <Route path="/history" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
           <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
         </Route>
 
@@ -87,6 +84,8 @@ function AppRoutes() {
         </Route>
         {/* Custom AppBar */}
         <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
+        <Route path="/history" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
+        {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
         <Route path="/register/:userid" element={Auth(Register, null)}></Route>
