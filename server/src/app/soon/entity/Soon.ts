@@ -13,11 +13,11 @@ export default class Soon extends BaseEntity {
   @Column()
   swid: number;
 
-  @ManyToOne(() => User, user => user.userid)
+  @ManyToOne(() => User, user => user.sj)
   @JoinColumn({name: "sjid"})
   soonjang: User;
 
-  @ManyToOne(() => User, user => user.userid)
+  @ManyToOne(() => User, user => user.sw)
   @JoinColumn({name: "swid"})
   soonwon: User;
 
