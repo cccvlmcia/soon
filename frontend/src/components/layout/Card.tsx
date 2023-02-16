@@ -14,6 +14,7 @@ const useStyles = makeStyles({
     width: 290,
     height: 400,
     display: "flex",
+    margin: "0 auto",
     flexDirection: "column",
   },
   media: {

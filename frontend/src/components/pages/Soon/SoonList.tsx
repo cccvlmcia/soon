@@ -36,7 +36,7 @@ export default function SoonList() {
   };
   return (
     <Box>
-      <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "10px"}}>
+      <Box sx={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gridGap: "12px", marginTop: "10px"}}>
         {soonlist?.map(({soonid, soonwon}: any) => (
           <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
         ))}
