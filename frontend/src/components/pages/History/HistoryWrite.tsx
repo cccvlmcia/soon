@@ -9,10 +9,11 @@ import dayjs, {Dayjs} from "dayjs";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import Loading from "react-loading";
 import Error from "components/Error/Error";
-import {getCampusUserQuery} from "@recoils/api/User";
+// import {getCampusUserQuery} from "@recoils/api/User";
 import HistoryCampusDialog from "./HistoryCampusDialog";
 import {useRecoilValue} from "recoil";
 import {userSelector, userState} from "@recoils/user/state";
+import { getCampusUserQuery } from "@recoils/campus/query";
 type Prayer = {
   pray: string;
   publicyn: string;
