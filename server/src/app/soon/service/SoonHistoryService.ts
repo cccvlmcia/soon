@@ -4,7 +4,7 @@ import SoonPray from "@soon/entity/SoonPray";
 import {In} from "typeorm";
 
 export async function getSoonHistory(historyid: number) {
-  return await SoonHistory.findOne({where: {historyid}});
+  return await SoonHistory.findOne({where: {historyid}, relations: {soonjang: true, soonwon: true, prays: true}});
 }
 
 export async function getSoonHistorySWList(swid: number) {

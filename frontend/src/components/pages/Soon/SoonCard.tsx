@@ -78,7 +78,7 @@ function SoonHistoryCard({historyid, user, kind, progress, historydate}: any) {
   const navigate = useNavigate();
   const dateStr = format(new Date(historydate), "MM-dd hh:mm");
   return (
-    <ListItemButton onClick={() => navigate(`/historycontents?historyid=${historyid}`)}>
+    <ListItemButton onClick={() => navigate(`/history/${historyid}/view`)}>
       <ListItemText primary={`${dateStr} [${type[kind]}] ${progress}`} secondary={user?.nickname} />
     </ListItemButton>
   );

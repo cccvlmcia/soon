@@ -63,7 +63,7 @@ function AppRoutes() {
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
-          <Route path="/historycontents" element={Auth(HistoryContents, null)}></Route>
+          <Route path="/history/:historyid/view" element={Auth(HistoryContents, null)}></Route>
           <Route path="/soon/:userid/card" element={Auth(SoonCard, null)}></Route>
           <Route path="/soon/list" element={Auth(SoonList, null)}></Route>
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
