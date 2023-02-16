@@ -1,10 +1,12 @@
 import {FastifyReply, FastifyInstance, FastifyRequest} from "fastify";
 import {
   addSoonHistory,
+  getSoonHistory,
   getSoonHistorySJList,
   getSoonHistorySJListNotMe,
   getSoonHistorySWList,
   removeSoonHistory,
+  editSoonHistory,
 } from "@soon/service/SoonHistoryService";
 import {getUserCampus} from "@user/service/UserCampusService";
 import {authHandler} from "@utils/OAuth2Utils";
@@ -18,6 +20,12 @@ type jwt = {
 };
 
 export default async function (fastify: FastifyInstance) {
+  fastify.get("/:historyid", async (req: FastifyRequest<{Params: {historyid: number}}>, reply: FastifyReply) => {
+    const {historyid} = req.params;
+    const histories = await getSoonHistory(historyid);
+    reply.send(histories);
+  });
+
   //TODO: 권한 있을 때, 권한 없을 때 (campus 조회 권한)
   fastify.get("/sj/:sjid", {
     preHandler: authHandler([AUTH.USER]),
@@ -63,8 +71,31 @@ export default async function (fastify: FastifyInstance) {
       }>,
       reply: FastifyReply,
     ) => {
-      console.log(req.body);
+
       const history = await addSoonHistory(req.body);
+      reply.send(history);
+    },
+  );
+
+  fastify.put(
+    "/:historyid",
+    async (
+      req: FastifyRequest<{
+        Params: {historyid: number};
+        Body: {
+          userid?: number;
+          sjid: number;
+          swid: number;
+          kind: string;
+          progress: string;
+          historydate: Date;
+          contents?: string;
+        };
+      }>,
+      reply: FastifyReply,
+    ) => {
+      const {historyid} = req.params;
+      const history = await editSoonHistory(historyid,req.body);
       reply.send(history);
     },
   );

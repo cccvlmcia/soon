@@ -5,19 +5,21 @@ import Error from "components/Error/Error";
 import {getSoonListQuery} from "@recoils/api/Soon";
 import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 export default function Home() {
   const loginUser = useRecoilValue(userState);
+  const navigate = useNavigate();
   return (
     <Box>
-      <RightPanel data={loginUser} />
+      <RightPanel data={loginUser} navigate={navigate} />
+      <MoveHistory navigate={navigate} />
     </Box>
   );
 }
 
-function MySoon({userid}: any) {
+function MySoon({userid, navigate}: any) {
   const {isLoading, isError, data, error} = getSoonListQuery(userid);
-  const navigate = useNavigate();
   if (isLoading) {
     return <Loading />;
   }
@@ -28,16 +30,17 @@ function MySoon({userid}: any) {
     navigate(`soon/${swid}/card`);
   };
   return (
-    <Box>
-      <Stack direction={"column"} spacing={1}>
-        {data.map(({soonwon}: any) => {
-          return (
-            <Box key={soonwon?.userid} bgcolor="pink" onClick={() => handleClick(soonwon?.userid)}>
-              {soonwon?.nickname}
-            </Box>
-          );
-        })}
-      </Stack>
+    <Box sx={{width: "90%", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))", gridGap: "10px"}}>
+      {data.map(({soonwon}: any) => {
+        return (
+          <Box
+            key={soonwon?.userid}
+            sx={{textAlign: "center", padding: "10px 0", background: "#ffeded", cursor: "pointer"}}
+            onClick={() => handleClick(soonwon?.userid)}>
+            {soonwon?.nickname}
+          </Box>
+        );
+      })}
     </Box>
   );
 }
@@ -67,54 +70,43 @@ function LeftPanel({data}: any) {
 }
 
 // right panel
-function RightPanel({data}: any) {
-  const navigate = useNavigate();
+function RightPanel({data, navigate}: any) {
   return (
     <Box sx={{width: "100%", display: "flex", alignItems: "center", flexDirection: "column", fontSize: "20px"}}>
       <Box sx={{display: "flex", justifyContent: "center", flexDirection: "column", maxWidth: "400px"}}>
-        <MyImage />
+        <MyImage userid={data?.userid} navigate={navigate} />
       </Box>
       <Stack direction="row" spacing={1}>
-        <Box>
-          <Stack direction="row">
-            <Box>{data?.nickname}</Box>
-            <Box onClick={() => navigate(`/myprofile/${data?.userid}`)}>⚙️</Box>
-          </Stack>
+        <Box>{data?.nickname}</Box>
+        <Box sx={{cursor: "pointer"}} onClick={() => navigate(`/myprofile/${data?.userid}`)}>
+          ⚙️
         </Box>
-        <Box>
-          <Stack direction="row">
-            <Box>ID=</Box>
-            <Box>{data?.userid}</Box>
-          </Stack>
-        </Box>
+        <Box>ID={data?.userid}</Box>
       </Stack>
       <Stack direction="row">
-        <Box>{data?.campus[0]?.major}</Box>
-        <Box>/</Box>
-        <Box>{data?.campus[0]?.sid}</Box>
-        <Box>/</Box>
-        <Box>{data?.gender}</Box>
+        {data?.campus[0]?.major} / {data?.campus[0]?.sid} / {data?.gender}
       </Stack>
       <Box component={"h2"}>나의 순원</Box>
-      <Stack direction={"row"} spacing={1}>
-        <Box>
-          <MySoon userid={data?.userid} />
-        </Box>
-      </Stack>
+      <MySoon userid={data?.userid} navigate={navigate} />
     </Box>
   );
 }
 
-function MyImage() {
+function MyImage({userid, navigate}: any) {
   return (
-    <Box>
-      <Box
-        style={{width: "100%"}}
-        component="img"
-        src={
-          "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340"
-        }
-      />
+    <Box
+      style={{width: "100%"}}
+      component="img"
+      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340"
+      onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}
+    />
+  );
+}
+
+function MoveHistory({navigate}: any) {
+  return (
+    <Box sx={{position: "absolute", bottom: "20px", right: "20px"}} onClick={() => navigate("/history")}>
+      <AddCircleIcon fontSize="large" sx={{color: "#ebe159", borderRadius: "50%", cursor: "pointer"}} />
     </Box>
   );
 }

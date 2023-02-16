@@ -3,12 +3,18 @@ import SoonHistory from "@soon/entity/SoonHistory";
 import SoonPray from "@soon/entity/SoonPray";
 import {In} from "typeorm";
 
+export async function getSoonHistory(historyid: number) {
+
+  return await SoonHistory.findOne({where: {historyid}, relations: {soonjang: true, soonwon: true, prays: true}});
+
+}
+
 export async function getSoonHistorySWList(swid: number) {
-  return await SoonHistory.find({where: {swid}});
+  return await SoonHistory.find({where: {swid}, relations: {soonjang: true, soonwon: true}});
 }
 
 export async function getSoonHistorySJList(sjid: number) {
-  return await SoonHistory.find({where: {sjid}});
+  return await SoonHistory.find({where: {sjid}, relations: {soonjang: true, soonwon: true}});
 }
 export async function getSoonHistorySJListNotMe(sjid: number, campues: string[]) {
   return await SoonHistory.find({
@@ -20,6 +26,35 @@ export async function getSoonHistorySJListNotMe(sjid: number, campues: string[])
 // export async function getSoonHistorySJListNotMe(sjid: number, campues: string[]) {
 //   return await SoonHistory.find({where: {sjid, soonwon: {campus: {campusid: In(campues)}}}, relations: {soonwon: {campus: true}}});
 // }
+
+
+export async function editSoonHistory(
+  historyid: number,
+  history: {
+    userid?: number;
+    sjid: number;
+    swid: number;
+    kind: string;
+    progress: string;
+    historydate: Date;
+    contents?: string;
+    prays?: {
+      pray: string;
+      publicyn: string;
+    }[];
+  },
+) {
+
+  return await txProcess(async manager => {
+    const repository = manager.getRepository(SoonHistory);
+    if (history.userid == undefined) {
+      history.userid = history.sjid;
+    }
+    const historyData = await repository.update({historyid}, history);
+
+    return historyData;
+  });
+}
 
 export async function addSoonHistory(history: {
   userid?: number;

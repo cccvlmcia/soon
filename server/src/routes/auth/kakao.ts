@@ -11,7 +11,6 @@ export default async function (fastify: FastifyInstance) {
     console.log("req.query >>", req.query);
     try {
       const data: any = await kakaoOAuth2.getAccessTokenFromAuthorizationCodeFlow(req);
-      console.log("data >>", data);
       const ssoid = data.id;
       const email = data.kakao_account?.email;
       const nickname = data?.kakao_account?.profile?.nickname;
