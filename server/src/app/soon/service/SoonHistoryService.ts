@@ -4,7 +4,9 @@ import SoonPray from "@soon/entity/SoonPray";
 import {In} from "typeorm";
 
 export async function getSoonHistory(historyid: number) {
+
   return await SoonHistory.findOne({where: {historyid}, relations: {soonjang: true, soonwon: true, prays: true}});
+
 }
 
 export async function getSoonHistorySWList(swid: number) {
@@ -25,6 +27,7 @@ export async function getSoonHistorySJListNotMe(sjid: number, campues: string[])
 //   return await SoonHistory.find({where: {sjid, soonwon: {campus: {campusid: In(campues)}}}, relations: {soonwon: {campus: true}}});
 // }
 
+
 export async function editSoonHistory(
   historyid: number,
   history: {
@@ -41,19 +44,13 @@ export async function editSoonHistory(
     }[];
   },
 ) {
+
   return await txProcess(async manager => {
     const repository = manager.getRepository(SoonHistory);
-    const prayRepository = manager.getRepository(SoonPray);
     if (history.userid == undefined) {
       history.userid = history.sjid;
     }
-
     const historyData = await repository.update({historyid}, history);
-
-    if (history?.prays && history?.prays?.length > 0) {
-      const prays = history?.prays.map(pray => ({historyid, ...pray}));
-      await prayRepository.save(prays);
-    }
 
     return historyData;
   });

@@ -89,10 +89,6 @@ export default async function (fastify: FastifyInstance) {
           progress: string;
           historydate: Date;
           contents?: string;
-          prays?: {
-            pray: string;
-            publicyn: string;
-          }[];
         };
       }>,
       reply: FastifyReply,
