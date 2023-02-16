@@ -8,7 +8,6 @@ import {useNavigate} from "react-router-dom";
 import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import Popover from "@mui/material/Popover";
 import {api} from "@recoils/consonants";
-import { Stack } from "@mui/system";
 
 const useStyles = makeStyles({
   root: {
@@ -21,26 +20,6 @@ const useStyles = makeStyles({
     height: 300,
   },
 });
-
-const soonStyles = makeStyles({
-  root: {
-    width: 500,
-    height: 100,
-    display: "flex",
-    flexDirection: "row",
-  },
-});
-
-export function SoonCardHeader({nickname, area, campus}: any) {
-  const classes = soonStyles();
-  return (
-  <Card className={classes.root}>
-    <CardContent>
-      <Typography variant="h4">{nickname}/{area}/{campus}</Typography>
-    </CardContent>
-  </Card>
-  );
-}
 
 const avatar =
   "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340";

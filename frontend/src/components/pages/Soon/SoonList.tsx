@@ -9,7 +9,7 @@ import axios from "axios";
 import { api } from "@recoils/consonants";
 
 export default function SoonList() {
-  const userid = 1 //TODO: user#
+  const userid = 2 //TODO: user#
   return (
     <Box>
       <Stack direction={"row"}>

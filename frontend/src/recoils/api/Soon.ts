@@ -17,6 +17,9 @@ export const options = {
 const getSoonList = (sjid: Number) => api.get(`/soon/sj/${sjid}`);
 const getSoonInfo = (swid: Number) => api.get(`/soon/sj/${swid}`);
 const getSoonId = (sjid: Number, swid: Number) => api.get(`/soon/${sjid}/${swid}`);
+const  getSoonHistory = (historyid: Number) => api.get(`/soon/history/${historyid}`);
+const getSoonHistorySWList = (swid: Number) => api.get(`/soon/history/sw/${swid}`);
+const getSoonHistorySJList = (sjid: Number) => api.get(`/soon/history/sj/${sjid}`);
 
 // const addSoon = (sjid: Number, swid: Number) =>
 //   api.post("/soon", {
@@ -24,7 +27,6 @@ const getSoonId = (sjid: Number, swid: Number) => api.get(`/soon/${sjid}/${swid}
 //       sjid,
 //       swid,
 //     },
-//     withCredentials: true,
 //   });
 // const removeSoon = (sjid: Number, swid: Number) => api.delete(`/soon/${sjid}/${swid}`);
 
@@ -43,3 +45,17 @@ export const getSoonIdQuery = (sjid: Number, swid: Number) => {
   return {isLoading, isError, data: data?.data, error};
 };
 
+export const getSoonHistoryQuery = (historyid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("getSoonHistory", () => getSoonHistory(historyid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
+
+export const getSoonHistorySWListQuery = (swid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("getSoonHistorySWList", () => getSoonHistorySWList(swid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
+
+export const getSoonHistorySJListQuery = (sjid: Number) => {
+  const {isLoading, isError, data, error} = useQuery("getSoonHistorySJList", () => getSoonHistorySJList(sjid), options);
+  return {isLoading, isError, data: data?.data, error};
+};
