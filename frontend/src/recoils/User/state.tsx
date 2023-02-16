@@ -15,6 +15,12 @@ export const userSelector = selector({
     );
   },
 });
+
+export const userState = atom({
+  key: "userState",
+  default: null,
+});
+
 // export const userSelector = selector({
 //   key: "userSelector",
 //   get: async ({get}) => {
@@ -28,7 +34,3 @@ export const userSelector = selector({
 //     );
 //   },
 // });
-export const userState = atom({
-  key: "userState",
-  default: null,
-});

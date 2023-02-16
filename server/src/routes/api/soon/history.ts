@@ -1,6 +1,7 @@
 import {FastifyReply, FastifyInstance, FastifyRequest} from "fastify";
 import {
   addSoonHistory,
+  getSoonHistory,
   getSoonHistorySJList,
   getSoonHistorySJListNotMe,
   getSoonHistorySWList,
@@ -18,6 +19,12 @@ type jwt = {
 };
 
 export default async function (fastify: FastifyInstance) {
+  fastify.get("/:historyid", async (req: FastifyRequest<{Params: {historyid: number}}>, reply: FastifyReply) => {
+    const {historyid} = req.params;
+    const histories = await getSoonHistory(historyid);
+    reply.send(histories);
+  });
+
   //TODO: 권한 있을 때, 권한 없을 때 (campus 조회 권한)
   fastify.get("/sj/:sjid", {
     preHandler: authHandler([AUTH.USER]),
@@ -63,9 +70,7 @@ export default async function (fastify: FastifyInstance) {
       }>,
       reply: FastifyReply,
     ) => {
-      const {data}: any = req.body;
-      console.log("data >>", data);
-      const history = await addSoonHistory(data);
+      const history = await addSoonHistory(req.body);
       reply.send(history);
     },
   );
