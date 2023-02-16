@@ -63,9 +63,8 @@ export default async function (fastify: FastifyInstance) {
       }>,
       reply: FastifyReply,
     ) => {
-      const {data}: any = req.body;
-      console.log("data >>", data);
-      const history = await addSoonHistory(data);
+      console.log(req.body);
+      const history = await addSoonHistory(req.body);
       reply.send(history);
     },
   );
