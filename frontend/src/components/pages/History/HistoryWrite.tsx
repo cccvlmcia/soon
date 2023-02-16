@@ -53,36 +53,18 @@ export default function HistoryWrite() {
   const authUser = useRecoilValue(userSelector);
   const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102");
 
-  const handleDateChange = (newValue: Dayjs | null) => {
-    setDate(newValue);
-  };
+  const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
 
-  const handleTextFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
-
     newValues[index].pray = event.target.value;
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
   };
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
-    const newValues = [...prayers];
-    newValues[index].publicyn = event.target.checked ? "true" : "false"; // Set value to "true" or "false" as a string
-    setPrayers(newValues);
-    setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
-  };
-  const handleReceive = (event: SelectChangeEvent<never[]>) => {
-    const value = event.target.value as string;
-    setSelected(typeof value === "string" ? value.split(",") : value);
-  };
-  const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
-    const value = event.target.value as string;
-    setCategorySelected(typeof value === "string" ? value : value);
-  };
-  const handleAddTextField = () => {
+  const handleAddPrayerField = () => {
     setPrayers([...prayers, {pray: "", publicyn: "true"}]);
   };
-
-  const handleDeleteTextField = (index: number) => {
+  const handleDeletePrayerField = (index: number) => {
     const newValues = [...prayers];
     newValues.splice(index, 1);
     setPrayers(newValues);
@@ -90,6 +72,23 @@ export default function HistoryWrite() {
   };
   const onChangeUser = (e: any) => {
     setOpen(true);
+  };
+
+  const handlPublicynChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+    const newValues = [...prayers];
+    newValues[index].publicyn = event.target.checked ? "true" : "false"; // Set value to "true" or "false" as a string
+    setPrayers(newValues);
+    setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
+  };
+  // Method 순모임 받은 사람 핸들링
+  const handleSwidReceive = (event: SelectChangeEvent<never[]>) => {
+    const value = event.target.value as string;
+    setSelected(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
+    const value = event.target.value as string;
+    setCategorySelected(typeof value === "string" ? value : value);
   };
 
   //error 처리....
@@ -182,7 +181,7 @@ export default function HistoryWrite() {
         {/* 선택방법.. 사용자 선택 */}
         <Box className="header">받은 사람</Box>
         <Box sx={{width: "calc(100% - 100px)"}}>
-          <Select value={selected as never} fullWidth multiple onChange={handleReceive} renderValue={selected => selected.join(", ")}>
+          <Select value={selected as never} fullWidth multiple onChange={handleSwidReceive} renderValue={selected => selected.join(", ")}>
             {userList.map((user: any, index: number) => (
               <MenuItem key={index} value={user.name}>
                 <Checkbox checked={selected.indexOf(user.name.toString()) > -1}></Checkbox>
@@ -215,24 +214,24 @@ export default function HistoryWrite() {
         <Box>
           {prayers.map((value, index) => (
             <Box key={index} sx={{display: "flex", alignItems: "center", mb: 2}}>
-              <TextField sx={{mr: 2}} value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handleTextFieldChange(event, index)} />
+              <TextField sx={{mr: 2}} value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handlePrayerFieldChange(event, index)} />
               <FormControlLabel
                 control={
                   <Checkbox
                     checked={value.publicyn === "true" ? true : false}
-                    onChange={event => handleCheckboxChange(event, index)}
+                    onChange={event => handlPublicynChange(event, index)}
                     name={`publicyn-${index}`}
                   />
                 }
                 label="Public"
               />
-              <Button sx={{ml: 2}} onClick={() => handleDeleteTextField(index)}>
+              <Button sx={{ml: 2}} onClick={() => handleDeletePrayerField(index)}>
                 Delete
               </Button>
             </Box>
           ))}
 
-          <Button onClick={handleAddTextField}>Add Prayer Field</Button>
+          <Button onClick={handleAddPrayerField}>Add Prayer Field</Button>
         </Box>
       </Box>
 
