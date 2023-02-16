@@ -1,22 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
-import Error from "components/Error/Error";
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  SelectChangeEvent,
-  Checkbox,
-  ListItemText,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState} from "recoil";
+import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 
-import {useNavigate} from "react-router-dom";
 import {editUser, postLogout, postUserRegistAxios} from "@recoils/user/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
@@ -54,7 +40,6 @@ export default function MyProfile() {
   const [user, setUser]: any = useState(null);
   const [open, setOpen]: any = useState(false);
   //{campusid, cccyn,gender, major,nickname,sid}
-  const navigate = useNavigate();
 
   function getSid(camid: string) {
     return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.sid;
@@ -116,86 +101,60 @@ export default function MyProfile() {
       component="form"
       onSubmit={handleSubmit(writeRegister)}
       sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "left",
         ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
         ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
+        ".value": {minWidth: "200px"},
       }}>
       <Box className="row">
         <Box className="header">이름</Box>
-        <Box>
+        <Box className="value">
           <TextField {...register("name")} value={name} onChange={handleName} />
         </Box>
       </Box>
       <Box className="row">
         <Box className="header">캠퍼스</Box>
-        <Box>
+        <Box className="value">
           <Button variant="outlined" onClick={onChangeCampus}>
             캠퍼스 선택
           </Button>
           <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
         </Box>
-        {/* <Box sx={{width: "calc(100% - 80px)", paddingRight: "10px"}}>
-          <Select
-            {...register("campusid")}
-            value={campusSelected}
-            fullWidth
-            onChange={handleCampusReceive}
-            // renderValue={(selected: any) => selected?.name}
-          >
-            {campusList?.map((campus: any, index: number) => (
-              <MenuItem key={index} value={campus} selected={index == 0}>
-                <ListItemText primary={campus?.name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </Box> */}
       </Box>
 
       <Box className="row">
         <Box className="header">학번</Box>
-        <Box>
+        <Box className="value">
           <TextField {...register("sid")} value={sid} onChange={handleSid} />
         </Box>
       </Box>
       <Box className="row">
-        {" "}
         <Box className="header">학과</Box>
-        <Box>
+        <Box className="value">
           <TextField {...register("major")} value={major} onChange={handleMajor} />
         </Box>
       </Box>
       <Box className="row">
-        {" "}
         <Box className="header">ccc 여부</Box>
-        <Box>
-          <RadioGroup
-            // {...register("cccYN")}
-            row
-            aria-labelledby="demo-radio-buttons-group-label"
-            // defaultValue="Y"
-            // name="radio-buttons-group"
-            value={(cccYNSelected as never) || null}
-            onChange={handleCCCYNReceive}>
+        <Box className="value">
+          <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
             <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
             <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
           </RadioGroup>
         </Box>
       </Box>
       <Box className="row">
-        {" "}
         <Box className="header">성별</Box>
-        <Box>
-          <RadioGroup
-            // {...register("gender")}
-            row
-            aria-labelledby="demo-radio-buttons-group-label"
-            value={(genderSelected as never) || null}
-            onChange={handleGednerReceive}>
+        <Box className="value">
+          <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
             <FormControlLabel value="female" control={<Radio checked={genderSelected == "female"} />} label="여자" />
             <FormControlLabel value="male" control={<Radio checked={genderSelected == "male"} />} label="남자" />
           </RadioGroup>
         </Box>
       </Box>
-
       <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}>
         <Button variant="outlined" type="submit">
           저장

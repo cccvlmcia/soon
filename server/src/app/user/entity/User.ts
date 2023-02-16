@@ -1,4 +1,5 @@
 import {COLUMN_TYPE_BIGINT, COLUMN_TYPE_ENUM} from "@common/CommonConstants";
+import Soon from "@soon/entity/Soon";
 import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, OneToOne} from "typeorm";
 import {Gender, USER_STATUS} from "../UserConstants";
 import UserAuth from "./UserAuth";
@@ -36,4 +37,10 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => UserAuth, auth => auth.user)
   auth: UserAuth;
+
+  @OneToMany(() => Soon, soon => soon.soonjang)
+  sj: Soon;
+
+  @OneToMany(() => Soon, soon => soon.soonwon)
+  sw: Soon;
 }

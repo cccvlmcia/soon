@@ -64,18 +64,14 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
           borderTop: "1px solid #EFEFEF",
           "> div": {padding: "20px", cursor: "pointer", borderBottom: "1px solid #EFEFEF"},
         }}>
-        <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
-          {data?.nickname ? (
+        {data?.nickname && (
+          <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
             <Box sx={{display: "flex"}} onClick={handleUser}>
               <AccountCircleIcon />
               {data?.nickname}
             </Box>
-          ) : (
-            <Box sx={{color: "white", padding: "16px 10px", cursor: "pointer"}} onClick={handleLogin}>
-              로그인
-            </Box>
-          )}
-        </Box>
+          </Box>
+        )}
         <Box onClick={() => move("/")}>홈</Box>
         <Box onClick={() => move("/campus")}>캠퍼스지체들</Box>
         <Box onClick={() => move("/admin")}>관리자</Box>
