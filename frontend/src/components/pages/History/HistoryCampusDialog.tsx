@@ -15,6 +15,11 @@ import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 
+type User = {
+  userid: string;
+  nickname: string;
+};
+
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
@@ -28,33 +33,35 @@ export default function HistoryCampusDialog({
   open,
   setOpen,
   users,
-  userid: userid,
+  selectedUsers,
   handleUser,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   users: any[];
-  userid: any;
+  selectedUsers: User[];
   handleUser: any;
 }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleItem = (campus: any) => {
+  const handleSelectedUser = (user: any) => {
     setOpen(false);
-    handleUser(campus);
+    handleUser(user);
   };
-  // console.log("received users : ", users);
-  const filteredItems = users.filter(user => user.userid != userid);
-  const itemList = filteredItems?.map(item => (
-    <Box key={item?.userid}>
-      <ListItemButton onClick={() => handleItem(item)}>
-        {/* {item?.campusid == campusid?.campusid && <CheckIcon />} */}
-        <ListItemText primary={item?.name} />
+  //FIXME: 시간 복잡도가 문제 때문에, set을 사용했습니다.
+  const selectedUserSet = new Set(selectedUsers.map(user => user.userid));
+  const filteredUsers = users.filter(user => !selectedUserSet.has(user.userid));
+  // console.log(users);
+  const userList = filteredUsers.map(user => (
+    <Box key={user.userid}>
+      <ListItemButton onClick={() => handleSelectedUser(user)}>
+        <ListItemText primary={user.nickname} />
       </ListItemButton>
       <Divider />
     </Box>
   ));
+
   return (
     <Box>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -68,7 +75,7 @@ export default function HistoryCampusDialog({
             </Typography>
           </Toolbar>
         </AppBar>
-        <List>{itemList}</List>
+        <List>{userList}</List>
       </Dialog>
     </Box>
     // <div>

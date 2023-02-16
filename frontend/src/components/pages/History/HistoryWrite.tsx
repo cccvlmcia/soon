@@ -18,10 +18,11 @@ type Prayer = {
   publicyn: string;
 };
 type FormData = {
-  soonjang: string;
-  category: string;
+  sjid: string;
+  swid: string;
+  kind: string;
   progress: string;
-  date: string;
+  historydate: Date;
   contents: string;
   prayer: string;
   prays: Prayer[];
@@ -38,23 +39,43 @@ type Category = {
 };
 
 export default function HistoryWrite() {
-  const [open, setOpen]: any = useState(false);
-  const navigate = useNavigate();
   const {historyid} = useParams();
-  const [date, setDate] = useState<Dayjs | null>(dayjs("2023-08-18T21:11:54"));
+  const navigate = useNavigate();
   const {register, handleSubmit, setValue, getValues} = useForm<FormData>(); // user
+  const [SoonwonOpen, setSoonwonOpen]: any = useState(false);
+  const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
+  const [date, setDate] = useState<Dayjs | null>(dayjs("2023-08-18T21:11:54"));
   const [userList, setUserList] = useState<User[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
   const [categorySelected, setCategorySelected] = useState<string>("");
-  const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "true"}]);
-
-  //FIXME: 현재 유저의 모든 정보를 가져 오는게 옳지 않은 듯?
-  const authUser = useRecoilValue(userSelector);
   const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102");
+  const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
+
+  const onChangeSoonjang = (e: any) => {
+    setSoonjangOpen(true);
+  };
+  const onChangeSoonwon = (e: any) => {
+    setSoonwonOpen(true);
+  };
+
+  //선택 된 유저는 공통 관리
+  const [selectedUsers, setSeletedUsers] = useState<User[]>([]);
+  //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
+  const [soonjang, setSoonjang] = useState<User>({userid: "0", nickname: ""});
+  const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
+
+  const handleSoonjang = (user: User) => {
+    setSoonjang(user);
+    setSeletedUsers([...selectedUsers, user]);
+    console.log("soonjang 수정 : ", user, soonjang);
+  };
+  const handleSoonwon = (user: User) => {
+    setSoonwon(user);
+    setSeletedUsers([...selectedUsers, user]);
+    console.log("soonwon 수정 : ", user, soonwon);
+  };
 
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
-
   const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
     newValues[index].pray = event.target.value;
@@ -62,7 +83,7 @@ export default function HistoryWrite() {
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
   };
   const handleAddPrayerField = () => {
-    setPrayers([...prayers, {pray: "", publicyn: "true"}]);
+    setPrayers([...prayers, {pray: "", publicyn: "Y"}]);
   };
   const handleDeletePrayerField = (index: number) => {
     const newValues = [...prayers];
@@ -70,20 +91,12 @@ export default function HistoryWrite() {
     setPrayers(newValues);
     setValue("prays", newValues);
   };
-  const onChangeUser = (e: any) => {
-    setOpen(true);
-  };
 
   const handlPublicynChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
-    newValues[index].publicyn = event.target.checked ? "true" : "false"; // Set value to "true" or "false" as a string
+    newValues[index].publicyn = event.target.checked ? "Y" : "N"; // Set value to "true" or "false" as a string
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
-  };
-  // Method 순모임 받은 사람 핸들링
-  const handleSwidReceive = (event: SelectChangeEvent<never[]>) => {
-    const value = event.target.value as string;
-    setSelected(typeof value === "string" ? value.split(",") : value);
   };
 
   const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
@@ -92,13 +105,22 @@ export default function HistoryWrite() {
   };
 
   //error 처리....
-  const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
-    params.category = categorySelected;
-    params.date = dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ");
+  const sendHistory: SubmitHandler<FormData> = async (params: FormData) => {
+    console.log("순장 순원 ", soonjang, soonwon);
+    //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
+    if (soonjang.userid == "0" || soonwon.userid == "0") {
+      console.log("순장/순원 선택 바랍니다");
+      return;
+    }
+    params.kind = categorySelected;
+    params.historydate = new Date(dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
+    // params.historydate = Date(date);
     params.prays = prayers;
+    params.sjid = soonjang.userid;
+    params.swid = soonwon.userid;
 
     console.log("params >> ", params);
-    const result = await api.post(`/history`, params);
+    const result = await api.post(`soon/history`, params);
     if (result) {
       navigate("/");
     } else {
@@ -106,23 +128,21 @@ export default function HistoryWrite() {
     }
   };
 
-  // 중간에 발생하는 값의 변화를 탐지하기 위함
   useEffect(() => {
     userListFunc();
     categoryFunc();
     fetchData();
-  }, [historyid]);
+  });
 
-  const handleUser = (user: any) => {};
   function fetchData() {
     if (isLoading) return <Loading />;
     if (isError) return <Error error={error} />;
   }
   const userListFunc = () => {
     const userList: User[] = data?.map(({user}: {user: User}) => {
-      return {userid: user.userid, name: user.nickname};
+      return {userid: user.userid, nickname: user.nickname};
     });
-    console.log(userList);
+    // console.log("user list : ", userList);
     setUserList(userList || []);
   };
   // 순모임 종류 선택 사항
@@ -137,7 +157,7 @@ export default function HistoryWrite() {
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(writeHistory)}
+      onSubmit={handleSubmit(sendHistory)}
       sx={[
         historyid ? styles.mobile.container : styles.web.container,
         styles.web.writeform,
@@ -149,11 +169,18 @@ export default function HistoryWrite() {
       <Box sx={styles.text}>순모임 히스토리 기록</Box>
       <Box className="row">
         <Box className="header">해준 사람</Box>
-        <Button variant="outlined" onClick={onChangeUser}>
-          해준 사람 선택
-        </Button>
+        <Box>{soonjang.nickname}1234 </Box>
         <Box>
-          <HistoryCampusDialog open={open} setOpen={setOpen} users={userList} userid="" handleUser={handleUser} />
+          <Button variant="outlined" onClick={onChangeSoonjang}>
+            해준 사람 선택
+          </Button>
+          <HistoryCampusDialog
+            open={SoonjangOpen}
+            setOpen={setSoonjangOpen}
+            users={userList}
+            selectedUsers={selectedUsers}
+            handleUser={handleSoonjang}
+          />
           {/* <TextField {...register("soonjang")} /> */}
         </Box>
       </Box>
@@ -163,8 +190,8 @@ export default function HistoryWrite() {
         <Box sx={{width: "calc(100% - 100px)"}}>
           <Select value={categorySelected as never} fullWidth onChange={handleCategoryReceive} renderValue={selected => selected}>
             {categoryList.map((soonType: any, index: number) => (
-              <MenuItem key={index} value={soonType.name}>
-                <Checkbox checked={categorySelected.indexOf(soonType.name.toString()) > -1}></Checkbox>
+              <MenuItem key={index} value={soonType.id}>
+                <Checkbox checked={categorySelected.indexOf(soonType.id.toString()) > -1}></Checkbox>
                 <ListItemText primary={soonType.name} />
               </MenuItem>
             ))}
@@ -180,16 +207,11 @@ export default function HistoryWrite() {
       <Box className="row">
         {/* 선택방법.. 사용자 선택 */}
         <Box className="header">받은 사람</Box>
-        <Box sx={{width: "calc(100% - 100px)"}}>
-          <Select value={selected as never} fullWidth multiple onChange={handleSwidReceive} renderValue={selected => selected.join(", ")}>
-            {userList.map((user: any, index: number) => (
-              <MenuItem key={index} value={user.name}>
-                <Checkbox checked={selected.indexOf(user.name.toString()) > -1}></Checkbox>
-                <ListItemText primary={user.name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
+        <Box> 받은 사람 보여줄 필드</Box>
+        <Button variant="outlined" onClick={onChangeSoonwon}>
+          받은 사람 선택
+        </Button>
+        <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
       </Box>
       <Box className="row">
         <Box className="header">날짜</Box>
@@ -218,7 +240,7 @@ export default function HistoryWrite() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={value.publicyn === "true" ? true : false}
+                    checked={value.publicyn === "Y" ? true : false}
                     onChange={event => handlPublicynChange(event, index)}
                     name={`publicyn-${index}`}
                   />
