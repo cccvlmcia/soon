@@ -20,9 +20,13 @@ export default async function (fastify: FastifyInstance) {
 
   fastify.get("/user", async (req: FastifyRequest<{Body: {jwt: jwt}}>, reply: FastifyReply) => {
     const {jwt} = req.body;
-    const {userid} = jwt;
-    const user = await getUserInfo(userid);
-    reply.send(user);
+    const userid = jwt?.userid;
+    if (userid) {
+      const user = await getUserInfo(userid);
+      reply.send(user);
+    } else {
+      reply.send(null);
+    }
   });
 
   fastify.post("/logout", async (req: FastifyRequest, reply: FastifyReply) => {
