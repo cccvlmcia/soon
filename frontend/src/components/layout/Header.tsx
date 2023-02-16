@@ -8,8 +8,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import {useRecoilState} from "recoil";
-import {userState} from "@recoils/user/state";
 import {postLogout} from "@recoils/user/axios";
+import {userState} from "@recoils/user/state";
 
 export default function Header() {
   const [open, setOpen] = useState(false);

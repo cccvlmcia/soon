@@ -4,7 +4,7 @@ import {useRecoilState} from "recoil";
 import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 
 import {editUser, postLogout, postUserRegistAxios} from "@recoils/user/axios";
-import {userGoogleAuthState} from "@recoils/Login/state";
+import {userGoogleAuthState} from "@recoils/login/state";
 import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
 import {campusState} from "@recoils/campus/state";

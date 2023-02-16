@@ -7,7 +7,7 @@ import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {UserCard} from "@layout/Card";
 import {api} from "@recoils/consonants";
-import {getSoonListQuery} from "@recoils/api/Soon";
+import {getSoonListQuery} from "@recoils/soon/query";
 import {userState} from "@recoils/user/state";
 import {styles} from "@layout/styles";
 
