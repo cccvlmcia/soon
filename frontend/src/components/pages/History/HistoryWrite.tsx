@@ -13,17 +13,23 @@ export default function HistoryWrite() {
   historyid ? console.log("history id >> ", historyid) : "";
   const {register, handleSubmit} = useForm<FormData>(); //user
   const [userList, setUserList] = useState<Object[]>([]);
-  const [kindList, setKindList] = useState<Object[]>([]);
+  const [categoryList, setCateogryList] = useState<Object[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [cateogrySelected, setCateogrySelected] = useState<string>("");
 
   const handleReceive = (event: SelectChangeEvent<never[]>) => {
     const value = event.target.value as string;
     setSelected(typeof value === "string" ? value.split(",") : value);
   };
+  const handleCateoryReceive = (event: SelectChangeEvent<never>) => {
+    const value = event.target.value as string;
+    setCateogrySelected(typeof value === "string" ? value : value);
+  };
 
   //error 처리....
   const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
     params.list = selected; //
+    params.category = cateogrySelected;
     console.log("params >> ", params);
     const result = await api.post(`/history`, params);
     if (result) {
@@ -44,6 +50,7 @@ export default function HistoryWrite() {
   // 중간에 발생하는 값의 변화를 탐지하기 위함
   useEffect(() => {
     userListFunc();
+    categoryFunc();
   }, [historyid]);
 
   const userListFunc = () => {
@@ -53,12 +60,13 @@ export default function HistoryWrite() {
       {userid: "3", name: "주님"},
     ]);
   };
-  const kindFunc = () => {
-    setKindList([
-      // {soon: "soon",name:}, //순모임
-      // {coffee: "coffee"}, //커피타임
-      // {activity: "activity"}, //외부활동
-      // {unity: "unity"}, //연합 순모임
+  // 순모임 종류 선택 사항
+  const categoryFunc = () => {
+    setCateogryList([
+      {id: "soon", name: "순모임"}, //순모임
+      {id: "coffee", name: "커피 타임"}, //커피타임
+      {id: "activity", name: "외부 활동"}, //외부활동
+      {id: "unity", name: "합동 순모임"}, //합동 순모임
     ]);
   };
   return (
@@ -84,8 +92,15 @@ export default function HistoryWrite() {
       <Box className="row">
         {/* 선택방법.. 분류 종류 */}
         <Box className="header">분류</Box>
-        <Box>
-          <TextField {...register("category")} />
+        <Box sx={{width: "calc(100% - 100px)"}}>
+          <Select value={cateogrySelected as never} fullWidth onChange={handleCateoryReceive} renderValue={selected => selected}>
+            {categoryList.map((soonType: any, index: number) => (
+              <MenuItem key={index} value={soonType.name}>
+                <Checkbox checked={cateogrySelected.indexOf(soonType.name.toString()) > -1}></Checkbox>
+                <ListItemText primary={soonType.name} />
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
       </Box>
       <Box className="row">
