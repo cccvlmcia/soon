@@ -7,7 +7,7 @@ import {api} from "@recoils/consonants";
 import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
 import dayjs, {Dayjs} from "dayjs";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {format} from "path";
+// import moment from "moment";
 export default function HistoryWrite() {
   const navigate = useNavigate();
   const {historyid} = useParams();
@@ -35,7 +35,7 @@ export default function HistoryWrite() {
   const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
     params.list = selected; //
     params.category = cateogrySelected;
-    params.date = date?.format("YYYY-MM-DD") || "";
+    params.date = dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ");
     console.log("params >> ", params);
     const result = await api.post(`/history`, params);
     if (result) {
