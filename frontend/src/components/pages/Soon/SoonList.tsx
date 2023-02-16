@@ -41,10 +41,11 @@ export default function SoonList() {
           <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
         ))}
       </Box>
-      <Stack direction={"row"}>
+      {/*FIXME: 순원 추가/삭제는 관리자 권한! */}
+      {/* <Stack direction={"row"}>
         <SoonAddButton sjid={userid} setSoonlist={setSoonlist} textFieldOpen={addOpen} setTextFieldOpen={setAddOpen} />
         <SoonDeleteButton sjid={userid} setSoonlist={setSoonlist} textFieldOpen={delOpen} setTextFieldOpen={setDelOpen} />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }
