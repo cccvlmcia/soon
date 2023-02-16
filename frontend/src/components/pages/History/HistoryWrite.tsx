@@ -1,5 +1,14 @@
-import {Box, Button, Checkbox, FormControlLabel, TextField} from "@mui/material";
+
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText} from "@mui/material";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {useNavigate, useParams} from "react-router-dom";
+import {styles} from "@layout/styles";
+import {api} from "@recoils/consonants";
+
 import {postSoon} from "@recoils/user/axios";
+
 
 import {ChangeEvent, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
@@ -22,11 +31,17 @@ export default function HistoryWrite() {
     setTextFields([...textFields, {pray: "", publicyn: true}]);
   };
 
-  const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newValues = [...textFields];
-    newValues[index].pray = event.target.value;
-    setTextFields(newValues);
-    setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
+  //error 처리....
+  const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
+    params.list = selected;
+    console.log("params >> ", params);
+    const result = await api.post(`/history`, params);
+    if (result) {
+      navigate("/");
+    } else {
+      console.log("SERVER에서 응답하지 않습니다");
+    }
+
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -54,45 +69,77 @@ export default function HistoryWrite() {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(writeSoon)}>
-      <Box>
-        <Box>해준 사람</Box>
-        <TextField {...register("giver")} />
+    <Box
+      component="form"
+      onSubmit={handleSubmit(writeHistory)}
+      sx={[
+        historyid ? styles.mobile.container : styles.web.container,
+        styles.web.writeform,
+        {
+          ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
+          ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+        },
+      ]}>
+      <Box sx={styles.text}>순모임 히스토리 기록</Box>
+      <Box className="row">
+        <Box className="header">해준 사람</Box>
+        {/* 선택방법.. 사용자 선택 */}
+        <Box>
+          <TextField {...register("soonjang")} />
+        </Box>
       </Box>
-      <Box>
-        <Box>분류</Box>
-        <TextField {...register("kind")} />
+      <Box className="row">
+        {/* 선택방법.. 분류 종류 */}
+        <Box className="header">분류</Box>
+        <Box>
+          <TextField {...register("category")} />
+        </Box>
       </Box>
-      <Box>
-        <Box>진도</Box>
-        <TextField {...register("progress")} />
+      <Box className="row">
+        <Box className="header">진도</Box>
+        <Box>
+          <TextField {...register("progress")} />
+        </Box>
       </Box>
-      <Box>
-        <Box>받은 사람</Box>
-        <TextField {...register("taker")} />
+      <Box className="row">
+        {/* 선택방법.. 사용자 선택 */}
+        <Box className="header">받은 사람</Box>
+        <Box sx={{width: "calc(100% - 100px)"}}>
+          <Select value={selected as never} fullWidth multiple onChange={handleReceive} renderValue={selected => selected.join(", ")}>
+            {userList.map((user: any, index: number) => (
+              <MenuItem key={index} value={user.name}>
+                <Checkbox checked={selected.indexOf(user.name.toString()) > -1}></Checkbox>
+                <ListItemText primary={user.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
       </Box>
-      <Box>
-        <Box>날짜</Box>
-        <TextField {...register("date")} />
+      <Box className="row">
+        {/*날짜 선택 */}
+        <Box className="header">날짜</Box>
+        <Box>
+          <TextField {...register("date")} />
+        </Box>
       </Box>
-      <Box>
-        <Box>내용</Box>
-        <TextField multiline rows={4} {...register("contents")} />
+      <Box className="row">
+        <Box className="header">내용</Box>
+        <Box>
+          <TextField multiline rows={4} {...register("contents")} />
+        </Box>
       </Box>
-      <Box>
-        {textFields.map((value, index) => (
-          <Box key={index}>
-            <TextField value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handleTextFieldChange(event, index)} />
-            <FormControlLabel
-              control={<Checkbox checked={value.publicyn} onChange={event => handleCheckboxChange(event, index)} name={`publicyn-${index}`} />}
-              label="Public"
-            />
-          </Box>
-        ))}
-        <Button onClick={handleAddTextField}>기도 제목을 추가하세요~</Button>
+      <Box className="row">
+        {/* 여러줄 추가 / 비밀여부... / textarea? */}
+        <Box className="header">기도제목</Box>
+        <Box>
+          <TextField {...register("prayer")} />
+        </Box>
+
       </Box>
-      <Box>
-        <Button type="submit">저장</Button>
+      <Box sx={{width: "100%", display: "flex", justifyContent: "center", marginTop: "10px"}}>
+        <Button variant="outlined" type="submit">
+          저장
+        </Button>
       </Box>
     </Box>
   );

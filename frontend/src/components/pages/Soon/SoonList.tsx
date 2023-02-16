@@ -1,30 +1,37 @@
 import {Box, Stack} from "@mui/material";
 import {useState} from "react";
-import {Button, makeStyles, TextField} from "@material-ui/core";
+import {Button, TextField} from "@mui/material";
 import {UserCard} from "@layout/Card";
-import { getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
+import {getSoonListQuery} from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
-import axios from "axios";
-import { api } from "@recoils/consonants";
+import {api} from "@recoils/consonants";
+import {useRecoilValue} from "recoil";
+import {userState} from "@recoils/user/state";
 
 export default function SoonList() {
-  const userid = 1 //TODO: user#
+  const loginUser: any = useRecoilValue(userState);
+  console.log("loginUser >", loginUser?.userid);
+  const userid = loginUser?.userid || 1; //TODO: user#
   return (
     <Box>
+      <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "10px"}}>
+        <MySoon userid={userid} />
+      </Box>
       <Stack direction={"row"}>
-        <Box><MySoon userid = {userid}/></Box>
-      </Stack>
-      <Stack direction={"row"}>
-        <Box><SoonAddButton userid = {userid}/></Box>
-        <Box><SoonDeleteButton userid = {userid}/></Box>
+        <Box>
+          <SoonAddButton userid={userid} />
+        </Box>
+        <Box>
+          <SoonDeleteButton userid={userid} />
+        </Box>
       </Stack>
     </Box>
   );
 }
 
 function MySoon({userid}: any) {
-  const {isLoading, isError, data, error} = getSoonListQuery(userid)
+  const {isLoading, isError, data, error} = getSoonListQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
@@ -32,16 +39,11 @@ function MySoon({userid}: any) {
     return <Error error={error} />;
   }
   return (
-    <div>
-      {data?.map((
-        {soonid, soonwon}: any) => (
-        <UserCard
-          key={soonid}
-          userid={soonwon.userid}
-          nickname={soonwon.nickname}
-        />
+    <Box>
+      {data?.map(({soonid, soonwon}: any) => (
+        <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
       ))}
-    </div>
+    </Box>
   );
 }
 
@@ -63,8 +65,7 @@ function SoonAddButton({userid}: any) {
     event.preventDefault();
     const swid = Number(text);
     const sjid = userid;
-    api.post("/soon", {sjid, swid})
-
+    api.post("/soon", {sjid, swid});
   };
 
   return (
@@ -78,6 +79,7 @@ function SoonAddButton({userid}: any) {
         }}>
         +
       </Button>
+      {/* FIXME: 순원추가 버튼 > Full-screen dialogs에서 전체 캠퍼스 사용자 중에 선택하는 걸로 */}
       {textFieldOpen && (
         <form onSubmit={handleSubmit}>
           <TextField label="순원id를 입력해주세요" value={text} onChange={handleChange} />
@@ -107,7 +109,7 @@ function SoonDeleteButton({userid}: any) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const swid = Number(text);
     const sjid = userid;
-    api.delete(`/soon/${sjid}/${swid}`)
+    api.delete(`/soon/${sjid}/${swid}`);
     event.preventDefault();
   };
 

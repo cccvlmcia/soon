@@ -18,9 +18,14 @@ export default function Header() {
   const handleMenuOpen = () => {
     setOpen(!open);
   };
+  const title = "";
   return (
-    <Box sx={{background: "black", height: "50px"}}>
-      <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px"}} />
+    <Box sx={{background: "black", height: "60px", display: "flex", alignItems: "center"}}>
+      {/* 여기에 들어간 페이지 title 처리.. 해야 하지 않겠니 */}
+      <Box>
+        <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px", height: "36px", width: "36px"}} />
+      </Box>
+      <Box>{title}</Box>
       <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
     </Box>
   );
@@ -42,6 +47,10 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
     handleMenuOpen();
     navigate("/login");
   };
+  const handleUser = () => {
+    handleMenuOpen();
+    navigate(`/myprofile/${data?.userid}`);
+  };
   return (
     <Drawer open={open} onClose={handleMenuOpen}>
       <Box>
@@ -49,6 +58,7 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
       </Box>
       <Box
         sx={{
+          width: "250px",
           display: "flex",
           flexDirection: "column",
           borderTop: "1px solid #EFEFEF",
@@ -56,7 +66,7 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
         }}>
         <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
           {data?.nickname ? (
-            <Box sx={{display: "flex"}}>
+            <Box sx={{display: "flex"}} onClick={handleUser}>
               <AccountCircleIcon />
               {data?.nickname}
             </Box>

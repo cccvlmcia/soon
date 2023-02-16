@@ -1,19 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import Error from "components/Error/Error";
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  SelectChangeEvent,
-  Checkbox,
-  ListItemText,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
+import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 import {getCampusListQuery} from "@recoils/api/User";
 import Loading from "react-loading";
 import {useRecoilValue, useSetRecoilState} from "recoil";
@@ -23,6 +11,7 @@ import {postLogout, postUserRegistAxios} from "@recoils/user/axios";
 import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
+import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 
 type FormData = {
   name: string;
@@ -44,12 +33,23 @@ const Register: React.FC = () => {
   const {register, handleSubmit} = useForm<FormData>();
   const setLoginUser = useSetRecoilState(userState);
   const [campusList, setCampusList] = useState<campusType[]>([]);
+  const [campus, setCampus] = useState<any>(null);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
   const googleAuth = useRecoilValue(userGoogleAuthState);
   const navigate = useNavigate();
+
+  const onChangeCampus = (event: SelectChangeEvent<never[]>) => {
+    setOpen(true);
+  };
+  const handleCampus = (campus: any) => {
+    setCampus(campus);
+    setCampusSelected([campus?.name]);
+    setCampusIdSelected([campus?.campusid]);
+  };
   const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
     const selectedNames = event.target.value as string[];
     const selectedIds = selectedNames.map(name => {
@@ -110,16 +110,30 @@ const Register: React.FC = () => {
     fetchData();
   }, [data]);
   return (
-    <Box component="form" onSubmit={handleSubmit(writeRegister)}>
-      <Box>
-        <Box sx={{fontSize: "16px"}}>이름</Box>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(writeRegister)}
+      sx={{
+        ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
+        ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
+      }}>
+      <Box className="row">
+        <Box className="header">이름</Box>
         <Box>
           <TextField {...register("name")} />
         </Box>
       </Box>
-      <Box>
-        <Box>캠퍼스</Box>
-        <Box>
+      {/*단일만 선택 가능하도록 일단 마무리 */}
+      <Box className="row">
+        <Box className="header">캠퍼스</Box>
+        <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
+          <Button variant="outlined" onClick={onChangeCampus}>
+            캠퍼스 선택
+          </Button>
+          <Box>{...campusSelected}</Box>
+          <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
+        </Box>
+        {/* <Box sx={{width: "calc(100% - 80px)", paddingRight: "10px"}}>
           <Select
             {...register("campusid")}
             value={campusSelected as never}
@@ -134,22 +148,25 @@ const Register: React.FC = () => {
               </MenuItem>
             ))}
           </Select>
-        </Box>
+        </Box> */}
       </Box>
-      <Box>
-        <Box>학번</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">학번</Box>
         <Box>
           <TextField {...register("sid")} />
         </Box>
       </Box>
-      <Box>
-        <Box>학과</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">학과</Box>
         <Box>
           <TextField {...register("major")} />
         </Box>
       </Box>
-      <Box>
-        <Box>ccc 여부</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">ccc 여부</Box>
         <Box>
           <RadioGroup
             // {...register("cccYN")}
@@ -164,8 +181,9 @@ const Register: React.FC = () => {
           </RadioGroup>
         </Box>
       </Box>
-      <Box>
-        <Box>성별</Box>
+      <Box className="row">
+        {" "}
+        <Box className="header">성별</Box>
         <Box>
           <RadioGroup
             // {...register("gender")}
@@ -179,8 +197,10 @@ const Register: React.FC = () => {
         </Box>
       </Box>
 
-      <Box>
-        <Button type="submit">저장</Button>
+      <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}>
+        <Button variant="outlined" type="submit">
+          저장
+        </Button>
       </Box>
     </Box>
   );

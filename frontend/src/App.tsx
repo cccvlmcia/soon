@@ -19,9 +19,9 @@ import {userGoogleAuthState} from "@recoils/Login/state";
 import {useRecoilState, useRecoilValue} from "recoil";
 import Loading from "components/Loading/Loading";
 import {userState, userSelector} from "@recoils/user/state";
+import {campusState} from "@recoils/campus/state";
 
 export default function App() {
-
   return (
     //App 최초 로딩 fallback
     <Suspense fallback={<Loading />}>
@@ -32,6 +32,7 @@ export default function App() {
 
 function AppRoutes() {
   const googleAuth = useRecoilValue(userGoogleAuthState);
+  const campusList = useRecoilValue(campusState);
   const [loginUser, setLoginUser] = useRecoilState(userState);
   const authUser = useRecoilValue(userSelector);
   useEffect(() => {
@@ -47,6 +48,8 @@ function AppRoutes() {
           {/*Login */}
           <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
+          <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
+
           {/*Login */}
 
           {/*Not Login */}
@@ -54,10 +57,8 @@ function AppRoutes() {
           {/*Not Login */}
 
           {/*EveryOne */}
-          <Route
-            path="/register"
-            element={Auth(Register, null)}></Route>
-            {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
+          <Route path="/register" element={Auth(Register, null)}></Route>
+          {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
@@ -65,7 +66,6 @@ function AppRoutes() {
           <Route path="/soon/list" element={Auth(SoonList, null)}></Route>
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
           <Route path="/admin" element={Auth(Admin, null)}></Route>
-          <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route>
           <Route path="/withdrawal" element={Auth(Withdrawal, null)}></Route>
           {/*EveryOne */}
         </Route>

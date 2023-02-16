@@ -5,15 +5,18 @@ import Loading from "react-loading";
 import {UserCard} from "@layout/Card";
 import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
-import axios from "axios";
+import {campusState} from "@recoils/campus/state";
 export default function Campus() {
   const loginUser: any = useRecoilValue(userState);
+  const campusList: any = useRecoilValue(campusState);
   if (loginUser?.campus?.length == 0) {
     // <NoData/> 필요
     return <Box>데이터 없습니다.</Box>;
   }
   const campusid = loginUser?.campus[0]?.campusid || "";
-  const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102");
+  const campus = campusList?.find((cam: any) => cam?.campusid == campusid);
+  //FIXME: 하드코딩된 캠퍼스 수정
+  const {isLoading, isError, data, error} = getCampusUserQuery("UNIV102" || campusid);
   if (isLoading) {
     return <Loading />;
   }
@@ -25,14 +28,9 @@ export default function Campus() {
   ));
 
   return (
-    <Box>
-      <Box>
-        
-        <h1>00대학교 C맨들 족보</h1>
-        </Box>
-      {/* 항목들 정렬 - flex 를 사용 */}
-
-      <Box sx={{display: "flex", gap: 1, flexFlow: "row wrap"}}>{userList}</Box>
+    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+      <Box component={"h1"}>{campus?.name}</Box>
+      <Box sx={{display: "flex", gap: 1, flexFlow: "row wrap", justifyContent: "center"}}>{userList}</Box>
     </Box>
   );
 }

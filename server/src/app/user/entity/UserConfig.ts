@@ -1,12 +1,24 @@
 import {COLUMN_TYPE_BIGINT, COLUMN_TYPE_ENUM, CommonYN, COMMON_N} from "@common/CommonConstants";
-import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany, ManyToMany} from "typeorm";
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  CreateDateColumn,
+  PrimaryColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  ManyToMany,
+  OneToOne,
+} from "typeorm";
 import User from "./User";
 @Entity()
 export default class UserConfig extends BaseEntity {
   @PrimaryColumn({type: COLUMN_TYPE_BIGINT})
   userid: number;
 
-  @ManyToOne(() => User, user => user.userid)
+  @OneToOne(() => User, user => user.userid)
   @JoinColumn({name: "userid"})
   user: User;
 

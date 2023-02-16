@@ -5,6 +5,7 @@ import {userGoogleAuthState} from "@recoils/Login/state";
 import {userState} from "@recoils/user/state";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState, useSetRecoilState} from "recoil";
+import GoogleButton from "react-google-button";
 
 const Login = () => {
   const [googleAuth, setGoogleAuth] = useRecoilState(userGoogleAuthState);
@@ -55,8 +56,8 @@ const Login = () => {
   });
 
   return (
-    <Box>
-      <Button onClick={googleSocialLogin}>Google Button</Button>
+    <Box sx={{display: "flex", alignItems: "center", width: "100%", height: "300px", justifyContent: "center"}}>
+      <GoogleButton onClick={googleSocialLogin} />
     </Box>
   );
 };

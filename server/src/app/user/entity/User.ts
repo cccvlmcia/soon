@@ -1,5 +1,5 @@
 import {COLUMN_TYPE_BIGINT, COLUMN_TYPE_ENUM} from "@common/CommonConstants";
-import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn} from "typeorm";
+import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, OneToOne} from "typeorm";
 import {Gender, USER_STATUS} from "../UserConstants";
 import UserAuth from "./UserAuth";
 import UserCampus from "./UserCampus";
@@ -25,7 +25,7 @@ export default class User extends BaseEntity {
   @CreateDateColumn()
   createdate: Date;
 
-  @OneToMany(() => UserConfig, config => config.user)
+  @OneToOne(() => UserConfig, config => config.user)
   config: UserConfig;
 
   @OneToMany(() => UserLogin, login => login.user)
@@ -36,5 +36,4 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => UserAuth, auth => auth.user)
   auth: UserAuth;
-
 }

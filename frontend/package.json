@@ -22,6 +22,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@material-ui/core": "^4.12.4",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.7",
     "@mui/styled-engine": "^5.11.0",
@@ -33,6 +34,7 @@
     "muicss": "^0.10.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-button": "^0.7.2",
     "react-hook-form": "^7.43.0",
     "react-loading": "^2.0.3",
     "react-query": "^3.39.3",

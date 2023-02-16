@@ -1,6 +1,6 @@
 import {CommonYN} from "@common/CommonConstants";
 import {addUserLogin, removeUserLogin} from "@user/service/UserLoginService";
-import {addUser, getUserInfo, getUserList, removeUser} from "@user/service/UserService";
+import {addUser, editUser, getUserInfo, getUserList, removeUser} from "@user/service/UserService";
 import {Gender} from "@user/UserConstants";
 import {FastifyReply, FastifyInstance, FastifyRequest} from "fastify";
 import userArticle from "./article";
@@ -45,6 +45,31 @@ export default async function (fastify: FastifyInstance) {
       reply.send(selected);
     },
   );
+  fastify.put(
+    "/:userid",
+    async (
+      req: FastifyRequest<{
+        Params: {userid: number};
+        Body: {
+          nickname: string;
+          gender: Gender;
+          cccyn: CommonYN;
+          campusid: string;
+          major: string;
+          sid: number;
+          ssoid: string;
+          email: string;
+          type: string;
+        };
+      }>,
+      reply: FastifyReply,
+    ) => {
+      const {userid} = req.params;
+      console.log("userid, req.body >>>>", userid, req.body);
+      const selected = await editUser(userid, req.body);
+      reply.send(selected);
+    },
+  );
 
   //계정에 대한 SSO 연동
   fastify.post(
@@ -68,5 +93,3 @@ export default async function (fastify: FastifyInstance) {
     reply.send(articles);
   });
 }
-
-

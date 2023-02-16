@@ -8,7 +8,6 @@ import {useNavigate} from "react-router-dom";
 import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import Popover from "@mui/material/Popover";
 import {api} from "@recoils/consonants";
-import { Stack } from "@mui/system";
 
 const useStyles = makeStyles({
   root: {
@@ -24,21 +23,25 @@ const useStyles = makeStyles({
 
 const soonStyles = makeStyles({
   root: {
-    width: 500,
-    height: 100,
+    // width: 500,
+    // height: 100,
     display: "flex",
     flexDirection: "row",
   },
 });
 
-export function SoonCardHeader({nickname, area, campus}: any) {
+// 아니면 가지고 있는 캠퍼스 정보 목록 조회? SoonCardHeader? 이건뭐야?
+export function SoonCardHeader({nickname, campus}: any) {
   const classes = soonStyles();
   return (
-  <Card className={classes.root}>
-    <CardContent>
-      <Typography variant="h4">{nickname}/{area}/{campus}</Typography>
-    </CardContent>
-  </Card>
+    <Card className={classes.root}>
+      <CardContent>
+        <Typography variant="h6">이름: {nickname}</Typography>
+        <Typography variant="h6">캠퍼스: {campus?.campus?.name}</Typography>
+        <Typography variant="h6">전공: {campus?.major}</Typography>
+        <Typography variant="h6">학번: {campus?.sid}</Typography>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -66,9 +69,20 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
     <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
-        <Typography variant="body1">이름: {nickname}</Typography>
-        {major && <Typography variant="body1">전공: {major}</Typography>}
-        {sid && <Typography variant="body1">학번: {sid}</Typography>}
+        <Box sx={{display: "flex"}}>
+          <Box>
+            <Typography variant="body1">이름: {nickname}</Typography>
+            {major && <Typography variant="body1">전공: {major}</Typography>}
+            {sid && <Typography variant="body1">학번: {sid}</Typography>}
+          </Box>
+          {/* isAdmin(순코디/관리자) 일때만 조회*/}
+          <Box sx={{marginLeft: "auto"}}>
+            <Button variant="outlined" onClick={openSubMenu}>
+              권한
+            </Button>
+            <SubMenu id={userid} anchorEl={anchorEl} setAnchorEl={setAnchorEl} open={open} setOpen={setOpen} authes={authes} />
+          </Box>
+        </Box>
       </CardContent>
     </Card>
   );

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Box, Button} from "@mui/material";
+import {Box} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios} from "@recoils/Login/axios";
 import {userState} from "@recoils/user/state";
@@ -7,6 +7,7 @@ import {useRecoilState} from "recoil";
 import ModalDialog from "./modal/ModalDialog";
 import {postLogout, removeUser} from "@recoils/user/axios";
 import {useNavigate} from "react-router-dom";
+import GoogleButton from "react-google-button";
 
 export default function Withdrawal() {
   const [open, setOpen] = useState(false);
@@ -49,8 +50,8 @@ export default function Withdrawal() {
   return (
     <Box>
       회원탈퇴
-      <Box>
-        <Button onClick={googleSocialLogin}>Google Button</Button>
+      <Box sx={{display: "flex", alignItems: "center", width: "100%", height: "300px", justifyContent: "center"}}>
+        <GoogleButton onClick={googleSocialLogin} />
       </Box>
       <ModalDialog open={open} setOpen={setOpen} handleOK={handleOK} />
     </Box>
