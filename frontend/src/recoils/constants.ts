@@ -1,5 +1,4 @@
 import axios from "axios";
-import {getStorage, setStorage} from "utils/SecureStorage";
 
 export const api = axios.create({
   baseURL: "/api/v1",

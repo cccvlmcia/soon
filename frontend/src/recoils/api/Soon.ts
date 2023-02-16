@@ -1,5 +1,5 @@
 import {useQuery} from "react-query";
-import {api} from "@recoils/consonants";
+import {api} from "@recoils/constants";
 
 export const options = {
   refetchOnWindowFocus: false,

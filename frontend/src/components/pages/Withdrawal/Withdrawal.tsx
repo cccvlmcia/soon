@@ -3,9 +3,9 @@ import {Box} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios} from "@recoils/Login/axios";
 import {userState} from "@recoils/user/state";
+import {postLogout, removeUser} from "@recoils/user/axios";
 import {useRecoilState} from "recoil";
 import ModalDialog from "./modal/ModalDialog";
-import {postLogout, removeUser} from "@recoils/user/axios";
 import {useNavigate} from "react-router-dom";
 import GoogleButton from "react-google-button";
 

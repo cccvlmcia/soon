@@ -1,6 +1,5 @@
-import {api, axiosProcess, server} from "@recoils/consonants";
+import {api, axiosProcess, server} from "@recoils/constants";
 import {postUser} from "@recoils/types";
-import axios from "axios";
 
 export function postUserRegistAxios(userInfo: postUser) {
   return api.post("/user", userInfo);
