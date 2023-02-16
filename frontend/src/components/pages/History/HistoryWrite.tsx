@@ -1,4 +1,3 @@
-
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText} from "@mui/material";
@@ -7,33 +6,24 @@ import {useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
 import {api} from "@recoils/consonants";
 
-import {postSoon} from "@recoils/user/axios";
-
-
-import {ChangeEvent, useState} from "react";
-import {SubmitHandler, useForm} from "react-hook-form";
-
-type FormData = {
-  giver: string;
-  kind: string;
-  progress: string;
-  taker: string;
-  date: string;
-  contents: string;
-  prays: {pray: string; publicyn: boolean}[];
-};
-
 export default function HistoryWrite() {
-  const [textFields, setTextFields] = useState<{pray: string; publicyn: boolean}[]>([]);
-  const {register, handleSubmit, setValue, getValues} = useForm<FormData>();
+  const navigate = useNavigate();
+  const {historyid} = useParams();
 
-  const handleAddTextField = () => {
-    setTextFields([...textFields, {pray: "", publicyn: true}]);
+  historyid ? console.log("history id >> ", historyid) : "";
+  const {register, handleSubmit} = useForm<FormData>(); //user
+  const [userList, setUserList] = useState<Object[]>([]);
+  const [kindList, setKindList] = useState<Object[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+
+  const handleReceive = (event: SelectChangeEvent<never[]>) => {
+    const value = event.target.value as string;
+    setSelected(typeof value === "string" ? value.split(",") : value);
   };
 
   //error 처리....
   const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
-    params.list = selected;
+    params.list = selected; //
     console.log("params >> ", params);
     const result = await api.post(`/history`, params);
     if (result) {
@@ -41,33 +31,36 @@ export default function HistoryWrite() {
     } else {
       console.log("SERVER에서 응답하지 않습니다");
     }
-
   };
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newValues = [...textFields];
-    newValues[index].publicyn = event.target.checked;
-    setTextFields(newValues);
-    setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
+  type FormData = {
+    soonjang: string;
+    category: string;
+    progress: string;
+    date: string;
+    contents: string;
+    prayer: string;
+    list: string[];
   };
+  // 중간에 발생하는 값의 변화를 탐지하기 위함
+  useEffect(() => {
+    userListFunc();
+  }, [historyid]);
 
-  const writeSoon: SubmitHandler<FormData> = async (params: FormData) => {
-    const soonInfo = {
-      userid: 70,
-      sjid: 70,
-      swid: 70,
-      kind: params.kind,
-      progress: params.progress,
-      //FIXME: Date로 받도록 할 것
-      historydate: new Date(),
-      contents: params.contents,
-      //FIXME: pray의 publiccyn이거 boolean 값으로 바꿀 것
-      prays: null,
-    };
-    console.log("Form data:", soonInfo);
-    await postSoon(soonInfo);
+  const userListFunc = () => {
+    setUserList([
+      {userid: "1", name: "김이박"},
+      {userid: "2", name: "고범수"},
+      {userid: "3", name: "주님"},
+    ]);
   };
-
+  const kindFunc = () => {
+    setKindList([
+      // {soon: "soon",name:}, //순모임
+      // {coffee: "coffee"}, //커피타임
+      // {activity: "activity"}, //외부활동
+      // {unity: "unity"}, //연합 순모임
+    ]);
+  };
   return (
     <Box
       component="form"
@@ -134,7 +127,6 @@ export default function HistoryWrite() {
         <Box>
           <TextField {...register("prayer")} />
         </Box>
-
       </Box>
       <Box sx={{width: "100%", display: "flex", justifyContent: "center", marginTop: "10px"}}>
         <Button variant="outlined" type="submit">
