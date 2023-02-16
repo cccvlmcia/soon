@@ -1,7 +1,7 @@
 import {Box, Stack} from "@mui/material";
 import {useState} from "react";
 import {Button, TextField} from "@mui/material";
-import {UserCard} from "@layout/Card";
+import { UserCard } from "@layout/Card";
 import {getSoonListQuery} from "@recoils/api/Soon";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
