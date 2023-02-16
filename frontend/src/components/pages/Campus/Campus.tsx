@@ -6,9 +6,12 @@ import {UserCard} from "@layout/Card";
 import {useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
 import {campusState} from "@recoils/campus/state";
+import {authState} from "@recoils/auth/state";
 export default function Campus() {
   const loginUser: any = useRecoilValue(userState);
   const campusList: any = useRecoilValue(campusState);
+  const authes = useRecoilValue(authState);
+
   if (loginUser?.campus?.length == 0) {
     // <NoData/> 필요
     return <Box>데이터 없습니다.</Box>;
@@ -23,8 +26,19 @@ export default function Campus() {
   if (isError) {
     return <Error error={error} />;
   }
+  const auth = loginUser?.auth;
+  const isAdmin = auth?.filter(({authid}: {authid: string}) => authes?.filter(({id}) => id == authid)?.length > 0)?.length > 0;
   const userList = data?.map(({userid, user, campus, major, sid}: any) => (
-    <UserCard key={userid} userid={userid} nickname={user?.nickname} campus={campus?.name} major={major} sid={sid} />
+    <UserCard
+      key={userid}
+      userid={userid}
+      nickname={user?.nickname}
+      campus={campus?.name}
+      major={major}
+      sid={sid}
+      isAdmin={isAdmin}
+      authList={user?.auth}
+    />
   ));
 
   return (
