@@ -4,6 +4,7 @@ import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, L
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
+import {api} from "@recoils/consonants";
 
 export default function HistoryWrite() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function HistoryWrite() {
   historyid ? console.log("history id >> ", historyid) : "";
   const {register, handleSubmit} = useForm<FormData>(); //user
   const [userList, setUserList] = useState<Object[]>([]);
+  const [kindList, setKindList] = useState<Object[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
   const handleReceive = (event: SelectChangeEvent<never[]>) => {
@@ -19,10 +21,11 @@ export default function HistoryWrite() {
     setSelected(typeof value === "string" ? value.split(",") : value);
   };
 
+  //error 처리....
   const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
-    params.list = selected;
+    params.list = selected; //
     console.log("params >> ", params);
-    const result = await axios.post(`/history`, params);
+    const result = await api.post(`/history`, params);
     if (result) {
       navigate("/");
     } else {
@@ -50,61 +53,85 @@ export default function HistoryWrite() {
       {userid: "3", name: "주님"},
     ]);
   };
+  const kindFunc = () => {
+    setKindList([
+      // {soon: "soon",name:}, //순모임
+      // {coffee: "coffee"}, //커피타임
+      // {activity: "activity"}, //외부활동
+      // {unity: "unity"}, //연합 순모임
+    ]);
+  };
   return (
     <Box
       component="form"
       onSubmit={handleSubmit(writeHistory)}
-      sx={[historyid ? styles.mobile.container : styles.web.container, styles.web.writeform]}>
+      sx={[
+        historyid ? styles.mobile.container : styles.web.container,
+        styles.web.writeform,
+        {
+          ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
+          ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+        },
+      ]}>
       <Box sx={styles.text}>순모임 히스토리 기록</Box>
-      <Box>
-        <Box sx={{fontSize: "16px", color: "gray"}}>해준 사람</Box>
+      <Box className="row">
+        <Box className="header">해준 사람</Box>
+        {/* 선택방법.. 사용자 선택 */}
         <Box>
           <TextField {...register("soonjang")} />
         </Box>
       </Box>
-      <Box>
-        <Box>분류</Box>
+      <Box className="row">
+        {/* 선택방법.. 분류 종류 */}
+        <Box className="header">분류</Box>
         <Box>
           <TextField {...register("category")} />
         </Box>
       </Box>
-      <Box>
-        <Box>진도</Box>
+      <Box className="row">
+        <Box className="header">진도</Box>
         <Box>
           <TextField {...register("progress")} />
         </Box>
       </Box>
-      <Box>
-        <Box>받은 사람</Box>
-        <Select value={selected as never} fullWidth multiple onChange={handleReceive} renderValue={selected => selected.join(", ")}>
-          {userList.map((user: any, index: number) => (
-            <MenuItem key={index} value={user.name}>
-              <Checkbox checked={selected.indexOf(user.name.toString()) > -1}></Checkbox>
-              <ListItemText primary={user.name} />
-            </MenuItem>
-          ))}
-        </Select>
+      <Box className="row">
+        {/* 선택방법.. 사용자 선택 */}
+        <Box className="header">받은 사람</Box>
+        <Box sx={{width: "calc(100% - 100px)"}}>
+          <Select value={selected as never} fullWidth multiple onChange={handleReceive} renderValue={selected => selected.join(", ")}>
+            {userList.map((user: any, index: number) => (
+              <MenuItem key={index} value={user.name}>
+                <Checkbox checked={selected.indexOf(user.name.toString()) > -1}></Checkbox>
+                <ListItemText primary={user.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
       </Box>
-      <Box>
-        <Box>날짜</Box>
+      <Box className="row">
+        {/*날짜 선택 */}
+        <Box className="header">날짜</Box>
         <Box>
           <TextField {...register("date")} />
         </Box>
       </Box>
-      <Box>
-        <Box>내용</Box>
+      <Box className="row">
+        <Box className="header">내용</Box>
         <Box>
           <TextField multiline rows={4} {...register("contents")} />
         </Box>
       </Box>
-      <Box>
-        <Box>기도제목</Box>
+      <Box className="row">
+        {/* 여러줄 추가 / 비밀여부... / textarea? */}
+        <Box className="header">기도제목</Box>
         <Box>
           <TextField {...register("prayer")} />
         </Box>
       </Box>
-      <Box>
-        <Button type="submit">저장</Button>
+      <Box sx={{width: "100%", display: "flex", justifyContent: "center", marginTop: "10px"}}>
+        <Button variant="outlined" type="submit">
+          저장
+        </Button>
       </Box>
     </Box>
   );

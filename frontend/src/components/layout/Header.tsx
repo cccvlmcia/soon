@@ -7,25 +7,31 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import {useRecoilValue} from "recoil";
-import {userState} from "@recoils/User/state";
+import {useRecoilState} from "recoil";
+import {userState} from "@recoils/user/state";
+import {postLogout} from "@recoils/user/axios";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const loginUser = useRecoilValue(userState);
+  const [loginUser, setLoginUser] = useRecoilState(userState);
 
   const handleMenuOpen = () => {
     setOpen(!open);
   };
+  const title = "";
   return (
-    <Box sx={{background: "black", height: "50px"}}>
-      <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px"}} />
-      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} />
+    <Box sx={{background: "black", height: "60px", display: "flex", alignItems: "center"}}>
+      {/* 여기에 들어간 페이지 title 처리.. 해야 하지 않겠니 */}
+      <Box>
+        <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px", height: "36px", width: "36px"}} />
+      </Box>
+      <Box>{title}</Box>
+      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
     </Box>
   );
 }
 
-function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleMenuOpen: any}) {
+function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open: any; handleMenuOpen: any; setLoginUser: any}) {
   const navigate = useNavigate();
   const move = (route: string) => {
     handleMenuOpen();
@@ -35,7 +41,16 @@ function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleM
   const handleLogin = () => {
     navigate("/login");
   };
-  const handleLogout = () => {};
+  const handleLogout = async () => {
+    await postLogout();
+    setLoginUser(null);
+    handleMenuOpen();
+    navigate("/login");
+  };
+  const handleUser = () => {
+    handleMenuOpen();
+    navigate(`/myprofile/${data?.userid}`);
+  };
   return (
     <Drawer open={open} onClose={handleMenuOpen}>
       <Box>
@@ -43,6 +58,7 @@ function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleM
       </Box>
       <Box
         sx={{
+          width: "250px",
           display: "flex",
           flexDirection: "column",
           borderTop: "1px solid #EFEFEF",
@@ -50,7 +66,7 @@ function DrawerMenu({data, open, handleMenuOpen}: {data: any; open: any; handleM
         }}>
         <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
           {data?.nickname ? (
-            <Box sx={{display: "flex"}}>
+            <Box sx={{display: "flex"}} onClick={handleUser}>
               <AccountCircleIcon />
               {data?.nickname}
             </Box>

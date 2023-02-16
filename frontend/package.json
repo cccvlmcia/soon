@@ -34,6 +34,7 @@
     "muicss": "^0.10.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-button": "^0.7.2",
     "react-hook-form": "^7.43.0",
     "react-loading": "^2.0.3",
     "react-query": "^3.39.3",

@@ -1,5 +1,6 @@
+import {Suspense, useEffect} from "react";
 import {Box} from "@mui/material";
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, Navigate, useNavigate} from "react-router-dom";
 
 import Layout from "@layout/Layout";
 import Home from "@pages/Home";
@@ -15,20 +16,50 @@ import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
 import MyProfile from "@pages/MyProfile/MyProfile";
 import Withdrawal from "@pages/Withdrawal/Withdrawal";
+import {userGoogleAuthState} from "@recoils/Login/state";
+import {useRecoilState, useRecoilValue} from "recoil";
+import Loading from "components/Loading/Loading";
+import {userState, userSelector} from "@recoils/user/state";
+import {campusState} from "@recoils/campus/state";
 
 export default function App() {
+  return (
+    //App 최초 로딩 fallback
+    <Suspense fallback={<Loading />}>
+      <AppRoutes />
+    </Suspense>
+  );
+}
+
+function AppRoutes() {
+  const googleAuth = useRecoilValue(userGoogleAuthState);
+  const campusList = useRecoilValue(campusState);
+  const [loginUser, setLoginUser] = useRecoilState(userState);
+  const authUser = useRecoilValue(userSelector);
+  useEffect(() => {
+    if (loginUser == null || loginUser == "") {
+      setLoginUser(authUser);
+    }
+  }, [authUser]);
+
   return (
     <Box>
       <Routes>
         <Route element={<Layout />}>
           {/*Login */}
-          <Route path="/" element={Auth(Home, true)}></Route>
-          <Route path="/campus" element={Auth(Campus, true)}></Route>
+          <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
+          <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
+          <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
+
           {/*Login */}
 
           {/*Not Login */}
-          <Route path="/login" element={Auth(Login, null)}></Route>
+          <Route path="/login" element={Auth(Login, false)}></Route>
+          {/*Not Login */}
+
+          {/*EveryOne */}
           <Route path="/register" element={Auth(Register, null)}></Route>
+          {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
           <Route path="/register/:userid" element={Auth(Register, null)}></Route>
           <Route path="/history" element={Auth(HistoryWrite, null)}></Route>
           <Route path="/history/:historyid" element={Auth(HistoryWrite, null)}></Route>
@@ -37,9 +68,8 @@ export default function App() {
           <Route path="/soon/list" element={Auth(SoonList, null)}></Route>
           <Route path="/soon/graph" element={Auth(SoonGraph, null)}></Route>
           <Route path="/admin" element={Auth(Admin, null)}></Route>
-          <Route path="/myprofile/:userid" element={Auth(MyProfile, null)}></Route>
           <Route path="/withdrawal" element={Auth(Withdrawal, null)}></Route>
-          {/*Not Login */}
+          {/*EveryOne */}
         </Route>
       </Routes>
     </Box>

@@ -5,9 +5,9 @@ import UserLogin from "@user/entity/UserLogin";
 import {setAuthAdmin} from "@utils/AuthUtils";
 
 export async function getUserLogin(ssoid: string, userid?: number) {
-  //[SOON-001] 내용입력 
-  //[MAINTAIN-001] 내용입력 
-  return await UserLogin.findOne({where: {ssoid, userid}, relations: {user: {campus: true, login: true, config: true, auth: true}}});//이제 auth도 가져온다 02.15
+  //[SOON-001] 내용입력
+  //[MAINTAIN-001] 내용입력
+  return await UserLogin.findOne({where: {ssoid, userid}, relations: {user: {campus: {campus: true}, login: true, config: true, auth: true}}}); //이제 auth도 가져온다 02.15
 }
 export async function addUserLogin(userid: number, login: {ssoid: string; email: string; type: string}) {
   return await txProcess(async manager => {
@@ -30,7 +30,8 @@ export async function removeUserLogin({userid, ssoid}: {userid: number; ssoid: s
     const repository = manager.getRepository(UserLogin);
     const login = await repository.findOne({where: {userid, ssoid}});
     if (login) {
-      const email = login.email;``
+      const email = login.email;
+      ``;
       const config = await setAuthAdmin(manager, userid, email, {removed: true});
     }
     return await repository.delete({userid, ssoid});

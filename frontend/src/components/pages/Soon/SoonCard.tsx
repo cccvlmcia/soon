@@ -27,9 +27,9 @@ function SoonCardHeader({nickname, major, sid}: any) {
 }
 
 export default function SoonCard() {
-  const urlParams = new URL(location.href).searchParams;
-  const userid = Number(urlParams.get("id"));
-  const {isLoading, isError, data, error} = getUserInfoQuery(userid)
+  const params = useParams();
+  const userid = Number(params?.userid) || 0;
+  const {isLoading, isError, data, error} = getUserInfoQuery(userid);
   if (isLoading) {
     return <Loading />;
   }
@@ -100,4 +100,3 @@ function SoonHistorySJ({sjid}: any) {
     <Box>{soonHistorySJ}</Box>
   );
 }
-

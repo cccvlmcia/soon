@@ -10,34 +10,16 @@ export const server = axios.create({
   withCredentials: true,
 });
 
-export const localStorageEffect =
-  (key: string) =>
-  ({setSelf, onSet}: any) => {
-    const savedValue = getStorage(key);
-    if (savedValue != "") {
-      setSelf(JSON.parse(savedValue));
-    }
-    onSet((newValue: any, _: any, isReset: boolean) => {
-      if (newValue) {
-        // console.log("new Value : ", newValue);
-        setStorage(key, JSON.stringify(newValue));
-        // console.log("newvalue, isReset : ", newValue, isReset);
-      }
-    });
-  };
-// "" null undegined
-
-function isEmpty(str: string) {
-  return str == "" || str == undefined || str == null;
-}
-
 export async function axiosProcess(caller: Function, isLogin = false) {
   try {
     return await caller();
-  } catch (err) {
-    console.error("err ... ", err);
-    if (isLogin) {
+  } catch (err: any) {
+    console.log("error.... ", err?.response?.status);
+    if (err?.response?.status == 500) {
+      console.error(err);
+    } else if (isLogin) {
       //refresh token 남아 있으면 갱신?!
+
       const {data} = await server.post("/auth/refreshToken");
       if (data == "USER_AUTHENTICATED") {
         return await caller();
@@ -47,3 +29,15 @@ export async function axiosProcess(caller: Function, isLogin = false) {
     return null;
   }
 }
+export const options = {
+  refetchOnWindowFocus: false,
+  retry: 0,
+  onSuccess: ({data}: any) => {
+    //api 호출 성공
+    console.log("onSuccess >>", data);
+  },
+  onError: (error: any) => {
+    //api 호출 실패
+    console.log("onError >> ", error.message);
+  },
+};
