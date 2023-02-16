@@ -1,22 +1,27 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText} from "@mui/material";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
 import {api} from "@recoils/consonants";
-
+import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
+import dayjs, {Dayjs} from "dayjs";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {format} from "path";
 export default function HistoryWrite() {
   const navigate = useNavigate();
   const {historyid} = useParams();
-
-  historyid ? console.log("history id >> ", historyid) : "";
+  const [date, setDate] = useState<Dayjs | null>(dayjs("2023-08-18T21:11:54"));
   const {register, handleSubmit} = useForm<FormData>(); //user
   const [userList, setUserList] = useState<Object[]>([]);
   const [categoryList, setCateogryList] = useState<Object[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [cateogrySelected, setCateogrySelected] = useState<string>("");
 
+  const handleChange = (newValue: Dayjs | null) => {
+    setDate(newValue);
+    // console.log(date.$d);
+  };
   const handleReceive = (event: SelectChangeEvent<never[]>) => {
     const value = event.target.value as string;
     setSelected(typeof value === "string" ? value.split(",") : value);
@@ -30,6 +35,7 @@ export default function HistoryWrite() {
   const writeHistory: SubmitHandler<FormData> = async (params: FormData) => {
     params.list = selected; //
     params.category = cateogrySelected;
+    params.date = date?.format("YYYY-MM-DD") || "";
     console.log("params >> ", params);
     const result = await api.post(`/history`, params);
     if (result) {
@@ -126,9 +132,15 @@ export default function HistoryWrite() {
       <Box className="row">
         {/*날짜 선택 */}
         <Box className="header">날짜</Box>
-        <Box>
-          <TextField {...register("date")} />
-        </Box>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <MobileDatePicker
+            label="Date mobile"
+            inputFormat="MM/DD/YYYY"
+            value={date}
+            onChange={handleChange}
+            renderInput={params => <TextField {...params} />}
+          />
+        </LocalizationProvider>
       </Box>
       <Box className="row">
         <Box className="header">내용</Box>
