@@ -21,30 +21,6 @@ const useStyles = makeStyles({
   },
 });
 
-const soonStyles = makeStyles({
-  root: {
-    // width: 500,
-    // height: 100,
-    display: "flex",
-    flexDirection: "row",
-  },
-});
-
-// 아니면 가지고 있는 캠퍼스 정보 목록 조회? SoonCardHeader? 이건뭐야?
-export function SoonCardHeader({nickname, campus}: any) {
-  const classes = soonStyles();
-  return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography variant="h6">이름: {nickname}</Typography>
-        <Typography variant="h6">캠퍼스: {campus?.campus?.name}</Typography>
-        <Typography variant="h6">전공: {campus?.major}</Typography>
-        <Typography variant="h6">학번: {campus?.sid}</Typography>
-      </CardContent>
-    </Card>
-  );
-}
-
 const avatar =
   "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340";
 export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid, auth}: any) {
