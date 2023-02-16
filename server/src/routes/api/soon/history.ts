@@ -71,6 +71,7 @@ export default async function (fastify: FastifyInstance) {
       }>,
       reply: FastifyReply,
     ) => {
+
       const history = await addSoonHistory(req.body);
       reply.send(history);
     },
