@@ -19,19 +19,25 @@ export default async function (fastify: FastifyInstance) {
     const soon = await getSoonInfo(swid);
     reply.send(soon);
   });
- // 순 Id 가져오는 용도
-  fastify.get("/:sjid/:swid",async (req: FastifyRequest<{Params: {sjid:number, swid: number}}>, reply: FastifyReply) => {
-    const{sjid, swid} = req.params;
+  // 순 Id 가져오는 용도
+  fastify.get("/:sjid/:swid", async (req: FastifyRequest<{Params: {sjid: number; swid: number}}>, reply: FastifyReply) => {
+    const {sjid, swid} = req.params;
     const soonId = await getSoonId(sjid, swid);
     reply.send(soonId);
   });
 
   fastify.post("/", async (req: FastifyRequest<{Body: {sjid: number; swid: number}}>, reply: FastifyReply) => {
     const soon = await addSoon(req.body);
-    reply.send(soon);
+    if (soon) {
+      const result = await getSoonId(req.body.sjid, req.body.swid);
+      reply.send(result);
+    } else {
+      reply.send(soon);
+    }
+    // reply.send(soon);
   });
 
-  fastify.delete("/:sjid/:swid", async (req: FastifyRequest<{Params: {sjid: number, swid: number}}>, reply: FastifyReply) => {
+  fastify.delete("/:sjid/:swid", async (req: FastifyRequest<{Params: {sjid: number; swid: number}}>, reply: FastifyReply) => {
     const soon = await removeSoon(req.params);
     reply.send(soon);
   });
