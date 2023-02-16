@@ -170,7 +170,6 @@ export default function HistoryWrite() {
         </Box>
       </Box>
       <Box className="row">
-        {/*날짜 선택 */}
         <Box className="header">날짜</Box>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <MobileDatePicker
@@ -189,25 +188,29 @@ export default function HistoryWrite() {
         </Box>
       </Box>
       <Box>
-        {prayers.map((value, index) => (
-          <Box key={index} sx={{display: "flex", alignItems: "center", mb: 2}}>
-            <TextField sx={{mr: 2}} value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handleTextFieldChange(event, index)} />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={value.publicyn === "true" ? true : false}
-                  onChange={event => handleCheckboxChange(event, index)}
-                  name={`publicyn-${index}`}
-                />
-              }
-              label="Public"
-            />
-            <Button sx={{ml: 2}} onClick={() => handleDeleteTextField(index)}>
-              Delete
-            </Button>
-          </Box>
-        ))}
-        <Button onClick={handleAddTextField}>Add Prayer Field</Button>
+        <Box>기도 제목</Box>
+        <Box>
+          {prayers.map((value, index) => (
+            <Box key={index} sx={{display: "flex", alignItems: "center", mb: 2}}>
+              <TextField sx={{mr: 2}} value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handleTextFieldChange(event, index)} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={value.publicyn === "true" ? true : false}
+                    onChange={event => handleCheckboxChange(event, index)}
+                    name={`publicyn-${index}`}
+                  />
+                }
+                label="Public"
+              />
+              <Button sx={{ml: 2}} onClick={() => handleDeleteTextField(index)}>
+                Delete
+              </Button>
+            </Box>
+          ))}
+
+          <Button onClick={handleAddTextField}>Add Prayer Field</Button>
+        </Box>
       </Box>
 
       <Box sx={{width: "100%", display: "flex", justifyContent: "center", marginTop: "10px"}}>
