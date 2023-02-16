@@ -13,7 +13,6 @@ import {styles} from "@layout/styles";
 
 export default function SoonList() {
   const loginUser: any = useRecoilValue(userState);
-  console.log("loginUser >", loginUser?.userid);
   const userid = loginUser?.userid || 1;
   const [soonlist, setSoonlist] = useState([]);
   const [addOpen, setAddOpen] = useState(false);
