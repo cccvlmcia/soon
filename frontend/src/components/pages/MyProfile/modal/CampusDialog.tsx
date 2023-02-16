@@ -36,7 +36,6 @@ export default function CampusDialog({
   campusSelected: any;
   handleCampus: any;
 }) {
-  console.log("campusSelected >", campusSelected);
   const handleClose = () => {
     setOpen(false);
   };
