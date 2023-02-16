@@ -19,12 +19,8 @@ export default function SoonList() {
         <MySoon userid={userid} />
       </Box>
       <Stack direction={"row"}>
-        <Box>
-          <SoonAddButton userid={userid} />
-        </Box>
-        <Box>
-          <SoonDeleteButton userid={userid} />
-        </Box>
+        <SoonAddButton userid={userid} />
+        <SoonDeleteButton userid={userid} />
       </Stack>
     </Box>
   );
@@ -61,11 +57,14 @@ function SoonAddButton({userid}: any) {
     setText(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const swid = Number(text);
     const sjid = userid;
-    api.post("/soon", {sjid, swid});
+    const result = await api.post("/soon", {sjid, swid});
+    if (result) {
+      console.log("result >> ", result);
+    }
   };
 
   return (
