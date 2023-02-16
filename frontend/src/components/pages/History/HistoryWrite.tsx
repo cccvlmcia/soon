@@ -13,7 +13,7 @@ import Error from "components/Error/Error";
 import HistoryCampusDialog from "./HistoryCampusDialog";
 import {useRecoilValue} from "recoil";
 import {userSelector, userState} from "@recoils/user/state";
-import { getCampusUserQuery } from "@recoils/campus/query";
+import {getCampusUserQuery} from "@recoils/campus/query";
 type Prayer = {
   pray: string;
   publicyn: string;
@@ -64,16 +64,24 @@ export default function HistoryWrite() {
   //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
   const [soonjang, setSoonjang] = useState<User>({userid: "0", nickname: ""});
   const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
-
-  const handleSoonjang = (user: User) => {
-    setSoonjang(user);
-    setSeletedUsers([...selectedUsers, user]);
-    console.log("soonjang 수정 : ", user, soonjang);
+  //TODO: 순장 순원 삭제 기능 필요하면 추가하도록
+  // const handleDeleteSoonjang = () => {};
+  // const handleDeleteSoonwon = () => {};
+  const handleSoonjang = (newSoonjang: User) => {
+    setSoonjang(newSoonjang);
+    setSeletedUsers([newSoonjang, soonwon]);
+    // setSeletedUsers(userList.filter(user => user != soonjang && user != soonwon));
+    // console.log("soonjang 수정 : ", newSoonjang, soonjang);
+    console.log("seleted user가 될 값: ", [newSoonjang, soonwon]);
+    console.log("seleteduser : ", selectedUsers);
   };
-  const handleSoonwon = (user: User) => {
-    setSoonwon(user);
-    setSeletedUsers([...selectedUsers, user]);
-    console.log("soonwon 수정 : ", user, soonwon);
+  const handleSoonwon = (newSoonwon: User) => {
+    setSoonwon(newSoonwon);
+    setSeletedUsers([newSoonwon, soonjang]);
+    // setSeletedUsers(userList.filter(user => user == newSoonwon || user == soonjang));
+
+    // console.log("soonwon 수정 : ", , soonwon);
+    console.log("seleteduser : ", selectedUsers);
   };
 
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
@@ -133,7 +141,7 @@ export default function HistoryWrite() {
     userListFunc();
     categoryFunc();
     fetchData();
-  });
+  }, [historyid, soonjang, soonwon]);
 
   function fetchData() {
     if (isLoading) return <Loading />;
@@ -170,7 +178,8 @@ export default function HistoryWrite() {
       <Box sx={styles.text}>순모임 히스토리 기록</Box>
       <Box className="row">
         <Box className="header">해준 사람</Box>
-        <Box>{soonjang.nickname}1234 </Box>
+        <Box sx={{width: "200px"}}>{soonjang.nickname}</Box>
+
         <Box>
           <Button variant="outlined" onClick={onChangeSoonjang}>
             해준 사람 선택
@@ -182,7 +191,9 @@ export default function HistoryWrite() {
             selectedUsers={selectedUsers}
             handleUser={handleSoonjang}
           />
-          {/* <TextField {...register("soonjang")} /> */}
+          {/* <Button sx={{ml: 2}} onClick={() => handleDeleteSoonjang()}>
+            Delete
+          </Button> */}
         </Box>
       </Box>
       <Box className="row">
@@ -208,7 +219,8 @@ export default function HistoryWrite() {
       <Box className="row">
         {/* 선택방법.. 사용자 선택 */}
         <Box className="header">받은 사람</Box>
-        <Box> 받은 사람 보여줄 필드</Box>
+        <Box sx={{width: "200px"}}>{soonwon.nickname}</Box>
+
         <Button variant="outlined" onClick={onChangeSoonwon}>
           받은 사람 선택
         </Button>
