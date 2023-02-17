@@ -16,7 +16,7 @@ import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
 import MyProfile from "@pages/MyProfile/MyProfile";
 import Withdrawal from "@pages/Withdrawal/Withdrawal";
-import {userGoogleAuthState} from "@recoils/Login/state";
+import {userGoogleAuthState} from "@recoils/login/state";
 import {useRecoilState, useRecoilValue} from "recoil";
 import Loading from "components/Loading/Loading";
 import {userState, userSelector} from "@recoils/user/state";
@@ -59,7 +59,6 @@ function AppRoutes() {
           {/*Login */}
           <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
-          <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
           <Route path="/soon/list" element={Auth(SoonList, true, loginUser || authUser)}></Route>
           <Route path="/withdrawal" element={Auth(Withdrawal, true, loginUser || authUser)}></Route>
         </Route>
@@ -72,7 +71,6 @@ function AppRoutes() {
           }>
           <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
 
-          <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
           <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
         </Route>
 
@@ -91,6 +89,8 @@ function AppRoutes() {
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
+        <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
+        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
         <Route path="/register/:userid" element={Auth(Register, null)}></Route>
         <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
         <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser || authUser)}></Route>

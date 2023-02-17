@@ -39,7 +39,9 @@ export default function (fastify: FastifyInstance) {
           return true;
         } catch (err: any) {
           console.error(err);
-          if (!EXCEPT_URL.includes(req.url)) {
+          console.log("EXCEPT_URL >", EXCEPT_URL, req.url);
+          const isExcept = EXCEPT_URL.filter(url => req.url?.startsWith(url))?.length > 0;
+          if (!isExcept) {
             if (err.message == "jwt expired") {
               //얘만 /auth/refreshToken 호출
               reply.code(ERROR_AUTH_EXPIRED).send("ERROR_AUTH_EXPIRED");

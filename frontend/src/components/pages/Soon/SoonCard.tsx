@@ -13,7 +13,7 @@ const avatar =
 
 function SoonCardHeader({nickname, major, sid, campusList}: any) {
   const items = campusList?.map((campus: any) => (
-    <option key={campus?.campusid} selected value={campus?.campusid}>
+    <option key={campus?.campusid} value={campus?.campusid}>
       {campus?.name}
     </option>
   ));
