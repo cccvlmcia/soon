@@ -39,7 +39,6 @@ export default function (fastify: FastifyInstance) {
           return true;
         } catch (err: any) {
           console.error(err);
-          console.log("EXCEPT_URL >", EXCEPT_URL, req.url);
           const isExcept = EXCEPT_URL.filter(url => req.url?.startsWith(url))?.length > 0;
           if (!isExcept) {
             if (err.message == "jwt expired") {

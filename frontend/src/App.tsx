@@ -1,4 +1,4 @@
-import {Suspense, useEffect} from "react";
+import {Suspense} from "react";
 import {Box} from "@mui/material";
 import {Routes, Route} from "react-router-dom";
 
@@ -16,11 +16,9 @@ import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
 import MyProfile from "@pages/MyProfile/MyProfile";
 import Withdrawal from "@pages/Withdrawal/Withdrawal";
-import {userGoogleAuthState} from "@recoils/login/state";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilValue} from "recoil";
 import Loading from "components/Loading/Loading";
-import {userState, userSelector} from "@recoils/user/state";
-import {campusState} from "@recoils/campus/state";
+import {userState} from "@recoils/user/state";
 import MenuHeader from "@layout/header/MenuHeader";
 import BlankHeader from "@layout/header/BlankHeader";
 import PrevHeader from "@layout/header/PrevHeader";
@@ -37,15 +35,7 @@ export default function App() {
 }
 
 function AppRoutes() {
-  const googleAuth = useRecoilValue(userGoogleAuthState);
-  const campusList = useRecoilValue(campusState);
-  const [loginUser, setLoginUser] = useRecoilState(userState);
-  const authUser = useRecoilValue(userSelector);
-  useEffect(() => {
-    if (loginUser == null || loginUser == "") {
-      setLoginUser(authUser);
-    }
-  }, [authUser]);
+  const loginUser = useRecoilValue(userState);
 
   return (
     <Box>
@@ -57,10 +47,10 @@ function AppRoutes() {
             </Layout>
           }>
           {/*Login */}
-          <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
-          <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
-          <Route path="/soon/list" element={Auth(SoonList, true, loginUser || authUser)}></Route>
-          <Route path="/withdrawal" element={Auth(Withdrawal, true, loginUser || authUser)}></Route>
+          <Route path="/" element={Auth(Home, true, loginUser)}></Route>
+          <Route path="/campus" element={Auth(Campus, true, loginUser)}></Route>
+          <Route path="/soon/list" element={Auth(SoonList, true, loginUser)}></Route>
+          <Route path="/withdrawal" element={Auth(Withdrawal, true, loginUser)}></Route>
         </Route>
 
         <Route
@@ -69,9 +59,9 @@ function AppRoutes() {
               <PrevHeader />
             </Layout>
           }>
-          <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
+          <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser)}></Route>
 
-          <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
+          <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser)}></Route>
         </Route>
 
         <Route
@@ -84,16 +74,16 @@ function AppRoutes() {
           <Route path="/register" element={Auth(Register, null)}></Route>
         </Route>
         {/* Custom AppBar */}
-        <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
-        <Route path="/history" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
+        <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser)}></Route>
+        <Route path="/history" element={Auth(HistoryWrite, true, loginUser)}></Route>
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
-        <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
-        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
+        <Route path="/admin" element={Auth(Admin, true, loginUser)}></Route>
+        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser)}></Route>
         <Route path="/register/:userid" element={Auth(Register, null)}></Route>
-        <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
-        <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser || authUser)}></Route>
+        <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser)}></Route>
+        <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser)}></Route>
       </Routes>
     </Box>
   );

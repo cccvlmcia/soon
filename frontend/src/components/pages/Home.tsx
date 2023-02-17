@@ -66,7 +66,6 @@ function MySoon({userid}: any) {
         gridGap: "10px",
       }}>
       {data.map(({soonwon}: any) => {
-        console.log("soonwon >", soonwon);
         return (
           <Box
             key={soonwon?.userid}
