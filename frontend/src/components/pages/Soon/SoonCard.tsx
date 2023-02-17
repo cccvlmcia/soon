@@ -8,8 +8,7 @@ import {format} from "date-fns";
 import NoData from "components/common/NoData";
 import {getUserInfoQuery} from "@recoils/User/query";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-const avatar =
-  "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function SoonCardHeader({nickname, major, sid, campusList}: any) {
   const items = campusList?.map((campus: any) => (
@@ -24,7 +23,8 @@ function SoonCardHeader({nickname, major, sid, campusList}: any) {
           {items}
         </Select>
       </Box>
-      <Box sx={{marginTop: "40px", borderRadius: "50%", width: "100px"}} component={"img"} src={avatar}></Box>
+      {/* <Box sx={{marginTop: "40px", borderRadius: "50%", width: "100px"}} component={"img"} src={avatar}></Box> */}
+      <AccountCircleIcon sx={{width: 80, height: 80, opacity: "0.5"}} />
       <Box sx={{textAlign: "center"}}>
         {nickname} {sid} <Box sx={{opacity: "0.5"}}>{major}</Box>
       </Box>

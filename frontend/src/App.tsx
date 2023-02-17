@@ -52,7 +52,7 @@ function AppRoutes() {
       <Routes>
         <Route
           element={
-            <Layout>
+            <Layout sx={{".MuiAppBar-root, .MuiToolbar-root": {boxShadow: "transparent"}}}>
               <MenuHeader />
             </Layout>
           }>

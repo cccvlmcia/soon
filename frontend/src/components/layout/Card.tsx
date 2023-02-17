@@ -6,6 +6,7 @@ import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from 
 import Popover from "@mui/material/Popover";
 import {api} from "@recoils/constants";
 import {authState} from "@recoils/auth/state";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const useStyles = makeStyles({
   root: {
@@ -24,9 +25,6 @@ export function UserCard({userid, nickname, pictureUrl, campus, major, sid, isAd
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState<Boolean>(false);
-  pictureUrl =
-    "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340";
-
   const openSubMenu = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -37,30 +35,29 @@ export function UserCard({userid, nickname, pictureUrl, campus, major, sid, isAd
     <Box className={classes.root} onClick={() => navigate(`/soon/card/${userid}`)}>
       <Box>
         <Box sx={{display: "flex"}}>
-          <Box
+          <AccountCircleIcon sx={{width: 80, height: 80, marginRight: "10px", opacity: "0.5"}} />
+          {/* <Box
             component="img"
             sx={{
               display: "inline-block",
               width: 80,
-              height: 100,
+              height: 80,
+              borderRadius: "50%",
               marginRight: "10px",
             }}
             src={pictureUrl}
             alt={nickname}
-          />
+          /> */}
           <Box sx={{">div": {display: "flex"}, div: {wordBreak: "break-all"}}}>
             <Box>
-              <Box sx={{minWidth: "32px", marginRight: "8px"}}>이름</Box>
-              <Box>{nickname}</Box>
+              <Box>
+                {nickname}
+                <Box component="span" sx={{fontSize: "0.8em", opacity: "0.5", marginLeft: "6px"}}>
+                  {sid}학번
+                </Box>
+              </Box>
             </Box>
-            <Box>
-              <Box sx={{minWidth: "32px", marginRight: "8px"}}>학번</Box>
-              <Box>{sid}</Box>
-            </Box>
-            <Box>
-              <Box sx={{minWidth: "32px", marginRight: "8px"}}>전공</Box>
-              <Box>{major}</Box>
-            </Box>
+            <Box sx={{opacity: "0.5"}}>{major}</Box>
           </Box>
           {/* isAdmin(순코디/관리자) 일때만 조회*/}
           {isAdmin && (
