@@ -55,14 +55,17 @@ export default function CampusDialog({
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <AppBar sx={{position: "relative"}}>
+        <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
-              캠퍼스 선택
-            </Typography>
+            <Box sx={{ml: 2}}>
+              <Typography variant="h6" component="div">
+                캠퍼스 선택
+              </Typography>
+            </Box>
+
             {/* <Button autoFocus color="inherit" onClick={handleClose}>
               save
             </Button> */}

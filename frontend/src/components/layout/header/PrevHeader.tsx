@@ -20,9 +20,11 @@ export default function PrevHeader() {
           <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
             <ArrowBackIosNewIcon color="secondary" />
           </IconButton>
-          <Typography sx={{flex: 1}} variant="h6" component="div">
-            {getTitle(pathname)}
-          </Typography>
+          <Box sx={{ml: 2}}>
+            <Typography variant="h6" component="div">
+              {getTitle(pathname)}
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
     </>
