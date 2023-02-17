@@ -16,7 +16,7 @@ import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
 import MyProfile from "@pages/MyProfile/MyProfile";
 import Withdrawal from "@pages/Withdrawal/Withdrawal";
-import {userGoogleAuthState} from "@recoils/login/state";
+import {userGoogleAuthState} from "@recoils/Login/state";
 import {useRecoilState, useRecoilValue} from "recoil";
 import Loading from "components/Loading/Loading";
 import {userState, userSelector} from "@recoils/user/state";
