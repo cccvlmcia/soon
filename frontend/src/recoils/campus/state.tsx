@@ -19,3 +19,7 @@ export const campusState = atom({
     },
   }),
 });
+export const selectedCampusState = atom({
+  key: "selectedCampusState",
+  default: null,
+});

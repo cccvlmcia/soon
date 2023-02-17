@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup, AppBar, Toolbar, IconButton, Typography} from "@mui/material";
 
 import {editUser} from "@recoils/user/axios";
@@ -10,6 +10,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
+import {selectedCampusState} from "@recoils/campus/state";
 type FormData = {
   name: string;
   campusid: string;
@@ -30,10 +31,10 @@ export default function MyProfile() {
   const ref = useRef(null);
 
   const {register, handleSubmit} = useForm<FormData>();
-  const [loginUser, setLoginUser]: any = useRecoilState(userState);
+  const loginUser: any = useRecoilValue(userState);
   const campuses = loginUser?.campus?.map(({campus}: any) => campus);
   const [campusList, setCampusList] = useState(campuses);
-  const [campusSelected, setCampusSelected]: any = useState(campuses && campuses[0]);
+  const [campusSelected, setCampusSelected]: any = useRecoilState(selectedCampusState);
   const [genderSelected, setGenderSelected] = useState<string>(loginUser?.gender);
   const [cccYNSelected, setCccYNSelected] = useState<string>(loginUser?.config?.cccyn);
   const [name, setName] = useState<string>(loginUser?.nickname);

@@ -5,16 +5,16 @@ import {userState} from "@recoils/user/state";
 import Error from "components/Error/Error";
 import Loading from "components/Loading/Loading";
 import {useEffect, useState} from "react";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import UserDialog from "./modal/UserDialog";
-import {ListItemButton, IconButton, Divider} from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { getCampusUserQuery } from "@recoils/campus/query";
+import {ListItemButton, Divider} from "@mui/material";
+import {getCampusUserQuery} from "@recoils/campus/query";
+import {selectedCampusState} from "@recoils/campus/state";
 
 export default function Admin() {
   const loginUser: any = useRecoilValue(userState);
   const [campusList, setCampusList] = useState([]);
-  const [campus, setCampus]: any = useState(null);
+  const [campus, setCampus]: any = useRecoilState(selectedCampusState);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
