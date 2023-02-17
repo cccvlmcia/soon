@@ -23,6 +23,15 @@ export type HistoryForm = {
   prayer: string;
   prays: Prayer[];
 };
+export type HistoryEditForm = {
+  sjid: string;
+  swid: string;
+  kind: string;
+  progress: string;
+  historydate: Date;
+  contents: string;
+  prayer: string;
+};
 
 export type User = {
   userid: string;

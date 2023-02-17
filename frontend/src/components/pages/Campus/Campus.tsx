@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Box, Stack} from "@mui/material";
+import {Box} from "@mui/material";
 
 import Error from "components/Error/Error";
 import Loading from "react-loading";
@@ -30,10 +30,8 @@ export default function Campus() {
   };
   return (
     <>
-      <Box sx={{textAlign: "center"}}>
-        <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
-          {campus?.name}
-        </Button>
+      <Box sx={{textAlign: "center", fontSize: "20px", margin: "20px 0"}}>
+        <Box onClick={() => setOpen(true)}>{campus?.name}</Box>
       </Box>
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
       <CampusUserList campus={campus} />
@@ -54,18 +52,26 @@ function CampusUserList({campus}: any) {
     refetch();
   }, [campus]);
 
-  const userList = data?.map(({userid, user, campus, major, sid}: any) => (
-    <UserCard
-      key={userid}
-      userid={userid}
-      nickname={user?.nickname}
-      campus={campus?.name}
-      major={major}
-      sid={sid}
-      isAdmin={isAdmin}
-      authList={user?.auth}
-    />
-  ));
+  const newData =
+    data &&
+    data.sort((prev: any, next: any) => {
+      if (prev["sid"] > next["sid"]) return -1;
+      if (prev["sid"] < next["sid"]) return 1;
+    });
+  const userList = newData?.map(({userid, user, campus, major, sid}: any) => {
+    return (
+      <UserCard
+        key={userid}
+        userid={userid}
+        nickname={user?.nickname}
+        campus={campus?.name}
+        major={major}
+        sid={sid}
+        isAdmin={isAdmin}
+        authList={user?.auth}
+      />
+    );
+  });
 
   if (isLoading) {
     return <Loading />;
@@ -80,7 +86,6 @@ function CampusUserList({campus}: any) {
 
   return (
     <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-      <Box component={"h1"}>{campus?.name}</Box>
       <Box sx={{display: "flex", gap: 1, flexFlow: "row wrap", justifyContent: "center"}}>{userList}</Box>
     </Box>
   );
