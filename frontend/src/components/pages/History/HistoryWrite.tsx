@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState, useRef} from "react";
+import {ChangeEvent, useEffect, useState, useRef, forwardRef} from "react";
 import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText, FormControlLabel} from "@mui/material";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
@@ -16,8 +16,10 @@ import {AppBar, IconButton, Toolbar, Typography} from "@mui/material";
 import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
+import {selectedCampusState} from "@recoils/campus/state";
+import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 
 type Prayer = {
   pray: string;
@@ -46,7 +48,77 @@ type Category = {
 
 export default function HistoryWrite() {
   const ref = useRef(null);
-  const loginUser = useRecoilValue(userState);
+  const loginUser: any = useRecoilValue(userState);
+  const [campusid, setCampusid] = useState(loginUser?.campus[0]?.campusid);
+  const [campusList, setCampusList] = useState([]);
+  const [campus, setCampus]: any = useRecoilState(selectedCampusState);
+  const [open, setOpen] = useState(false);
+
+  const SubmitButton = forwardRef((props: any, ref: any) => {
+    return (
+      <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
+        저장
+      </Button>
+    );
+  });
+  useEffect(() => {
+    const list = loginUser?.campus?.map(({campus}: any) => campus);
+    setCampusList(list);
+    if (campus == null && list?.length > 0) {
+      setCampus(list[0]);
+    }
+  }, [loginUser]);
+  const handleCampus = (campus: any) => {
+    setCampus(campus);
+    setCampusid(campus?.campusid);
+  };
+
+  const onConfirm = () => {
+    console.log("onConfirm >");
+    const target: any = ref.current;
+    target?.click();
+  };
+
+  return (
+    <>
+      <MyHeader onConfirm={onConfirm} />
+      <Box sx={{textAlign: "center"}}>
+        <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
+          {campus?.name}
+        </Button>
+      </Box>
+      <HistoryWriteContents SubmitButton={<SubmitButton ref={ref} />} campusid={campusid} />
+      <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
+    </>
+  );
+}
+
+function MyHeader({onConfirm}: any) {
+  const {pathname} = useLocation();
+
+  const navigate = useNavigate();
+  const handlePrev = () => {
+    navigate(-1);
+  };
+  return (
+    <>
+      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
+            <ArrowBackIosNewIcon color="secondary" />
+          </IconButton>
+          <Typography sx={{flex: 1}} variant="h6" component="div">
+            {getTitle(pathname)}
+          </Typography>
+          <IconButton edge="end" color="inherit" onClick={onConfirm} aria-label="close">
+            <CheckIcon color="secondary" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </>
+  );
+}
+function HistoryWriteContents({SubmitButton, campusid}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
   const {register, handleSubmit, setValue, getValues} = useForm<FormData>(); // user
@@ -61,10 +133,21 @@ export default function HistoryWrite() {
     {id: "unity", name: "합동 순모임"}, //합동 순모임
   ]);
   const [categorySelected, setCategorySelected]: any = useState(null);
-  //FIXME: 하드 코딩 된 부분 수정 할 것
-  const campusid = loginUser?.campus[0]?.campusid || "UNIV102";
-  const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
+
+  const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
+
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
+
+  //선택 된 유저는 공통 관리
+  const [selectedUsers, setSeletedUsers] = useState<User[]>([]);
+  //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
+  const [soonjang, setSoonjang] = useState<User>({userid: "0", nickname: ""});
+  const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
+
+  useEffect(() => {
+    refetch();
+  }, [campusid]);
+
   const onChangeSoonjang = (e: any) => {
     setSoonjangOpen(true);
   };
@@ -72,14 +155,6 @@ export default function HistoryWrite() {
     setSoonwonOpen(true);
   };
 
-  //선택 된 유저는 공통 관리
-  const [selectedUsers, setSeletedUsers] = useState<User[]>([]);
-  //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
-  const [soonjang, setSoonjang] = useState<User>({userid: "0", nickname: ""});
-  const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
-  //TODO: 순장 순원 삭제 기능 필요하면 추가하도록
-  // const handleDeleteSoonjang = () => {};
-  // const handleDeleteSoonwon = () => {};
   const handleSoonjang = (newSoonjang: User) => {
     setSoonjang(newSoonjang);
     setSeletedUsers([newSoonjang, soonwon]);
@@ -92,11 +167,9 @@ export default function HistoryWrite() {
     setSoonwon(newSoonwon);
     setSeletedUsers([newSoonwon, soonjang]);
     // setSeletedUsers(userList.filter(user => user == newSoonwon || user == soonjang));
-
     // console.log("soonwon 수정 : ", , soonwon);
     console.log("seleteduser : ", selectedUsers);
   };
-
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
   const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
@@ -113,19 +186,16 @@ export default function HistoryWrite() {
     setPrayers(newValues);
     setValue("prays", newValues);
   };
-
   const handlPublicynChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
     newValues[index].publicyn = event.target.checked ? "Y" : "N"; // Set value to "true" or "false" as a string
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
   };
-
   const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
     setCategorySelected(value);
   };
-
   //error 처리....
   const sendHistory: SubmitHandler<FormData> = async (params: FormData) => {
     console.log("순장 순원 ", soonjang, soonwon);
@@ -145,6 +215,7 @@ export default function HistoryWrite() {
     console.log("params >> ", params);
     const result = await api.post(`soon/history`, params);
     if (result) {
+      alert("순 히스토리 쓰기 완료!");
       navigate("/");
     } else {
       console.log("SERVER에서 응답하지 않습니다");
@@ -164,17 +235,28 @@ export default function HistoryWrite() {
     const userList: User[] = data?.map(({user}: {user: User}) => {
       return {userid: user.userid, nickname: user.nickname};
     });
-    // console.log("user list : ", userList);
     setUserList(userList || []);
   };
+
+  // 순모임 종류 선택 사항
+  const categoryFunc = () => {
+    setCategoryList([
+      {id: "soon", name: "순모임"}, //순모임
+      {id: "coffee", name: "커피 타임"}, //커피타임
+      {id: "activity", name: "외부 활동"}, //외부활동
+      {id: "unity", name: "합동 순모임"}, //합동 순모임
+    ]);
+  };
+
+
   const onConfirm = () => {
     console.log("onConfirm >");
     const target: any = ref.current;
     target?.click();
   };
+
   return (
     <>
-      <MyHeader onConfirm={onConfirm} />
       <Box
         component="form"
         onSubmit={handleSubmit(sendHistory)}
@@ -193,7 +275,6 @@ export default function HistoryWrite() {
             </Button>
           </Box>
           <Box sx={{width: "200px"}}>{soonjang.nickname}</Box>
-
           <Box>
             <HistoryCampusDialog
               open={SoonjangOpen}
@@ -202,9 +283,6 @@ export default function HistoryWrite() {
               selectedUsers={selectedUsers}
               handleUser={handleSoonjang}
             />
-            {/* <Button sx={{ml: 2}} onClick={() => handleDeleteSoonjang()}>
-            Delete
-          </Button> */}
           </Box>
         </Box>
         <Box className="row">
@@ -244,7 +322,6 @@ export default function HistoryWrite() {
             </Button>
           </Box>
           <Box sx={{width: "200px"}}>{soonwon.nickname}</Box>
-
           <HistoryCampusDialog
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
@@ -303,39 +380,9 @@ export default function HistoryWrite() {
         <Button variant="outlined" fullWidth onClick={handleAddPrayerField}>
           기도제목 추가
         </Button>
-
-        {/* <Box sx={{width: "100%", display: "flex", justifyContent: "center", marginTop: "10px"}}> */}
-        <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
-          저장
-        </Button>
-        {/* </Box> */}
+        <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
+        {SubmitButton}
       </Box>
-    </>
-  );
-}
-
-function MyHeader({onConfirm}: any) {
-  const {pathname} = useLocation();
-
-  const navigate = useNavigate();
-  const handlePrev = () => {
-    navigate(-1);
-  };
-  return (
-    <>
-      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
-            <ArrowBackIosNewIcon color="secondary" />
-          </IconButton>
-          <Typography sx={{flex: 1}} variant="h6" component="div">
-            {getTitle(pathname)}
-          </Typography>
-          <IconButton edge="end" color="inherit" onClick={onConfirm} aria-label="close">
-            <CheckIcon color="secondary" />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
     </>
   );
 }
