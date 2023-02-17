@@ -24,6 +24,7 @@ import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 import {categoryState} from "@recoils/history/state";
 import {getSoonHistoryQuery} from "@recoils/soon/query";
 import {HistoryEditForm, Prayer, User} from "@recoils/types";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function HistoryEdit() {
   const ref = useRef(null);
@@ -63,11 +64,13 @@ export default function HistoryEdit() {
   return (
     <>
       <MyHeader onConfirm={onConfirm} />
-      <Box sx={{textAlign: "center"}}>
-        <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
-          {campus?.name}
-        </Button>
+      <Box sx={{textAlign: "center", fontSize: "20px", padding: "20px 0", borderBottom: "1px solid gray"}}>
+        <Box onClick={() => setOpen(true)} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <Box>{campus?.name}</Box>
+          <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+        </Box>
       </Box>
+
       <HistoryWriteContents SubmitButton={<SubmitButton ref={ref} />} campusid={campusid} />
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
     </>

@@ -83,7 +83,7 @@ export default function HistoryContents() {
 
   return (
     <>
-      <MyHeader />
+      <MyHeader hasAuth={hasPrayAuth} />
       <Box
         sx={[
           historyid ? styles.mobile.container : styles.web.container,
@@ -134,10 +134,9 @@ export default function HistoryContents() {
   );
 }
 
-function MyHeader({}: any) {
+function MyHeader({hasAuth}: any) {
   const {pathname} = useLocation();
   const {historyid} = useParams();
-  console.log("pathname >", historyid);
   const navigate = useNavigate();
   const handlePrev = () => {
     navigate(-1);
@@ -157,9 +156,12 @@ function MyHeader({}: any) {
           <Typography sx={{flex: 1}} variant="h6" component="div">
             {getTitle(pathname)}
           </Typography>
-          <IconButton edge="end" color="inherit" onClick={onClickEdit} aria-label="close">
-            <EditIcon color="secondary" />
-          </IconButton>
+          {/*  순장이나 순원만 수정가능 */}
+          {hasAuth && (
+            <IconButton edge="end" color="inherit" onClick={onClickEdit} aria-label="close">
+              <EditIcon color="secondary" />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
     </>
