@@ -59,7 +59,6 @@ function AppRoutes() {
           {/*Login */}
           <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
-          <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
           <Route path="/soon/list" element={Auth(SoonList, true, loginUser || authUser)}></Route>
           <Route path="/withdrawal" element={Auth(Withdrawal, true, loginUser || authUser)}></Route>
         </Route>
@@ -90,6 +89,7 @@ function AppRoutes() {
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
+        <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
         <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
         <Route path="/register/:userid" element={Auth(Register, null)}></Route>
         <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
