@@ -60,7 +60,6 @@ function MySoon({userid}: any) {
   return (
     <Box sx={{width: "90%", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))", gridGap: "10px"}}>
       {data.map(({soonwon}: any) => {
-        console.log("soonwon >", soonwon);
         return (
           <Box
             key={soonwon?.userid}
