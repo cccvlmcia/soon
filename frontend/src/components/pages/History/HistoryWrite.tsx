@@ -231,8 +231,8 @@ export default function HistoryWrite() {
           <TextField multiline rows={4} {...register("contents")} />
         </Box>
       </Box>
-      <Box>
-        <Box>기도 제목</Box>
+      <Box className="row">
+        <Box className="header">기도 제목</Box>
         <Box>
           {prayers.map((value, index) => (
             <Box key={index} sx={{display: "flex", alignItems: "center", mb: 2}}>
