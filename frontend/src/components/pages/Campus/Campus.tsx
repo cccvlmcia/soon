@@ -54,18 +54,26 @@ function CampusUserList({campus}: any) {
     refetch();
   }, [campus]);
 
-  const userList = data?.map(({userid, user, campus, major, sid}: any) => (
-    <UserCard
-      key={userid}
-      userid={userid}
-      nickname={user?.nickname}
-      campus={campus?.name}
-      major={major}
-      sid={sid}
-      isAdmin={isAdmin}
-      authList={user?.auth}
-    />
-  ));
+  const newData =
+    data &&
+    data.sort((prev: any, next: any) => {
+      if (prev["sid"] > next["sid"]) return -1;
+      if (prev["sid"] < next["sid"]) return 1;
+    });
+  const userList = newData?.map(({userid, user, campus, major, sid}: any) => {
+    return (
+      <UserCard
+        key={userid}
+        userid={userid}
+        nickname={user?.nickname}
+        campus={campus?.name}
+        major={major}
+        sid={sid}
+        isAdmin={isAdmin}
+        authList={user?.auth}
+      />
+    );
+  });
 
   if (isLoading) {
     return <Loading />;
