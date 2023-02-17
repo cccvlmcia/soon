@@ -68,7 +68,7 @@ function AppRoutes() {
               <PrevHeader />
             </Layout>
           }>
-          <Route path="/soon/:userid/card" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
+          <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
 
           <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
         </Route>
