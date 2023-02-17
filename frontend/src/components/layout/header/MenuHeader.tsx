@@ -1,16 +1,16 @@
-import {AppBar, Box, IconButton, Toolbar, Typography} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useState} from "react";
+import {useRecoilState} from "recoil";
 
+import {AppBar, Box, IconButton, Toolbar, Typography} from "@mui/material";
 import {Drawer} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import {useRecoilState} from "recoil";
 import {userState} from "@recoils/user/state";
 import {postLogout} from "@recoils/user/axios";
-import {getTitle, titles} from "./HeaderConstants";
+import {getTitle} from "./HeaderConstants";
 
 export default function MenuHeader() {
   const [open, setOpen] = useState(false);
