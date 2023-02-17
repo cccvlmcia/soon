@@ -30,10 +30,8 @@ export default function Campus() {
   };
   return (
     <>
-      <Box sx={{textAlign: "center"}}>
-        <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
-          {campus?.name}
-        </Button>
+      <Box sx={{textAlign: "center", fontSize: "20px", margin: "20px 0"}}>
+        <Box onClick={() => setOpen(true)}>{campus?.name}</Box>
       </Box>
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
       <CampusUserList campus={campus} />
@@ -88,7 +86,6 @@ function CampusUserList({campus}: any) {
 
   return (
     <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-      <Box component={"h1"}>{campus?.name}</Box>
       <Box sx={{display: "flex", gap: 1, flexFlow: "row wrap", justifyContent: "center"}}>{userList}</Box>
     </Box>
   );

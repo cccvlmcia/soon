@@ -224,6 +224,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         <Box className="row">
           {/* 선택방법.. 분류 종류 */}
           <Box className="header">분류</Box>
+
           <Box sx={{width: "calc(100% - 200px)"}}>
             <Select
               size="small"

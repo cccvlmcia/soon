@@ -42,8 +42,9 @@ export default function HistoryContents() {
         historyid ? styles.mobile.container : styles.web.container,
         styles.web.writeform,
         {
+          marginTop: "40px",
           ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-          ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+          ".header": {width: "70px", textAlign: "left", padding: "0 10px 0 40px", fontSize: "16px"},
         },
       ]}>
       <Box className="row">
