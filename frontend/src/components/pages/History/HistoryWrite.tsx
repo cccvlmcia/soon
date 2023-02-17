@@ -126,9 +126,16 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const [date, setDate]: any = useState(new Date());
   const [userList, setUserList] = useState<User[]>([]);
-  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [categoryList, setCategoryList] = useState<Category[]>([
+    {id: "soon", name: "순모임"}, //순모임
+    {id: "coffee", name: "커피 타임"}, //커피타임
+    {id: "activity", name: "외부 활동"}, //외부활동
+    {id: "unity", name: "합동 순모임"}, //합동 순모임
+  ]);
   const [categorySelected, setCategorySelected]: any = useState(null);
+
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
+
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
 
   //선택 된 유저는 공통 관리
@@ -217,7 +224,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
 
   useEffect(() => {
     userListFunc();
-    categoryFunc();
     fetchData();
   }, [data, historyid, soonjang, soonwon]);
 
@@ -231,6 +237,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     });
     setUserList(userList || []);
   };
+
   // 순모임 종류 선택 사항
   const categoryFunc = () => {
     setCategoryList([
@@ -239,6 +246,13 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
       {id: "activity", name: "외부 활동"}, //외부활동
       {id: "unity", name: "합동 순모임"}, //합동 순모임
     ]);
+  };
+
+
+  const onConfirm = () => {
+    console.log("onConfirm >");
+    const target: any = ref.current;
+    target?.click();
   };
 
   return (
