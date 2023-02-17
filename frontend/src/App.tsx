@@ -65,8 +65,6 @@ function AppRoutes() {
             </Layout>
           }>
           <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser)}></Route>
-
-          <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser)}></Route>
         </Route>
 
         <Route
@@ -81,13 +79,14 @@ function AppRoutes() {
         {/* Custom AppBar */}
         <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser)}></Route>
         <Route path="/history" element={Auth(HistoryWrite, true, loginUser)}></Route>
+        <Route path="/history/:historyid" element={Auth(HistoryContents, true, loginUser)}></Route>
+        <Route path="/admin" element={Auth(Admin, true, loginUser)}></Route>
+        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser)}></Route>
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
-        <Route path="/admin" element={Auth(Admin, true, loginUser)}></Route>
-        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser)}></Route>
         <Route path="/register/:userid" element={Auth(Register, null)}></Route>
-        <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser)}></Route>
+        {/* <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser)}></Route> */}
         <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser)}></Route>
       </Routes>
     </Box>

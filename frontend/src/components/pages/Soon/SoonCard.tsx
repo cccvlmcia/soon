@@ -69,7 +69,7 @@ function SoonHistoryCard({historyid, user, kind, progress, historydate}: any) {
   const dateStr = format(new Date(historydate), "MM-dd hh:mm");
   return (
     <Box
-      onClick={() => navigate(`/history/${historyid}/view`)}
+      onClick={() => navigate(`/history/${historyid}`)}
       sx={{display: "flex", justifyContent: "space-between", margin: "8px 20px", fontWeight: "300"}}>
       <Box sx={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{`[${type[kind]}] ${progress}`}</Box>
       <Box sx={{display: "flex", flexDirection: "column", opacity: "0.5"}}>
