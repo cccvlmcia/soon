@@ -55,11 +55,12 @@ function MySoon({userid}: any) {
     return <Error error={error} />;
   }
   const handleClick = (swid: number) => {
-    navigate(`soon/${swid}/card`);
+    navigate(`soon/card/${swid}`);
   };
   return (
     <Box sx={{width: "90%", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))", gridGap: "10px"}}>
       {data.map(({soonwon}: any) => {
+        console.log("soonwon >", soonwon);
         return (
           <Box
             key={soonwon?.userid}
@@ -130,7 +131,7 @@ function MyImage({userid}: any) {
       style={{width: "100%"}}
       component="img"
       src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340"
-      onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}
+      onClick={() => navigate(`/soon/card/${userid}`)}
     />
   );
 }

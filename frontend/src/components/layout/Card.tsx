@@ -39,12 +39,13 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
     setAnchorEl(e.currentTarget);
   };
   return (
-    <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}>
+    <Card className={classes.root} onClick={() => navigate(`/soon/card/${userid}`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
         <Box sx={{display: "flex"}}>
           <Box>
             <Typography variant="body1">이름: {nickname}</Typography>
+            <Typography variant="body1">ID: {userid}</Typography>
             {major && <Typography variant="body1">전공: {major}</Typography>}
             {sid && <Typography variant="body1">학번: {sid}</Typography>}
           </Box>

@@ -3,7 +3,7 @@ import Soon from "@soon/entity/Soon";
 
 //순장의 순원 목록
 export async function getSoonList(sjid: number) {
-  return await Soon.find({where: {sjid}, relations: {soonjang: true, soonwon: true}});
+  return await Soon.find({where: {sjid}, relations: {soonjang: {campus: {campus: true}}, soonwon: {campus: {campus: true}}}});
 }
 
 export async function getSoonInfo(swid: number) {
