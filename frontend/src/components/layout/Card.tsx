@@ -39,7 +39,7 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
     setAnchorEl(e.currentTarget);
   };
   return (
-    <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}>
+    <Card className={classes.root} onClick={() => navigate(`/soon/card/${userid}`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
         <Box sx={{display: "flex"}}>
