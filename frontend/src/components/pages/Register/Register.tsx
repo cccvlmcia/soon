@@ -7,7 +7,7 @@ import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, Radi
 
 import Error from "components/Error/Error";
 import {postLogout, postUserRegistAxios} from "@recoils/user/axios";
-import {userGoogleAuthState} from "@recoils/login/state";
+import {userGoogleAuthState} from "@recoils/Login/state";
 import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
