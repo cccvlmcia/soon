@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import {useNavigate} from "react-router-dom";
 import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import Popover from "@mui/material/Popover";
-import {api} from "@recoils/consonants";
+import {api} from "@recoils/constants";
 import {useRecoilValue} from "recoil";
 import {authState} from "@recoils/auth/state";
 
@@ -39,7 +39,7 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
     setAnchorEl(e.currentTarget);
   };
   return (
-    <Card className={classes.root} onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}>
+    <Card className={classes.root} onClick={() => navigate(`/soon/card/${userid}`)}>
       <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
       <CardContent>
         <Box sx={{display: "flex"}}>

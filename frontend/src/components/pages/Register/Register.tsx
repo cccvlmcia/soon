@@ -5,13 +5,13 @@ import {useRecoilValue, useSetRecoilState} from "recoil";
 import Loading from "react-loading";
 import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 
-import {getCampusListQuery} from "@recoils/api/User";
 import Error from "components/Error/Error";
 import {postLogout, postUserRegistAxios} from "@recoils/user/axios";
-import {userGoogleAuthState} from "@recoils/Login/state";
+import {userGoogleAuthState} from "@recoils/login/state";
 import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
+import {getCampusListQuery} from "@recoils/campus/query";
 
 type FormData = {
   name: string;

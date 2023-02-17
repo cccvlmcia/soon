@@ -1,25 +1,53 @@
-import {Box, Stack} from "@mui/material";
+import {useEffect, useState} from "react";
+import {Box, Button, Stack} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
-import {getSoonListQuery} from "@recoils/api/Soon";
-import {useRecoilValue} from "recoil";
+import {getSoonListQuery} from "@recoils/soon/query";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-
+import CampusDialog from "./MyProfile/modal/CampusDialog";
+import {selectedCampusState} from "@recoils/campus/state";
 export default function Home() {
-  const loginUser = useRecoilValue(userState);
+  const loginUser: any = useRecoilValue(userState);
+  const [campusList, setCampusList] = useState([]);
+  const [campus, setCampus]: any = useRecoilState(selectedCampusState);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    const list = loginUser?.campus?.map(({campus}: any) => campus);
+    setCampusList(list);
+    if (campus == null && list?.length > 0) {
+      setCampus(list[0]);
+    }
+  }, [loginUser]);
+  const handleCampus = (campus: any) => {
+    setCampus(campus);
+  };
+
+  const selectCampus = loginUser?.campus?.find((cam: any) => cam?.campus?.campusid == campus?.campusid);
   return (
-    <Box>
-      <RightPanel data={loginUser} navigate={navigate} />
-      <MoveHistory navigate={navigate} />
-    </Box>
+    <>
+      <Box>
+        <Box sx={{textAlign: "center"}}>
+          <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
+            {campus?.name}
+          </Button>
+        </Box>
+        <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
+
+        <RightPanel data={loginUser} campus={selectCampus} />
+        <MoveHistory navigate={navigate} />
+      </Box>
+    </>
   );
 }
 
-function MySoon({userid, navigate}: any) {
+function MySoon({userid}: any) {
   const {isLoading, isError, data, error} = getSoonListQuery(userid);
+  const navigate = useNavigate();
+
   if (isLoading) {
     return <Loading />;
   }
@@ -27,11 +55,12 @@ function MySoon({userid, navigate}: any) {
     return <Error error={error} />;
   }
   const handleClick = (swid: number) => {
-    navigate(`soon/${swid}/card`);
+    navigate(`soon/card/${swid}`);
   };
   return (
     <Box sx={{width: "90%", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))", gridGap: "10px"}}>
       {data.map(({soonwon}: any) => {
+        console.log("soonwon >", soonwon);
         return (
           <Box
             key={soonwon?.userid}
@@ -70,35 +99,39 @@ function LeftPanel({data}: any) {
 }
 
 // right panel
-function RightPanel({data, navigate}: any) {
+function RightPanel({data, campus}: any) {
+  const navigate = useNavigate();
+
   return (
-    <Box sx={{width: "100%", display: "flex", alignItems: "center", flexDirection: "column", fontSize: "20px"}}>
+    <Box sx={{width: "100%", display: "flex", alignItems: "center", flexDirection: "column", fontSize: "20px", marginTop: "5px;"}}>
       <Box sx={{display: "flex", justifyContent: "center", flexDirection: "column", maxWidth: "400px"}}>
-        <MyImage userid={data?.userid} navigate={navigate} />
+        <MyImage userid={data?.userid} />
       </Box>
       <Stack direction="row" spacing={1}>
         <Box>{data?.nickname}</Box>
         <Box sx={{cursor: "pointer"}} onClick={() => navigate(`/myprofile/${data?.userid}`)}>
           ⚙️
         </Box>
-        <Box>ID={data?.userid}</Box>
       </Stack>
-      <Stack direction="row">
-        {data?.campus[0]?.major} / {data?.campus[0]?.sid} / {data?.gender}
-      </Stack>
+      {/* 캠퍼스 변경시.... */}
+      <Box>
+        {campus?.major}({campus?.sid})
+      </Box>
       <Box component={"h2"}>나의 순원</Box>
-      <MySoon userid={data?.userid} navigate={navigate} />
+      <MySoon userid={data?.userid} />
     </Box>
   );
 }
 
-function MyImage({userid, navigate}: any) {
+function MyImage({userid}: any) {
+  const navigate = useNavigate();
+
   return (
     <Box
       style={{width: "100%"}}
       component="img"
       src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340"
-      onClick={() => navigate(`/soon/${userid}/card?id=${userid}`)}
+      onClick={() => navigate(`/soon/card/${userid}`)}
     />
   );
 }
@@ -106,7 +139,7 @@ function MyImage({userid, navigate}: any) {
 function MoveHistory({navigate}: any) {
   return (
     <Box sx={{position: "absolute", bottom: "20px", right: "20px"}} onClick={() => navigate("/history")}>
-      <AddCircleIcon fontSize="large" sx={{color: "#ebe159", borderRadius: "50%", cursor: "pointer"}} />
+      <AddCircleIcon sx={{color: "#000000", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px"}} />
     </Box>
   );
 }

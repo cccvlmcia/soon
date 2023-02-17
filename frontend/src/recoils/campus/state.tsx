@@ -1,4 +1,4 @@
-import {axiosProcess} from "@recoils/consonants";
+import {axiosProcess} from "@recoils/constants";
 import {userState} from "@recoils/user/state";
 import {atom, selector} from "recoil";
 import {getCampusList} from "./axios";
@@ -18,4 +18,8 @@ export const campusState = atom({
       );
     },
   }),
+});
+export const selectedCampusState = atom({
+  key: "selectedCampusState",
+  default: null,
 });

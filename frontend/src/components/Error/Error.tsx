@@ -1,5 +1,5 @@
 import {Box} from "@mui/material";
-import {server} from "@recoils/consonants";
+import {server} from "@recoils/constants";
 import {userState} from "@recoils/user/state";
 import Loading from "components/Loading/Loading";
 import {useNavigate, useLocation} from "react-router-dom";
