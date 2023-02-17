@@ -11,6 +11,8 @@ import UserHistory from "@user/entity/UserHistory";
 import Soon from "@soon/entity/Soon";
 import SoonHistory from "@soon/entity/SoonHistory";
 import pray from "@routes/api/soon/pray";
+import SoonPray from "@soon/entity/SoonPray";
+import {In} from "typeorm";
 
 export async function getUserList() {
   return await User.find({relations: {campus: true, login: true, config: true}});
@@ -117,7 +119,7 @@ export async function removeUser(userid: number) {
     const authRepository = manager.getRepository(UserAuth);
     const campusRepository = manager.getRepository(UserCampus);
     const soonRepository = manager.getRepository(Soon);
-    const prayRepository = manager.getRepository(pray);
+    const prayRepository = manager.getRepository(SoonPray);
     const soonHistoryRepository = manager.getRepository(SoonHistory);
 
     /*
@@ -134,11 +136,13 @@ export async function removeUser(userid: number) {
     const histories = await soonHistoryRepository.find({where: [{sjid: userid}, {swid: userid}]});
     if (histories?.length > 0) {
       const ids = histories?.map(({historyid}) => historyid);
-      await prayRepository.delete({historyid: ids});
+      if (ids?.length > 0) {
+        await prayRepository.delete({historyid: In(ids)});
+      }
     }
     await soonHistoryRepository.delete({sjid: userid});
     await soonHistoryRepository.delete({swid: userid});
-    return repository.delete({userid});
+    return await repository.delete({userid});
     // return repository.delete({userid});
   });
 }
