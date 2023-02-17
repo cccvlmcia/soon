@@ -45,7 +45,6 @@ export default function MyProfile() {
   const [user, setUser]: any = useState(null);
   const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
-
   function getSid(camid: string) {
     return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.sid;
   }
@@ -54,7 +53,9 @@ export default function MyProfile() {
   }
   useEffect(() => {
     if (loginUser) {
-      // setSeleceted()
+      if (campusSelected == null && campusList?.length > 0) {
+        setCampusSelected(campusList[0]);
+      }
     }
   }, [loginUser]);
   //FIXME: set 하는 방식을 id > obj로 변경 필요
@@ -141,9 +142,7 @@ export default function MyProfile() {
           </Box>
         </Box>
         <Box className="row">
-          <Box className="header" onClick={onChangeCampus}>
-            캠퍼스
-          </Box>
+          <Box className="header">캠퍼스</Box>
           <Box className="value">
             <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
               {campusSelected?.name}
