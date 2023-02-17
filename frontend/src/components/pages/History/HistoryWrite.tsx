@@ -194,7 +194,8 @@ export default function HistoryWrite() {
           styles.web.writeform,
           {
             ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-            ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+            ".header": {minWidth: "95px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+            ".value": {width: "100%"},
           },
         ]}>
         <Box className="row">
@@ -203,21 +204,19 @@ export default function HistoryWrite() {
               순장선택
             </Button>
           </Box>
-          <Box sx={{width: "200px"}}>{soonjang.nickname}</Box>
-          <Box>
-            <HistoryCampusDialog
-              open={SoonjangOpen}
-              setOpen={setSoonjangOpen}
-              users={userList}
-              selectedUsers={selectedUsers}
-              handleUser={handleSoonjang}
-            />
-          </Box>
+          <Box className="value">{soonjang.nickname}</Box>
+          <HistoryCampusDialog
+            open={SoonjangOpen}
+            setOpen={setSoonjangOpen}
+            users={userList}
+            selectedUsers={selectedUsers}
+            handleUser={handleSoonjang}
+          />
         </Box>
         <Box className="row">
           {/* 선택방법.. 분류 종류 */}
           <Box className="header">분류</Box>
-          <Box sx={{width: "calc(100% - 200px)"}}>
+          <Box className="value">
             <Select
               size="small"
               value={categorySelected?.name || ""}
@@ -238,19 +237,18 @@ export default function HistoryWrite() {
         </Box>
         <Box className="row">
           <Box className="header">진도</Box>
-          <Box>
-            <TextField size="small" {...register("progress")} />
+          <Box className="value">
+            <TextField size="small" fullWidth {...register("progress")} />
           </Box>
         </Box>
         <Box className="row">
           {/* 선택방법.. 사용자 선택 */}
           <Box className="header">
-            {" "}
             <Button variant="outlined" onClick={onChangeSoonwon}>
               받은 사람
             </Button>
           </Box>
-          <Box sx={{width: "200px"}}>{soonwon.nickname}</Box>
+          <Box className="value">{soonwon.nickname}</Box>
           <HistoryCampusDialog
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
@@ -261,47 +259,48 @@ export default function HistoryWrite() {
         </Box>
         <Box className="row">
           <Box className="header">날짜</Box>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
-              inputFormat="MM/DD/YYYY"
-              value={date}
-              onChange={handleDateChange}
-              renderInput={params => <TextField size="small" {...params} />}
-            />
-          </LocalizationProvider>
+          <Box sx={{maxWidth: "130px", div: {maxWidth: "130px"}}}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                inputFormat="MM/DD/YYYY"
+                value={date}
+                onChange={handleDateChange}
+                renderInput={params => <TextField size="small" {...params} />}
+              />
+            </LocalizationProvider>
+          </Box>
         </Box>
         <Box className="row">
           <Box className="header">내용</Box>
-          <Box>
-            <TextField size="small" multiline rows={4} {...register("contents")} />
+          <Box className="value">
+            <TextField size="small" fullWidth multiline rows={4} {...register("contents")} />
           </Box>
         </Box>
-        <Box sx={{marginTop: "5px"}}>
-          <Box className="header" sx={{textAlign: "left!important"}}>
-            기도 제목
-          </Box>
-        </Box>
-        <Box>
-          <Box>
+        <Box className="row">
+          <Box className="header">기도 제목</Box>
+          <Box className="value">
             {prayers.map((value, index) => (
               <Box key={index} sx={{display: "flex", alignItems: "center", padding: "2px 0"}}>
                 <TextField
                   size="small"
-                  sx={{mr: 2}}
+                  fullWidth
                   value={value.pray}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => handlePrayerFieldChange(event, index)}
                 />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={value.publicyn === "Y" ? true : false}
-                      onChange={event => handlPublicynChange(event, index)}
-                      name={`publicyn-${index}`}
-                    />
-                  }
-                  label="공개"
-                />
-                <RemoveCircleOutlineIcon onClick={() => handleDeletePrayerField(index)} />
+                <Box sx={{display: "flex", alignItems: "center", minWidth: "105px", marginLeft: "10px"}}>
+                  <FormControlLabel
+                    sx={{minWidth: "75px"}}
+                    control={
+                      <Checkbox
+                        checked={value.publicyn === "Y" ? true : false}
+                        onChange={event => handlPublicynChange(event, index)}
+                        name={`publicyn-${index}`}
+                      />
+                    }
+                    label="공개"
+                  />
+                  <RemoveCircleOutlineIcon onClick={() => handleDeletePrayerField(index)} />
+                </Box>
               </Box>
             ))}
           </Box>
