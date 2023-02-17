@@ -1,28 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
-import Error from "components/Error/Error";
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  SelectChangeEvent,
-  Checkbox,
-  ListItemText,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
-import {getCampusListQuery} from "@recoils/api/User";
-import Loading from "react-loading";
-import {useRecoilValue, useSetRecoilState} from "recoil";
-
 import {useNavigate} from "react-router-dom";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import Loading from "react-loading";
+import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
+
+import Error from "components/Error/Error";
 import {postLogout, postUserRegistAxios} from "@recoils/user/axios";
-import {userGoogleAuthState} from "@recoils/Login/state";
+import {userGoogleAuthState} from "@recoils/login/state";
 import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
+import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
+import {getCampusListQuery} from "@recoils/campus/query";
 
 type FormData = {
   name: string;
@@ -44,24 +33,26 @@ const Register: React.FC = () => {
   const {register, handleSubmit} = useForm<FormData>();
   const setLoginUser = useSetRecoilState(userState);
   const [campusList, setCampusList] = useState<campusType[]>([]);
+  const [campus, setCampus] = useState<any>(null);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
   const [genderSelected, setGenderSelected] = useState<string>();
   const [cccYNSelected, setCccYNSelected] = useState<string>();
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
   const googleAuth = useRecoilValue(userGoogleAuthState);
   const navigate = useNavigate();
-  const handleCampusReceive = (event: SelectChangeEvent<never[]>) => {
-    const selectedNames = event.target.value as string[];
-    const selectedIds = selectedNames.map(name => {
-      const campus: campusType = campusList.find(campus => campus.name === name) || {campusid: "", name: "", areaid: "", useyn: "", createdate: ""};
-      return campus ? campus.campusid : "0";
-    });
-    setCampusSelected(selectedNames);
-    setCampusIdSelected(selectedIds);
+
+  const onChangeCampus = () => {
+    setOpen(true);
   };
+  const handleCampus = (campus: any) => {
+    setCampus(campus);
+    setCampusSelected([campus?.name]);
+    setCampusIdSelected([campus?.campusid]);
+  };
+
   const handleGednerReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
-
     console.log("gender : ", value);
     setGenderSelected(value);
   };
@@ -71,10 +62,7 @@ const Register: React.FC = () => {
     setCccYNSelected(value);
   };
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
-    // params.list = selected;
-    // console.log(googleAuth);
     const {auth} = googleAuth;
-    // const auth = {ssoid: "test", email: "test", type: "test"};
     const userRegistInfo: postUser = {
       nickname: params.name,
       gender: genderSelected || "",
@@ -109,78 +97,72 @@ const Register: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [data]);
+
   return (
-    <Box component="form" onSubmit={handleSubmit(writeRegister)}>
-      <Box>
-        <Box sx={{fontSize: "16px"}}>이름</Box>
-        <Box>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(writeRegister)}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "left",
+        ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
+        ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
+        ".value": {minWidth: "200px"},
+      }}>
+      <Box className="row">
+        <Box className="header">이름</Box>
+        <Box className="value">
           <TextField {...register("name")} />
         </Box>
       </Box>
-      <Box>
-        <Box>캠퍼스</Box>
-        <Box>
-          <Select
-            {...register("campusid")}
-            value={campusSelected as never}
-            fullWidth
-            multiple
-            onChange={handleCampusReceive}
-            renderValue={selected => selected.join(", ")}>
-            {campusList.map(({name, campusid}: any, index: number) => (
-              <MenuItem key={index} value={name}>
-                <Checkbox checked={campusSelected.indexOf(name.toString()) > -1} />
-                <ListItemText primary={name} />
-              </MenuItem>
-            ))}
-          </Select>
+      {/*단일만 선택 가능하도록 일단 마무리 */}
+      <Box className="row">
+        <Box className="header">캠퍼스</Box>
+        <Box className="value" sx={{display: "flex", alignItems: "center", gap: 1}}>
+          <Button variant="outlined" onClick={onChangeCampus}>
+            캠퍼스 선택
+          </Button>
+          <Box>{...campusSelected}</Box>
+          <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
         </Box>
       </Box>
-      <Box>
-        <Box>학번</Box>
-        <Box>
+      <Box className="row">
+        <Box className="header">학번</Box>
+        <Box className="value">
           <TextField {...register("sid")} />
         </Box>
       </Box>
-      <Box>
-        <Box>학과</Box>
-        <Box>
+      <Box className="row">
+        <Box className="header">학과</Box>
+        <Box className="value">
           <TextField {...register("major")} />
         </Box>
       </Box>
-      <Box>
-        <Box>ccc 여부</Box>
-        <Box>
-          <RadioGroup
-            // {...register("cccYN")}
-            row
-            aria-labelledby="demo-radio-buttons-group-label"
-            // defaultValue="Y"
-            // name="radio-buttons-group"
-            value={(cccYNSelected as never) || null}
-            onChange={handleCCCYNReceive}>
+      <Box className="row">
+        <Box className="header">ccc 여부</Box>
+        <Box className="value">
+          <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
             <FormControlLabel value="Y" control={<Radio />} label="Y" />
             <FormControlLabel value="N" control={<Radio />} label="N" />
           </RadioGroup>
         </Box>
       </Box>
-      <Box>
-        <Box>성별</Box>
-        <Box>
-          <RadioGroup
-            // {...register("gender")}
-            row
-            aria-labelledby="demo-radio-buttons-group-label"
-            value={(genderSelected as never) || null}
-            onChange={handleGednerReceive}>
+      <Box className="row">
+        <Box className="header">성별</Box>
+        <Box className="value">
+          <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
             <FormControlLabel value="female" control={<Radio />} label="female" />
             <FormControlLabel value="male" control={<Radio />} label="male" />
           </RadioGroup>
         </Box>
       </Box>
 
-      <Box>
-        <Button type="submit">저장</Button>
+      <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}>
+        <Button variant="outlined" type="submit">
+          저장
+        </Button>
       </Box>
     </Box>
   );

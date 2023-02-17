@@ -15,4 +15,11 @@ export const styles = {
     },
   },
   text: {fontSize: "16px"},
+  soon: {
+    button: {
+      size: "small",
+      width: "30px",
+      height: "23px",
+    },
+  },
 };

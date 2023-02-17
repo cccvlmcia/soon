@@ -1,30 +1,26 @@
+import {useState, useEffect} from "react";
+import {useRecoilValue} from "recoil";
+
 import {Box, Stack} from "@mui/material";
-import {useState} from "react";
-import {Button, makeStyles, TextField} from "@material-ui/core";
-import {UserCard} from "@layout/Card";
-import { getSoonIdQuery, getSoonListQuery } from "@recoils/api/Soon";
+import {Button, TextField} from "@mui/material";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
-import axios from "axios";
-import { api } from "@recoils/consonants";
+import {UserCard} from "@layout/Card";
+import {api} from "@recoils/constants";
+import {getSoonListQuery} from "@recoils/soon/query";
+import {userState} from "@recoils/user/state";
+import {styles} from "@layout/styles";
 
 export default function SoonList() {
-  const userid = 1 //TODO: user#
-  return (
-    <Box>
-      <Stack direction={"row"}>
-        <Box><MySoon userid = {userid}/></Box>
-      </Stack>
-      <Stack direction={"row"}>
-        <Box><SoonAddButton userid = {userid}/></Box>
-        <Box><SoonDeleteButton userid = {userid}/></Box>
-      </Stack>
-    </Box>
-  );
-}
+  const loginUser: any = useRecoilValue(userState);
+  const [soonlist, setSoonlist] = useState([]);
+  const {isLoading, isError, data, error} = getSoonListQuery(loginUser?.userid);
+  useEffect(() => {
+    if (data) {
+      setSoonlist(data);
+    }
+  }, [data]);
 
-function MySoon({userid}: any) {
-  const {isLoading, isError, data, error} = getSoonListQuery(userid)
   if (isLoading) {
     return <Loading />;
   }
@@ -32,104 +28,13 @@ function MySoon({userid}: any) {
     return <Error error={error} />;
   }
   return (
-    <div>
-      {data?.map((
-        {soonid, soonwon}: any) => (
-        <UserCard
-          key={soonid}
-          userid={soonwon.userid}
-          nickname={soonwon.nickname}
-        />
-      ))}
-    </div>
-  );
-}
-
-function SoonAddButton({userid}: any) {
-  const buttonStyle = {
-    size: "small",
-    width: "30px",
-    height: "23px",
-  };
-
-  const [textFieldOpen, setTextFieldOpen] = useState(false);
-  const [text, setText] = useState("");
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setText(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const swid = Number(text);
-    const sjid = userid;
-    api.post("/soon", {sjid, swid})
-
-  };
-
-  return (
-    <Box>
-      <Button
-        variant="contained"
-        color="primary"
-        style={buttonStyle}
-        onClick={() => {
-          setTextFieldOpen(!textFieldOpen);
-        }}>
-        +
-      </Button>
-      {textFieldOpen && (
-        <form onSubmit={handleSubmit}>
-          <TextField label="순원id를 입력해주세요" value={text} onChange={handleChange} />
-          <Button type="submit" variant="contained">
-            순원추가
-          </Button>
-        </form>
-      )}
-    </Box>
-  );
-}
-
-function SoonDeleteButton({userid}: any) {
-  const buttonStyle = {
-    size: "small",
-    width: "30px",
-    height: "23px",
-  };
-
-  const [textFieldOpen, setTextFieldOpen] = useState(false);
-  const [text, setText] = useState("");
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setText(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const swid = Number(text);
-    const sjid = userid;
-    api.delete(`/soon/${sjid}/${swid}`)
-    event.preventDefault();
-  };
-
-  return (
-    <Box>
-      <Button
-        variant="contained"
-        color="primary"
-        style={buttonStyle}
-        onClick={() => {
-          setTextFieldOpen(!textFieldOpen);
-        }}>
-        -
-      </Button>
-      {textFieldOpen && (
-        <form onSubmit={handleSubmit}>
-          <TextField label="순원id를 입력해주세요" value={text} onChange={handleChange} />
-          <Button type="submit" variant="contained">
-            순원삭제
-          </Button>
-        </form>
-      )}
-    </Box>
+    <>
+      <Box sx={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gridGap: "12px", marginTop: "10px"}}>
+        {soonlist?.map(({soonid, soonwon}: any) => (
+          <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
+        ))}
+      </Box>
+      {/*FIXME: 순원 추가/삭제는 관리자 권한! */}
+    </>
   );
 }
