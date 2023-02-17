@@ -1,3 +1,4 @@
+import {Jwt} from "jsonwebtoken";
 import {FastifyReply, FastifyInstance, FastifyRequest} from "fastify";
 import {
   addSoonHistory,
@@ -11,6 +12,8 @@ import {
 import {getUserCampus} from "@user/service/UserCampusService";
 import {authHandler} from "@utils/OAuth2Utils";
 import {AUTH} from "@auth/AuthConstants";
+import Soon from "@soon/entity/Soon";
+import {SoonType} from "@soon/SoonConstants";
 
 type jwt = {
   userid: number;
@@ -22,9 +25,9 @@ type jwt = {
 export default async function (fastify: FastifyInstance) {
   fastify.get("/:historyid", async (req: FastifyRequest<{Params: {historyid: number}}>, reply: FastifyReply) => {
     const {historyid} = req.params;
-  
+
     const histories = await getSoonHistory(historyid);
-    console.log("histories >>", histories)
+    console.log("histories >>", histories);
     reply.send(histories);
   });
 
@@ -73,7 +76,6 @@ export default async function (fastify: FastifyInstance) {
       }>,
       reply: FastifyReply,
     ) => {
-
       const history = await addSoonHistory(req.body);
       reply.send(history);
     },
@@ -88,7 +90,7 @@ export default async function (fastify: FastifyInstance) {
           userid?: number;
           sjid: number;
           swid: number;
-          kind: string;
+          kind: SoonType;
           progress: string;
           historydate: Date;
           contents?: string;
@@ -97,7 +99,8 @@ export default async function (fastify: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const {historyid} = req.params;
-      const history = await editSoonHistory(historyid,req.body);
+      console.log("req.body : ", req.body);
+      const history = await editSoonHistory(historyid, req.body);
       reply.send(history);
     },
   );

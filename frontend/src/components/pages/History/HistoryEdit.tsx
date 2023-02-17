@@ -21,9 +21,9 @@ import {userState} from "@recoils/user/state";
 import {selectedCampusState} from "@recoils/campus/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 
-import {HistoryForm, Prayer, User} from "@recoils/types";
 import {categoryState} from "@recoils/history/state";
 import {getSoonHistoryQuery} from "@recoils/soon/query";
+import {HistoryEditForm, Prayer, User} from "@recoils/types";
 
 export default function HistoryEdit() {
   const ref = useRef(null);
@@ -103,7 +103,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
   const [SoonwonOpen, setSoonwonOpen]: any = useState(false);
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const categoryList = useRecoilValue(categoryState);
-  const {register, handleSubmit, setValue, getValues} = useForm<HistoryForm>(); // user
+  const {register, handleSubmit, setValue, getValues} = useForm<HistoryEditForm>(); // user
 
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
   const {isLoading: historyIsLoading, isError: historyIsError, data: historyData, error: historyError} = getSoonHistoryQuery(Number(historyid));
@@ -149,33 +149,13 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     console.log("seleteduser : ", selectedUsers);
   };
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
-  const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
-    const newValues = [...prayers];
-    newValues[index].pray = event.target.value;
-    setPrayers(newValues);
-    setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
-  };
-  const handleAddPrayerField = () => {
-    setPrayers([...prayers, {pray: "", publicyn: "Y"}]);
-  };
-  const handleDeletePrayerField = (index: number) => {
-    const newValues = [...prayers];
-    newValues.splice(index, 1);
-    setPrayers(newValues);
-    setValue("prays", newValues);
-  };
-  const handlPublicynChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
-    const newValues = [...prayers];
-    newValues[index].publicyn = event.target.checked ? "Y" : "N"; // Set value to "true" or "false" as a string
-    setPrayers(newValues);
-    setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
-  };
+
   const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
     setCategorySelected(value);
   };
   //error 처리....
-  const sendHistory: SubmitHandler<HistoryForm> = async (params: HistoryForm) => {
+  const sendHistory: SubmitHandler<HistoryEditForm> = async (params: HistoryEditForm) => {
     console.log("순장 순원 ", soonjang, soonwon);
     //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
     if (soonjang.userid == "0" || soonwon.userid == "0") {
@@ -186,12 +166,12 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     params.kind = categorySelected?.id;
     params.historydate = new Date(dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
     // params.historydate = Date(date);
-    params.prays = prayers;
+
     params.sjid = soonjang.userid;
     params.swid = soonwon.userid;
 
     console.log("params >> ", params);
-    const result = await api.put(`soon/history/${historyid}`,params);
+    const result = await api.put(`soon/history/${historyid}`, params);
     if (result) {
       alert("순 히스토리 쓰기 완료!");
       navigate("/");
@@ -303,39 +283,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
             <TextField size="small" defaultValue={historyData.contents} multiline rows={4} {...register("contents")} />
           </Box>
         </Box>
-        <Box sx={{marginTop: "5px"}}>
-          <Box className="header" sx={{textAlign: "left!important"}}>
-            기도 제목
-          </Box>
-        </Box>
-        <Box>
-          <Box>
-            {prayers.map((value, index) => (
-              <Box key={index} sx={{display: "flex", alignItems: "center", padding: "2px 0"}}>
-                <TextField
-                  size="small"
-                  sx={{mr: 2}}
-                  value={value.pray}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => handlePrayerFieldChange(event, index)}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={value.publicyn === "Y" ? true : false}
-                      onChange={event => handlPublicynChange(event, index)}
-                      name={`publicyn-${index}`}
-                    />
-                  }
-                  label="공개"
-                />
-                <RemoveCircleOutlineIcon onClick={() => handleDeletePrayerField(index)} />
-              </Box>
-            ))}
-          </Box>
-        </Box>
-        <Button variant="outlined" fullWidth onClick={handleAddPrayerField}>
-          기도제목 추가
-        </Button>
+
         <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
         {SubmitButton}
       </Box>
