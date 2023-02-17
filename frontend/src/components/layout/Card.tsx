@@ -45,6 +45,7 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
         <Box sx={{display: "flex"}}>
           <Box>
             <Typography variant="body1">이름: {nickname}</Typography>
+            <Typography variant="body1">ID: {userid}</Typography>
             {major && <Typography variant="body1">전공: {major}</Typography>}
             {sid && <Typography variant="body1">학번: {sid}</Typography>}
           </Box>

@@ -27,11 +27,12 @@ export default function SoonList() {
       setSoonlist(data);
     }
   }, [data]);
+  console.log("soonwon", data)
   return (
     <Box>
       <Box sx={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gridGap: "12px", marginTop: "10px"}}>
         {soonlist?.map(({soonid, soonwon}: any) => (
-          <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} />
+          <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname}/>
         ))}
       </Box>
       {/*FIXME: 순원 추가/삭제는 관리자 권한! */}
