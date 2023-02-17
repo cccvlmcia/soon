@@ -86,7 +86,8 @@ export default function HistoryEdit() {
               console.log(selected);
               return selected;
             }}>
-            {categoryList.map((category: Category, index: number) => (
+            {/* FIXME: Category타입 지정시 에러 */}
+            {categoryList.map((category: any, index: number) => (
               <MenuItem key={index} value={category}>
                 <Checkbox checked={categorySelected?.id === category.id} />
                 <ListItemText primary={category.name} />

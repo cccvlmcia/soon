@@ -57,9 +57,7 @@ export default function SoonCard() {
       <Box>
         <Box sx={{border: "1px solid black", textAlign: "center", padding: "20px"}}>해준 순모임 히스토리</Box>
 
-        {/*권한 있어야 조회 가능*/}
         <SoonHistorySJ sjid={userid} />
-        {/*권한 있어야 조회 가능*/}
       </Box>
     </Box>
   );
