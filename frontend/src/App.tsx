@@ -72,7 +72,6 @@ function AppRoutes() {
           }>
           <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
 
-          <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
           <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
         </Route>
 
@@ -91,6 +90,7 @@ function AppRoutes() {
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
+        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
         <Route path="/register/:userid" element={Auth(Register, null)}></Route>
         <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
         <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser || authUser)}></Route>

@@ -18,8 +18,8 @@ export const getSoonIdQuery = (sjid: Number, swid: Number) => {
 };
 
 export const getSoonHistoryQuery = (historyid: Number) => {
-  const {isLoading, isError, data, error} = useQuery("getSoonHistory", () => getSoonHistory(historyid), options);
-  return {isLoading, isError, data: data?.data, error};
+  const {isLoading, isError, data, error, refetch} = useQuery("getSoonHistory", () => getSoonHistory(historyid), options);
+  return {isLoading, isError, data: data?.data, error, refetch};
 };
 
 export const getSoonHistorySWListQuery = (swid: Number) => {
