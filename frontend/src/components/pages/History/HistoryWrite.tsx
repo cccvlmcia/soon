@@ -160,11 +160,9 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     setSoonwon(newSoonwon);
     setSeletedUsers([newSoonwon, soonjang]);
     // setSeletedUsers(userList.filter(user => user == newSoonwon || user == soonjang));
-
     // console.log("soonwon 수정 : ", , soonwon);
     console.log("seleteduser : ", selectedUsers);
   };
-
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
   const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
@@ -181,19 +179,16 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     setPrayers(newValues);
     setValue("prays", newValues);
   };
-
   const handlPublicynChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
     newValues[index].publicyn = event.target.checked ? "Y" : "N"; // Set value to "true" or "false" as a string
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
   };
-
   const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
     setCategorySelected(value);
   };
-
   //error 처리....
   const sendHistory: SubmitHandler<FormData> = async (params: FormData) => {
     console.log("순장 순원 ", soonjang, soonwon);
@@ -233,7 +228,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     const userList: User[] = data?.map(({user}: {user: User}) => {
       return {userid: user.userid, nickname: user.nickname};
     });
-    // console.log("user list : ", userList);
     setUserList(userList || []);
   };
   // 순모임 종류 선택 사항
@@ -266,7 +260,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
             </Button>
           </Box>
           <Box sx={{width: "200px"}}>{soonjang.nickname}</Box>
-
           <Box>
             <HistoryCampusDialog
               open={SoonjangOpen}
@@ -275,9 +268,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
               selectedUsers={selectedUsers}
               handleUser={handleSoonjang}
             />
-            {/* <Button sx={{ml: 2}} onClick={() => handleDeleteSoonjang()}>
-            Delete
-          </Button> */}
           </Box>
         </Box>
         <Box className="row">
@@ -317,7 +307,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
             </Button>
           </Box>
           <Box sx={{width: "200px"}}>{soonwon.nickname}</Box>
-
           <HistoryCampusDialog
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
