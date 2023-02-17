@@ -208,6 +208,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     console.log("params >> ", params);
     const result = await api.post(`soon/history`, params);
     if (result) {
+      alert("순 히스토리 쓰기 완료!");
       navigate("/");
     } else {
       console.log("SERVER에서 응답하지 않습니다");
@@ -365,6 +366,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         <Button variant="outlined" fullWidth onClick={handleAddPrayerField}>
           기도제목 추가
         </Button>
+        <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
         {SubmitButton}
       </Box>
     </>
