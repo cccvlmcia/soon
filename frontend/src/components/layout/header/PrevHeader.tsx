@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {IconButton, Toolbar, Typography} from "@mui/material";
+import {Box, IconButton, Toolbar, Typography} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import {getTitle} from "./HeaderConstants";
