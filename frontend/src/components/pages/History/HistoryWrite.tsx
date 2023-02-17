@@ -211,6 +211,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
   };
 
   const onConfirm = () => {
+    const ref = useRef(null);
     console.log("onConfirm >");
     const target: any = ref.current;
     target?.click();

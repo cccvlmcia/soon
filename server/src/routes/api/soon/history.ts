@@ -22,7 +22,9 @@ type jwt = {
 export default async function (fastify: FastifyInstance) {
   fastify.get("/:historyid", async (req: FastifyRequest<{Params: {historyid: number}}>, reply: FastifyReply) => {
     const {historyid} = req.params;
+  
     const histories = await getSoonHistory(historyid);
+    console.log("histories >>", histories)
     reply.send(histories);
   });
 
