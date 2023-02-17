@@ -15,8 +15,8 @@ export default function HistoryContents() {
     return <Error error={error} />;
   } 
 
-  const prays = data?.prays?.map(({pray, publicyn}: any) => (
-    <Box>
+  const prays = data?.prays?.map(({prayid,pray, publicyn}: any) => (
+    <Box key={prayid}>
       <Box>{pray}</Box>
       <Box>{publicyn}</Box>
     </Box>
