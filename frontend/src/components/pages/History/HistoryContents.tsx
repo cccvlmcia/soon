@@ -1,8 +1,8 @@
+import {useParams} from "react-router-dom";
 import {Box} from "@mui/material";
 import {getSoonHistoryQuery} from "@recoils/soon/query";
 import Error from "components/Error/Error";
 import Loading from "components/Loading/Loading";
-import {useParams} from "react-router-dom";
 
 export default function HistoryContents() {
   const {historyid} = useParams();

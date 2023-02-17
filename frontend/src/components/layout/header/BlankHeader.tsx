@@ -1,7 +1,7 @@
+import {useLocation} from "react-router-dom";
 import {Toolbar, Typography} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import {useLocation} from "react-router-dom";
-import {getTitle, titles} from "./HeaderConstants";
+import {getTitle} from "./HeaderConstants";
 export default function BlankHeader() {
   const {pathname} = useLocation();
   return (
