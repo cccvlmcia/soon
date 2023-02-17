@@ -25,7 +25,7 @@ export default function HistoryContents() {
   //  const  config  =loginUser?.config?.userid === data.swid || loginUser?.config?.userid === data.sjid)
   let prays: Prayer[] = data?.prays;
   if (!hasPrayAuth) {
-    prays = prays.filter((pray: any) => pray.publicyn == "N");
+    prays = prays.filter((pray: any) => pray.publicyn != "N");
   }
   console.log(prays);
   const prayView = prays.map(({pray, publicyn}: any, index: number) => (
