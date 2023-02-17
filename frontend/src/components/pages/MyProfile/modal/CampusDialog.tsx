@@ -44,7 +44,7 @@ export default function CampusDialog({
     handleCampus(campus);
   };
   const itemList = items?.map(item => (
-    <Box key={item?.campusid}>
+    <Box key={item?.campusid} sx={{padding: "0 10px"}}>
       <ListItemButton onClick={() => handleItem(item)}>
         {item?.campusid == campusSelected?.campusid && <CheckIcon />}
         <ListItemText primary={item?.name} secondary={item?.campusid} />
