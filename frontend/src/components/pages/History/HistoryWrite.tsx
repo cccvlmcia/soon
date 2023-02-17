@@ -38,16 +38,26 @@ import {HistoryForm, Prayer, User} from "@recoils/types";
 
 export default function HistoryWrite() {
   const ref = useRef(null);
+  const campusRef = useRef(null);
   const loginUser: any = useRecoilValue(userState);
   const [campusid, setCampusid] = useState(loginUser?.campus[0]?.campusid);
   const [campusList, setCampusList] = useState([]);
   const [campus, setCampus]: any = useRecoilState(selectedCampusState);
   const [open, setOpen] = useState(false);
-
+  //forwarRef로 초기화 하는거 만들어서, 안에서 클릭할 버튼을 만들고, 실제 이벤트는 initRef/fowardRef  , init 이벤트 초기화 ㄱㄱ
   const SubmitButton = forwardRef((props: any, ref: any) => {
     return (
-      <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
-        저장
+      // <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
+      <Button ref={ref} variant="outlined" type="submit">
+        submit 저장
+      </Button>
+    );
+  });
+  const InitButton = forwardRef((props: any, ref: any) => {
+    console.log("init 찍힘");
+    return (
+      <Button ref={ref} variant="outlined">
+        Init 버튼
       </Button>
     );
   });
@@ -58,14 +68,22 @@ export default function HistoryWrite() {
       setCampus(list[0]);
     }
   }, [loginUser]);
+
   const handleCampus = (campus: any) => {
+    initHistoryForm();
     setCampus(campus);
     setCampusid(campus?.campusid);
   };
 
   const onConfirm = () => {
-    console.log("onConfirm >");
+    console.log("HistoryWrite onConfirm >");
     const target: any = ref.current;
+    target?.click();
+  };
+
+  const initHistoryForm = () => {
+    console.log("캠퍼스를 변경했으므로 폼을 초기화 합니다");
+    const target: any = campusRef.current;
     target?.click();
   };
 
@@ -77,7 +95,7 @@ export default function HistoryWrite() {
           {campus?.name}
         </Button>
       </Box>
-      <HistoryWriteContents SubmitButton={<SubmitButton ref={ref} />} campusid={campusid} />
+      <HistoryWriteContents SubmitButton={<SubmitButton ref={ref} />} InitButton={<InitButton ref={campusRef} />} campusid={campusid} />
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
     </>
   );
@@ -108,7 +126,7 @@ function MyHeader({onConfirm}: any) {
     </>
   );
 }
-function HistoryWriteContents({SubmitButton, campusid}: any) {
+function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
   const {register, handleSubmit, setValue, getValues} = useForm<HistoryForm>(); // user
@@ -120,7 +138,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
   const [categorySelected, setCategorySelected]: any = useState(null);
 
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
-
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
 
   //선택 된 유저는 공통 관리
@@ -143,17 +160,10 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
   const handleSoonjang = (newSoonjang: User) => {
     setSoonjang(newSoonjang);
     setSeletedUsers([newSoonjang, soonwon]);
-    // setSeletedUsers(userList.filter(user => user != soonjang && user != soonwon));
-    // console.log("soonjang 수정 : ", newSoonjang, soonjang);
-    console.log("seleted user가 될 값: ", [newSoonjang, soonwon]);
-    console.log("seleteduser : ", selectedUsers);
   };
   const handleSoonwon = (newSoonwon: User) => {
     setSoonwon(newSoonwon);
     setSeletedUsers([newSoonwon, soonjang]);
-    // setSeletedUsers(userList.filter(user => user == newSoonwon || user == soonjang));
-    // console.log("soonwon 수정 : ", , soonwon);
-    console.log("seleteduser : ", selectedUsers);
   };
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
   const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -186,7 +196,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     console.log("순장 순원 ", soonjang, soonwon);
     //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
     if (soonjang.userid == "0" || soonwon.userid == "0") {
-      console.log("순장/순원 선택 바랍니다");
       alert("순장/순원 선택 바랍니다");
       return;
     }
@@ -197,7 +206,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     params.sjid = soonjang.userid;
     params.swid = soonwon.userid;
 
-    console.log("params >> ", params);
     const result = await api.post(`soon/history`, params);
     if (result) {
       alert("순 히스토리 쓰기 완료!");
@@ -225,7 +233,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
 
   const onConfirm = () => {
     const ref = useRef(null);
-    console.log("onConfirm >");
+    console.log("HistoryWriteContents onConfirm > ");
     const target: any = ref.current;
     target?.click();
   };
@@ -356,6 +364,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         </Button>
         <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
         {SubmitButton}
+        {InitButton}
       </Box>
     </>
   );
