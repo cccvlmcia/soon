@@ -11,6 +11,8 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
 import {selectedCampusState} from "@recoils/campus/state";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 type FormData = {
   name: string;
   campusid: string;
@@ -119,9 +121,18 @@ export default function MyProfile() {
           flexDirection: "column",
           // alignItems: "center",
           justifyContent: "left",
-          ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-          ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
-          ".value": {minWidth: "200px"},
+          marginTop: "20px",
+          ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
+          ".header": {
+            width: "70px",
+            minHeight: "48px",
+            padding: "0 10px 0 40px",
+            fontSize: "16px",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          },
+          ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
         }}>
         <Box className="row">
           <Box className="header">이름</Box>
@@ -130,13 +141,14 @@ export default function MyProfile() {
           </Box>
         </Box>
         <Box className="row">
-          <Box className="header">
-            <Button variant="outlined" onClick={onChangeCampus}>
-              캠퍼스 선택
-            </Button>
+          <Box className="header" onClick={onChangeCampus}>
+            캠퍼스
           </Box>
           <Box className="value">
-            <Box>{campusSelected?.name}</Box>
+            <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
+              {campusSelected?.name}
+              <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+            </Box>
             <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
           </Box>
         </Box>
