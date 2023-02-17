@@ -9,3 +9,27 @@ export type postUser = {
   email: string;
   type: string;
 };
+export type Prayer = {
+  pray: string;
+  publicyn: string;
+};
+export type HistoryForm = {
+  sjid: string;
+  swid: string;
+  kind: string;
+  progress: string;
+  historydate: Date;
+  contents: string;
+  prayer: string;
+  prays: Prayer[];
+};
+
+export type User = {
+  userid: string;
+  nickname: string;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+};
