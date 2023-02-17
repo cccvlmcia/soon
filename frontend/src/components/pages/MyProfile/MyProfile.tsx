@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useRecoilState} from "recoil";
-import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
+import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup, AppBar, Toolbar, IconButton, Typography} from "@mui/material";
 
-import {editUser, postLogout, postUserRegistAxios} from "@recoils/user/axios";
-import {userGoogleAuthState} from "@recoils/Login/state";
-import {postUser} from "@recoils/types";
+import {editUser} from "@recoils/user/axios";
 import {userState} from "@recoils/user/state";
-import {campusState} from "@recoils/campus/state";
 import CampusDialog from "./modal/CampusDialog";
-
+import {useLocation, useNavigate} from "react-router-dom";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import {getTitle} from "@layout/header/HeaderConstants";
+import CheckIcon from "@mui/icons-material/Check";
 type FormData = {
   name: string;
   campusid: string;
@@ -27,6 +27,8 @@ type campusType = {
 };
 export default function MyProfile() {
   // const {isLoading, isError, data, error} = getCampusListQuery();
+  const ref = useRef(null);
+
   const {register, handleSubmit} = useForm<FormData>();
   const [loginUser, setLoginUser]: any = useRecoilState(userState);
   const campuses = loginUser?.campus?.map(({campus}: any) => campus);
@@ -39,6 +41,8 @@ export default function MyProfile() {
   const [major, setMajor] = useState<string>(getMajor(campusSelected?.campusid));
   const [user, setUser]: any = useState(null);
   const [open, setOpen]: any = useState(false);
+  const navigate = useNavigate();
+
   //{campusid, cccyn,gender, major,nickname,sid}
 
   function getSid(camid: string) {
@@ -79,7 +83,11 @@ export default function MyProfile() {
       major: major,
       sid: sid,
     };
-    const result = await editUser(loginUser?.userid, userInfo);
+    const {data} = await editUser(loginUser?.userid, userInfo);
+    if (data?.affected > 0) {
+      alert("저장되었습니다, 재 로그인 적용됩니다.");
+      navigate(-1);
+    }
   };
 
   const handleName = (e: any) => {
@@ -96,70 +104,104 @@ export default function MyProfile() {
     setOpen(true);
   };
 
+  const onConfirm = () => {
+    console.log("onConfirm >");
+    const target: any = ref.current;
+    target?.click();
+  };
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit(writeRegister)}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "left",
-        ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-        ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
-        ".value": {minWidth: "200px"},
-      }}>
-      <Box className="row">
-        <Box className="header">이름</Box>
-        <Box className="value">
-          <TextField {...register("name")} value={name} onChange={handleName} />
+    <>
+      <MyHeader onConfirm={onConfirm} />
+      <Box
+        component="form"
+        onSubmit={handleSubmit(writeRegister)}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          // alignItems: "center",
+          justifyContent: "left",
+          ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
+          ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+          ".value": {minWidth: "200px"},
+        }}>
+        <Box className="row">
+          <Box className="header">이름</Box>
+          <Box className="value">
+            <TextField {...register("name")} value={name} onChange={handleName} />
+          </Box>
         </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">캠퍼스</Box>
-        <Box className="value">
-          <Button variant="outlined" onClick={onChangeCampus}>
-            캠퍼스 선택
-          </Button>
-          <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
+        <Box className="row">
+          <Box className="header">
+            <Button variant="outlined" onClick={onChangeCampus}>
+              캠퍼스 선택
+            </Button>
+          </Box>
+          <Box className="value">
+            <Box>{campusSelected?.name}</Box>
+            <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
+          </Box>
         </Box>
-      </Box>
 
-      <Box className="row">
-        <Box className="header">학번</Box>
-        <Box className="value">
-          <TextField {...register("sid")} value={sid} onChange={handleSid} />
+        <Box className="row">
+          <Box className="header">학번</Box>
+          <Box className="value">
+            <TextField {...register("sid")} value={sid} onChange={handleSid} />
+          </Box>
         </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">학과</Box>
-        <Box className="value">
-          <TextField {...register("major")} value={major} onChange={handleMajor} />
+        <Box className="row">
+          <Box className="header">학과</Box>
+          <Box className="value">
+            <TextField {...register("major")} value={major} onChange={handleMajor} />
+          </Box>
         </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">ccc 여부</Box>
-        <Box className="value">
-          <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
-            <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
-            <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
-          </RadioGroup>
+        <Box className="row">
+          <Box className="header">ccc 여부</Box>
+          <Box className="value">
+            <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
+              <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
+              <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
+            </RadioGroup>
+          </Box>
         </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">성별</Box>
-        <Box className="value">
-          <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
-            <FormControlLabel value="female" control={<Radio checked={genderSelected == "female"} />} label="여자" />
-            <FormControlLabel value="male" control={<Radio checked={genderSelected == "male"} />} label="남자" />
-          </RadioGroup>
+        <Box className="row">
+          <Box className="header">성별</Box>
+          <Box className="value">
+            <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
+              <FormControlLabel value="female" control={<Radio checked={genderSelected == "female"} />} label="여자" />
+              <FormControlLabel value="male" control={<Radio checked={genderSelected == "male"} />} label="남자" />
+            </RadioGroup>
+          </Box>
         </Box>
-      </Box>
-      <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}>
-        <Button variant="outlined" type="submit">
+        {/* <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}> */}
+        <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
           저장
         </Button>
       </Box>
-    </Box>
+    </>
+  );
+}
+function MyHeader({onConfirm}: any) {
+  const {pathname} = useLocation();
+
+  const navigate = useNavigate();
+  const handlePrev = () => {
+    navigate(-1);
+  };
+  return (
+    <>
+      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
+            <ArrowBackIosNewIcon color="secondary" />
+          </IconButton>
+          <Typography sx={{flex: 1}} variant="h6" component="div">
+            {getTitle(pathname)}
+          </Typography>
+          <IconButton edge="end" color="inherit" onClick={onConfirm} aria-label="close">
+            <CheckIcon color="secondary" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 }

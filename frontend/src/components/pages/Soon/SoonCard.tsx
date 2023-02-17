@@ -1,12 +1,13 @@
 import {Box, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
-import {getUserInfoQuery} from "@recoils/api/User";
-import {getSoonHistorySJListQuery, getSoonHistorySWListQuery} from "@recoils/api/Soon";
+
+import {getSoonHistorySJListQuery, getSoonHistorySWListQuery} from "@recoils/soon/query";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
-import {Card, CardMedia, CardContent, makeStyles, Typography} from "@material-ui/core";
-import {useNavigate, useParams} from "react-router-dom";
-import {format, parse} from "date-fns";
+import {makeStyles, Typography} from "@material-ui/core";
+import {useSearchParams, useNavigate, useParams} from "react-router-dom";
+import {format} from "date-fns";
 import NoData from "components/common/NoData";
+import {getUserInfoQuery} from "@recoils/user/query";
 const soonHeaderStyles = makeStyles({
   root: {
     display: "flex",
@@ -37,7 +38,11 @@ function SoonCardHeader({nickname, major, sid}: any) {
 
 export default function SoonCard() {
   const params = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams?.get("id");
+
   const userid = Number(params?.userid) || 0;
+  console.log("userid >", userid, id);
   const {isLoading, isError, data, error} = getUserInfoQuery(userid);
   if (isLoading) {
     return <Loading />;

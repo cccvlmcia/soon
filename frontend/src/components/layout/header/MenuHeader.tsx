@@ -1,5 +1,5 @@
-import {Box} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {AppBar, Box, IconButton, Toolbar, Typography} from "@mui/material";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useState} from "react";
 
 import {Drawer} from "@mui/material";
@@ -10,24 +10,40 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {useRecoilState} from "recoil";
 import {userState} from "@recoils/user/state";
 import {postLogout} from "@recoils/user/axios";
+import {getTitle, titles} from "./HeaderConstants";
 
-export default function Header() {
+export default function MenuHeader() {
   const [open, setOpen] = useState(false);
   const [loginUser, setLoginUser] = useRecoilState(userState);
-
+  const {pathname} = useLocation();
   const handleMenuOpen = () => {
     setOpen(!open);
   };
-  const title = "";
   return (
-    <Box sx={{background: "black", height: "60px", display: "flex", alignItems: "center"}}>
-      {/* 여기에 들어간 페이지 title 처리.. 해야 하지 않겠니 */}
-      <Box>
-        <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px", height: "36px", width: "36px"}} />
-      </Box>
-      <Box>{title}</Box>
+    <>
+      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
+        <Toolbar>
+          <IconButton edge="start" onClick={handleMenuOpen} aria-label="close">
+            <MenuIcon color="secondary" />
+          </IconButton>
+          <Typography sx={{flex: 1}} variant="h6" component="div">
+            {getTitle(pathname)}
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
-    </Box>
+    </>
+
+    // <Box sx={{background: "black", height: "60px", display: "flex", alignItems: "center"}}>
+    //   {/* 여기에 들어간 페이지 title 처리.. 해야 하지 않겠니 */}
+    //   <Box>
+    //     <MenuIcon onClick={handleMenuOpen} color="secondary" sx={{margin: "13px", height: "36px", width: "36px"}} />
+    //   </Box>
+    //   <Typography sx={{flex: 1}} variant="h6" component="div">
+    //     {titles[pathname]}
+    //   </Typography>
+    //   <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
+    // </Box>
   );
 }
 
@@ -43,6 +59,7 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
   };
   const handleLogout = async () => {
     await postLogout();
+    alert("로그아웃 되었습니다.");
     setLoginUser(null);
     handleMenuOpen();
     navigate("/login");
@@ -64,6 +81,7 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
           borderTop: "1px solid #EFEFEF",
           "> div": {padding: "20px", cursor: "pointer", borderBottom: "1px solid #EFEFEF"},
         }}>
+        <Box onClick={() => move("/")}>홈</Box>
         {data?.nickname && (
           <Box sx={{padding: "16px 12px", cursor: "pointer"}}>
             <Box sx={{display: "flex"}} onClick={handleUser}>
@@ -72,15 +90,14 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
             </Box>
           </Box>
         )}
-        <Box onClick={() => move("/")}>홈</Box>
         <Box onClick={() => move("/campus")}>캠퍼스지체들</Box>
         <Box onClick={() => move("/admin")}>관리자</Box>
         {data && (
-          <Box sx={{display: "flex", flexDirection: "column", gap: "10px"}}>
-            <Box onClick={() => handleLogout()}>로그아웃</Box>
+          <>
             <Box onClick={() => move("/soon/list")}>내 순원</Box>
+            <Box onClick={() => handleLogout()}>로그아웃</Box>
             <Box onClick={() => move("/withdrawal")}>회원탈퇴</Box>
-          </Box>
+          </>
         )}
       </Box>
     </Drawer>

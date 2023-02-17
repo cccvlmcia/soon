@@ -1,6 +1,6 @@
 import {Box, Button, List, ListItem, ListItemText} from "@mui/material";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
-import {getCampusUserQuery} from "@recoils/api/User";
+
 import {userState} from "@recoils/user/state";
 import Error from "components/Error/Error";
 import Loading from "components/Loading/Loading";
@@ -9,6 +9,7 @@ import {useRecoilValue} from "recoil";
 import UserDialog from "./modal/UserDialog";
 import {ListItemButton, IconButton, Divider} from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { getCampusUserQuery } from "@recoils/campus/query";
 
 export default function Admin() {
   const loginUser: any = useRecoilValue(userState);
