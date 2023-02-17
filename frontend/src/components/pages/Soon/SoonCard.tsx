@@ -1,4 +1,4 @@
-import {Box, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {Box, List, ListItemButton, ListItemText} from "@mui/material";
 
 import {getSoonHistorySJListQuery, getSoonHistorySWListQuery} from "@recoils/soon/query";
 import Loading from "components/Loading/Loading";
@@ -44,6 +44,7 @@ export default function SoonCard() {
   const userid = Number(params?.userid) || 0;
   console.log("userid >", userid, id);
   const {isLoading, isError, data, error} = getUserInfoQuery(userid);
+  const campus = data?.campus[0];
   if (isLoading) {
     return <Loading />;
   }
@@ -52,7 +53,7 @@ export default function SoonCard() {
   }
   return (
     <Box>
-      <SoonCardHeader nickname={data?.nickname} major={data?.campus[0]?.major} sid={data?.campus[0]?.sid} />
+      <SoonCardHeader nickname={data?.nickname} major={campus.major} sid={campus?.sid} />
       <Box>
         <Box sx={{border: "1px solid black", textAlign: "center", padding: "20px"}}>받은 순모임 히스토리</Box>
         <SoonHistorySW swid={userid} />
