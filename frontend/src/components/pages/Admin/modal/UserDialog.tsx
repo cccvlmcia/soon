@@ -11,8 +11,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SWDialog from "./SWDialog";
 const Transition = React.forwardRef(function Transition(

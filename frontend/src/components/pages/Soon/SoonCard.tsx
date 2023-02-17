@@ -1,10 +1,9 @@
 import {Box, List, ListItemButton, ListItemText, Select, MenuItem} from "@mui/material";
-
 import {getSoonHistorySJListQuery, getSoonHistorySWListQuery} from "@recoils/soon/query";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {Typography} from "@material-ui/core";
-import {useSearchParams, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {format} from "date-fns";
 import NoData from "components/common/NoData";
 import {getUserInfoQuery} from "@recoils/user/query";
@@ -13,7 +12,7 @@ const avatar =
 
 function SoonCardHeader({nickname, major, sid, campusList}: any) {
   const items = campusList?.map((campus: any) => (
-    <option key={campus?.campusid} selected value={campus?.campusid}>
+    <option key={campus?.campusid} value={campus?.campusid}>
       {campus?.name}
     </option>
   ));

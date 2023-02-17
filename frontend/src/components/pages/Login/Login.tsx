@@ -1,4 +1,4 @@
-import {Box, Button} from "@mui/material";
+import {Box} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios, getToken} from "@recoils/login/axios";
 import {userGoogleAuthState} from "@recoils/login/state";
@@ -57,7 +57,7 @@ const Login = () => {
 
   return (
     <Box sx={{display: "flex", alignItems: "center", width: "100%", height: "300px", justifyContent: "center", flexDirection: "column"}}>
-      <Box component="img" src="images/logo.jpg" sx={{maxWidth: "100%", maxHeight: "100%"}}></Box>
+      <Box component="img" src="/public/images/logo.jpg" sx={{maxWidth: "100%", maxHeight: "100%"}}></Box>
 
       <Box>
         <GoogleButton onClick={googleSocialLogin} />

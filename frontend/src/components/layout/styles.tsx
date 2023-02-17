@@ -1,4 +1,3 @@
-// export const styles ={}
 export const styles = {
   web: {
     container: {

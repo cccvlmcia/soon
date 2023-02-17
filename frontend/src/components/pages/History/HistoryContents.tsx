@@ -1,4 +1,6 @@
+
 import {styles} from "@layout/styles";
+import {useParams} from "react-router-dom";
 import {Box} from "@mui/material";
 import {getSoonHistoryQuery} from "@recoils/soon/query";
 import {Prayer} from "@recoils/types";
@@ -7,6 +9,7 @@ import Error from "components/Error/Error";
 import Loading from "components/Loading/Loading";
 import {useParams} from "react-router-dom";
 import {useRecoilValue} from "recoil";
+
 
 export default function HistoryContents() {
   const {historyid} = useParams();
@@ -33,6 +36,7 @@ export default function HistoryContents() {
       <Box key={index}>
         {index + 1} : {pray}
       </Box>
+
     </Box>
   ));
   //FIXME: 캠퍼스 추가하고 싶으면 엔티티에 순원 캠퍼스 넣어서 가져오도록 하셈
