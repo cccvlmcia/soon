@@ -1,7 +1,6 @@
 import {atom} from "recoil";
 import {recoilPersist} from "recoil-persist";
 import {getStorage, setStorage} from "utils/SecureStorage";
-const {persistAtom} = recoilPersist();
 
 export const localStorageEffect =
   (key: string) =>
