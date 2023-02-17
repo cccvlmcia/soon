@@ -47,16 +47,15 @@ export default function HistoryWrite() {
   //forwarRef로 초기화 하는거 만들어서, 안에서 클릭할 버튼을 만들고, 실제 이벤트는 initRef/fowardRef  , init 이벤트 초기화 ㄱㄱ
   const SubmitButton = forwardRef((props: any, ref: any) => {
     return (
-      // <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
-      <Button ref={ref} variant="outlined" type="submit">
+      <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
+        {/* <Button ref={ref} variant="outlined" type="submit"> */}
         submit 저장
       </Button>
     );
   });
   const InitButton = forwardRef((props: any, ref: any) => {
-    console.log("init 찍힘");
     return (
-      <Button ref={ref} variant="outlined">
+      <Button ref={ref} variant="outlined" onClick={props?.onClick} sx={{display: "none"}}>
         Init 버튼
       </Button>
     );
@@ -95,7 +94,11 @@ export default function HistoryWrite() {
           {campus?.name}
         </Button>
       </Box>
-      <HistoryWriteContents SubmitButton={<SubmitButton ref={ref} />} InitButton={<InitButton ref={campusRef} />} campusid={campusid} />
+      <HistoryWriteContents
+        SubmitButton={<SubmitButton ref={ref} />}
+        InitButton={(handleClick: any) => <InitButton ref={campusRef} onClick={handleClick} />}
+        campusid={campusid}
+      />
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
     </>
   );
@@ -129,22 +132,27 @@ function MyHeader({onConfirm}: any) {
 function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
+  const loginUser: any = useRecoilValue(userState);
+
   const {register, handleSubmit, setValue, getValues} = useForm<HistoryForm>(); // user
   const [SoonwonOpen, setSoonwonOpen]: any = useState(false);
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const [date, setDate]: any = useState(new Date());
   const [userList, setUserList] = useState<User[]>([]);
   const categoryList = useRecoilValue(categoryState);
-  const [categorySelected, setCategorySelected]: any = useState(null);
+  const [categorySelected, setCategorySelected]: any = useState({id: "soon", name: "순모임"});
 
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
 
-  //선택 된 유저는 공통 관리
-  const [selectedUsers, setSeletedUsers] = useState<User[]>([]);
   //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
-  const [soonjang, setSoonjang] = useState<User>({userid: "0", nickname: ""});
+
+  const [soonjang, setSoonjang] = useState<User>({userid: loginUser?.userid, nickname: loginUser?.nickname});
   const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
+  const [progress, setProgress] = useState("");
+  const [contents, setContents] = useState("");
+  //선택 된 유저는 공통 관리
+  const [selectedUsers, setSeletedUsers] = useState<User[]>([soonjang, soonwon]);
 
   useEffect(() => {
     refetch();
@@ -189,6 +197,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
   };
   const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
+    console.log("value >", value);
     setCategorySelected(value);
   };
   //error 처리....
@@ -231,13 +240,18 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
     setUserList(userList || []);
   };
 
-  const onConfirm = () => {
-    const ref = useRef(null);
-    console.log("HistoryWriteContents onConfirm > ");
-    const target: any = ref.current;
-    target?.click();
+  const handleInit = () => {
+    console.log("init! 내부 함수 실행!!");
+    const sj = {userid: loginUser?.userid, nickname: loginUser?.nickname};
+    setSoonjang(sj);
+    setSoonwon({userid: "0", nickname: ""});
+    setPrayers([{pray: "", publicyn: "Y"}]);
+    setCategorySelected({id: "soon", name: "순모임"});
+    setSeletedUsers([sj]);
+    setProgress("");
+    setContents("");
+    setDate(new Date());
   };
-
   return (
     <>
       <Box
@@ -258,7 +272,9 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
               순장선택
             </Button>
           </Box>
-          <Box className="value">{soonjang.nickname}</Box>
+          <Box className="value">
+            <TextField size="small" fullWidth value={soonjang.nickname} InputProps={{readOnly: true}} />
+          </Box>
           <HistoryCampusDialog
             open={SoonjangOpen}
             setOpen={setSoonjangOpen}
@@ -271,15 +287,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
           {/* 선택방법.. 분류 종류 */}
           <Box className="header">분류</Box>
           <Box className="value">
-            <Select
-              size="small"
-              value={categorySelected?.name || ""}
-              fullWidth
-              onChange={handleCategoryReceive}
-              renderValue={selected => {
-                console.log(selected);
-                return selected;
-              }}>
+            <Select size="small" value={categorySelected} fullWidth onChange={handleCategoryReceive} renderValue={(selected: any) => selected?.name}>
               {categoryList.map((soonType: any, index: number) => (
                 <MenuItem key={index} value={soonType}>
                   <Checkbox checked={categorySelected?.id == soonType.id}></Checkbox>
@@ -292,7 +300,15 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
         <Box className="row">
           <Box className="header">진도</Box>
           <Box className="value">
-            <TextField size="small" fullWidth {...register("progress")} />
+            <TextField
+              size="small"
+              fullWidth
+              {...register("progress")}
+              value={progress}
+              onChange={(e: any) => {
+                setProgress(e.target.value);
+              }}
+            />
           </Box>
         </Box>
         <Box className="row">
@@ -302,7 +318,9 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
               받은 사람
             </Button>
           </Box>
-          <Box className="value">{soonwon.nickname}</Box>
+          <Box className="value">
+            <TextField fullWidth size="small" value={soonwon.nickname} InputProps={{readOnly: true}} />
+          </Box>
           <HistoryCampusDialog
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
@@ -313,13 +331,13 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
         </Box>
         <Box className="row">
           <Box className="header">날짜</Box>
-          <Box sx={{maxWidth: "130px", div: {maxWidth: "130px"}}}>
+          <Box sx={{width: "100%"}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileDatePicker
                 inputFormat="MM/DD/YYYY"
                 value={date}
                 onChange={handleDateChange}
-                renderInput={params => <TextField size="small" {...params} />}
+                renderInput={params => <TextField fullWidth size="small" {...params} />}
               />
             </LocalizationProvider>
           </Box>
@@ -327,7 +345,17 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
         <Box className="row">
           <Box className="header">내용</Box>
           <Box className="value">
-            <TextField size="small" fullWidth multiline rows={4} {...register("contents")} />
+            <TextField
+              size="small"
+              fullWidth
+              multiline
+              rows={4}
+              {...register("contents")}
+              value={contents}
+              onChange={(e: any) => {
+                setContents(e.target.value);
+              }}
+            />
           </Box>
         </Box>
         <Box className="row">
@@ -364,7 +392,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
         </Button>
         <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
         {SubmitButton}
-        {InitButton}
+        {InitButton(handleInit)}
       </Box>
     </>
   );
