@@ -46,7 +46,7 @@ type Category = {
 
 export default function HistoryWrite() {
   const ref = useRef(null);
-  const loginUser : any = useRecoilValue(userState);
+  const loginUser: any = useRecoilValue(userState);
   const {historyid} = useParams();
   const navigate = useNavigate();
   const {register, handleSubmit, setValue, getValues} = useForm<FormData>(); // user
@@ -86,11 +86,9 @@ export default function HistoryWrite() {
     setSoonwon(newSoonwon);
     setSeletedUsers([newSoonwon, soonjang]);
     // setSeletedUsers(userList.filter(user => user == newSoonwon || user == soonjang));
-
     // console.log("soonwon 수정 : ", , soonwon);
     console.log("seleteduser : ", selectedUsers);
   };
-
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
   const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
@@ -107,19 +105,16 @@ export default function HistoryWrite() {
     setPrayers(newValues);
     setValue("prays", newValues);
   };
-
   const handlPublicynChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const newValues = [...prayers];
     newValues[index].publicyn = event.target.checked ? "Y" : "N"; // Set value to "true" or "false" as a string
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
   };
-
   const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
     const value = event.target.value;
     setCategorySelected(value);
   };
-
   //error 처리....
   const sendHistory: SubmitHandler<FormData> = async (params: FormData) => {
     console.log("순장 순원 ", soonjang, soonwon);
@@ -159,7 +154,6 @@ export default function HistoryWrite() {
     const userList: User[] = data?.map(({user}: {user: User}) => {
       return {userid: user.userid, nickname: user.nickname};
     });
-    // console.log("user list : ", userList);
     setUserList(userList || []);
   };
   // 순모임 종류 선택 사항
@@ -197,7 +191,6 @@ export default function HistoryWrite() {
             </Button>
           </Box>
           <Box sx={{width: "200px"}}>{soonjang.nickname}</Box>
-
           <Box>
             <HistoryCampusDialog
               open={SoonjangOpen}
@@ -206,9 +199,6 @@ export default function HistoryWrite() {
               selectedUsers={selectedUsers}
               handleUser={handleSoonjang}
             />
-            {/* <Button sx={{ml: 2}} onClick={() => handleDeleteSoonjang()}>
-            Delete
-          </Button> */}
           </Box>
         </Box>
         <Box className="row">
@@ -248,7 +238,6 @@ export default function HistoryWrite() {
             </Button>
           </Box>
           <Box sx={{width: "200px"}}>{soonwon.nickname}</Box>
-
           <HistoryCampusDialog
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
@@ -310,47 +299,10 @@ export default function HistoryWrite() {
         <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
       </Box>
       <Box className="row">
-        <Box className="header">날짜</Box>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <MobileDatePicker
-            label="Date mobile"
-            inputFormat="MM/DD/YYYY"
-            value={date}
-            onChange={handleDateChange}
-            renderInput={params => <TextField {...params} />}
-          />
-        </LocalizationProvider>
-      </Box>
-      <Box className="row">
-        <Box className="header">내용</Box>
         <Box>
-          <TextField multiline rows={4} {...register("contents")} />
-        </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">기도 제목</Box>
-        <Box>
-          {prayers.map((value, index) => (
-            <Box key={index} sx={{display: "flex", alignItems: "center", mb: 2}}>
-              <TextField sx={{mr: 2}} value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handlePrayerFieldChange(event, index)} />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={value.publicyn === "Y" ? true : false}
-                    onChange={event => handlPublicynChange(event, index)}
-                    name={`publicyn-${index}`}
-                  />
-                }
-                label="Public"
-              />
-              <Button sx={{ml: 2}} onClick={() => handleDeletePrayerField(index)}>
-                Delete
-              </Button>
-            </Box>
-          ))}
-        <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
-          저장
-        </Button>
+          <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
+            저장
+          </Button>
         </Box>
       </Box>
     </>
@@ -359,7 +311,6 @@ export default function HistoryWrite() {
 
 function MyHeader({onConfirm}: any) {
   const {pathname} = useLocation();
-
   const navigate = useNavigate();
   const handlePrev = () => {
     navigate(-1);
