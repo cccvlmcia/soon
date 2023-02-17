@@ -17,7 +17,7 @@ export default class SoonPray extends BaseEntity {
   historyid: number;
 
   @ManyToOne(() => SoonHistory, history => history.prays)
-  @JoinColumn({name: "histroyid"})
+  @JoinColumn({name: "historyid"})
   history: SoonHistory;
 
   @Column()

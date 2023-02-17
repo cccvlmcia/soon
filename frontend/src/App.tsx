@@ -9,7 +9,7 @@ import Auth from "@hoc/Auth";
 import Register from "@pages/Register/Register";
 import Campus from "@pages/Campus/Campus";
 import HistoryWrite from "@pages/History/HistoryWrite";
-import HistoryContents from "@pages/History/HistoryContents";
+
 import SoonCard from "@pages/Soon/SoonCard";
 import SoonList from "@pages/Soon/SoonList";
 import SoonGraph from "@pages/Soon/SoonGraph";
@@ -24,6 +24,8 @@ import {campusState} from "@recoils/campus/state";
 import MenuHeader from "@layout/header/MenuHeader";
 import BlankHeader from "@layout/header/BlankHeader";
 import PrevHeader from "@layout/header/PrevHeader";
+import HistoryEdit from "@pages/History/HistoryEdit";
+import HistoryContents from "@pages/History/HistoryContents";
 
 export default function App() {
   return (
@@ -68,8 +70,9 @@ function AppRoutes() {
               <PrevHeader />
             </Layout>
           }>
-          <Route path="/soon/:userid/card" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
+          <Route path="/soon/card/:userid" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
 
+          <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, loginUser || authUser)}></Route>
           <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
         </Route>
 

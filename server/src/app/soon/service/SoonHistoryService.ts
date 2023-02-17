@@ -38,10 +38,6 @@ export async function editSoonHistory(
     progress: string;
     historydate: Date;
     contents?: string;
-    prays?: {
-      pray: string;
-      publicyn: string;
-    }[];
   },
 ) {
 
@@ -64,11 +60,12 @@ export async function addSoonHistory(history: {
   progress: string;
   historydate: Date;
   contents?: string;
-  prays?: {
+  prays?:any;
+}) {
+  /* {
     pray: string;
     publicyn: string;
-  }[];
-}) {
+  }[]; */
   return await txProcess(async manager => {
     const repository = manager.getRepository(SoonHistory);
     const prayRepository = manager.getRepository(SoonPray);
@@ -79,7 +76,7 @@ export async function addSoonHistory(history: {
     const historyData = await repository.save(history);
     const historyid = historyData.historyid;
     if (history?.prays && history?.prays?.length > 0) {
-      const prays = history?.prays.map(pray => ({historyid, ...pray}));
+      const prays = history?.prays.map((pray:any) => ({historyid, ...pray}));
       await prayRepository.save(prays);
     }
     return historyData;
