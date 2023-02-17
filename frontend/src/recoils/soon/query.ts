@@ -1,5 +1,5 @@
 import {useQuery} from "react-query";
-import {api, options} from "@recoils/consonants";
+import {api, options} from "@recoils/constants";
 import {getSoonHistory, getSoonHistorySJList, getSoonHistorySWList, getSoonId, getSoonInfo, getSoonList} from "./axios";
 
 export const getSoonListQuery = (sjid: Number) => {

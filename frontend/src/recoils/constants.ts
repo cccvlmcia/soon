@@ -1,18 +1,4 @@
 import axios from "axios";
-import {getStorage, setStorage} from "utils/SecureStorage";
-
-export const options = {
-  refetchOnWindowFocus: false,
-  retry: 0,
-  onSuccess: ({data}: any) => {
-    //api 호출 성공
-    console.log("onSuccess >>", data);
-  },
-  onError: (error: any) => {
-    //api 호출 실패
-    console.log("onError >> ", error.message);
-  },
-};
 
 export const api = axios.create({
   baseURL: "/api/v1",
@@ -43,3 +29,15 @@ export async function axiosProcess(caller: Function, isLogin = false) {
     return null;
   }
 }
+export const options = {
+  refetchOnWindowFocus: false,
+  retry: 0,
+  onSuccess: ({data}: any) => {
+    //api 호출 성공
+    console.log("onSuccess >>", data);
+  },
+  onError: (error: any) => {
+    //api 호출 실패
+    console.log("onError >> ", error.message);
+  },
+};

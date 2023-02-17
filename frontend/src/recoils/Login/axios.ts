@@ -1,4 +1,4 @@
-import {axiosProcess, server} from "@recoils/consonants";
+import {axiosProcess, server} from "@recoils/constants";
 
 export async function getGoogleInfoAxios(code: string) {
   return axiosProcess(async () => {

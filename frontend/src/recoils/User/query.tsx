@@ -1,4 +1,4 @@
-import {options} from "@recoils/consonants";
+import {options} from "@recoils/constants";
 import {useQuery} from "react-query";
 import {getUserInfo, getUserList} from "@recoils/user/axios";
 

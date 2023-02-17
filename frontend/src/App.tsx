@@ -21,6 +21,9 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import Loading from "components/Loading/Loading";
 import {userState, userSelector} from "@recoils/user/state";
 import {campusState} from "@recoils/campus/state";
+import MenuHeader from "@layout/header/MenuHeader";
+import BlankHeader from "@layout/header/BlankHeader";
+import PrevHeader from "@layout/header/PrevHeader";
 
 export default function App() {
   return (
@@ -45,32 +48,49 @@ function AppRoutes() {
   return (
     <Box>
       <Routes>
-        <Route element={<Layout />}>
+        <Route
+          element={
+            <Layout>
+              <MenuHeader />
+            </Layout>
+          }>
           {/*Login */}
           <Route path="/" element={Auth(Home, true, loginUser || authUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser || authUser)}></Route>
-          <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
           <Route path="/admin" element={Auth(Admin, true, loginUser || authUser)}></Route>
-          <Route path="/history" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
-          <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
-          <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
-          <Route path="/soon/:userid/card" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
           <Route path="/soon/list" element={Auth(SoonList, true, loginUser || authUser)}></Route>
-          <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser || authUser)}></Route>
           <Route path="/withdrawal" element={Auth(Withdrawal, true, loginUser || authUser)}></Route>
-
-          {/*Login */}
-
-          {/*Not Login */}
-          <Route path="/login" element={Auth(Login, false)}></Route>
-          {/*Not Login */}
-
-          {/*EveryOne */}
-          <Route path="/register" element={Auth(Register, null)}></Route>
-          {/* // element={isRegistered() ? <Navigate to={"/"} /> : Auth(Login, null)}></Route> */}
-          <Route path="/register/:userid" element={Auth(Register, null)}></Route>
-          {/*EveryOne */}
         </Route>
+
+        <Route
+          element={
+            <Layout>
+              <PrevHeader />
+            </Layout>
+          }>
+          <Route path="/soon/:userid/card" element={Auth(SoonCard, true, loginUser || authUser)}></Route>
+
+          <Route path="/history/:historyid/view" element={Auth(HistoryContents, true, loginUser || authUser)}></Route>
+        </Route>
+
+        <Route
+          element={
+            <Layout>
+              <BlankHeader />
+            </Layout>
+          }>
+          <Route path="/login" element={Auth(Login, false)}></Route>
+          <Route path="/register" element={Auth(Register, null)}></Route>
+        </Route>
+        {/* Custom AppBar */}
+        <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser || authUser)}></Route>
+        <Route path="/history" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
+        {/* Custom AppBar */}
+
+        {/* 이건 왜 필요?? */}
+        <Route path="/register/:userid" element={Auth(Register, null)}></Route>
+        <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser || authUser)}></Route>
+        <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser || authUser)}></Route>
       </Routes>
     </Box>
   );

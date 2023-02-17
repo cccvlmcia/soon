@@ -12,7 +12,7 @@ import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, Checkbox, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import {api} from "@recoils/consonants";
+import {api} from "@recoils/constants";
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;

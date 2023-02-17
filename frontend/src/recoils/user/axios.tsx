@@ -1,4 +1,4 @@
-import {api, axiosProcess, server} from "@recoils/consonants";
+import {api, axiosProcess, server} from "@recoils/constants";
 import {postUser} from "@recoils/types";
 
 export const getAuthUser = () => server.get("/auth/user");
