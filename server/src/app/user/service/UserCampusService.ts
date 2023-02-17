@@ -9,6 +9,12 @@ export async function editUserCampus(userid: number, campus: {campusid: string; 
     return await repository.update({userid, defaultyn: CommonYN.Y}, campus);
   });
 }
+export async function addUserCampus(campus: {userid: number; campusid: string; major: string; sid: number}) {
+  return await txProcess(async manager => {
+    const repository = manager.getRepository(UserCampus);
+    return await repository.save(campus);
+  });
+}
 export async function getUserCampus(userid: number) {
   return await UserCampus.find({where: {userid}, relations: {campus: true}});
 }
