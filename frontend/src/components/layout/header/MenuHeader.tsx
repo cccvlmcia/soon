@@ -26,9 +26,11 @@ export default function MenuHeader() {
           <IconButton edge="start" onClick={handleMenuOpen} aria-label="close">
             <MenuIcon color="secondary" />
           </IconButton>
-          <Typography sx={{flex: 1}} variant="h6" component="div">
-            {getTitle(pathname)}
-          </Typography>
+          <Box sx={{ml: 2}}>
+            <Typography variant="h6" component="div">
+              {getTitle(pathname)}
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
       <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
@@ -90,15 +92,11 @@ function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open
             </Box>
           </Box>
         )}
-        <Box onClick={() => move("/campus")}>캠퍼스지체들</Box>
+        <Box onClick={() => move("/campus")}>내 캠퍼스</Box>
+        <Box onClick={() => move("/soon/list")}>내 순원</Box>
         <Box onClick={() => move("/admin")}>관리자</Box>
-        {data && (
-          <>
-            <Box onClick={() => move("/soon/list")}>내 순원</Box>
-            <Box onClick={() => handleLogout()}>로그아웃</Box>
-            <Box onClick={() => move("/withdrawal")}>회원탈퇴</Box>
-          </>
-        )}
+        <Box onClick={() => handleLogout()}>로그아웃</Box>
+        <Box onClick={() => move("/withdrawal")}>회원탈퇴</Box>
       </Box>
     </Drawer>
   );
