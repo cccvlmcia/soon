@@ -1,15 +1,12 @@
 import {useState, useEffect} from "react";
 import {useRecoilValue} from "recoil";
 
-import {Box, Stack} from "@mui/material";
-import {Button, TextField} from "@mui/material";
+import {Box} from "@mui/material";
 import Loading from "components/Loading/Loading";
 import Error from "components/Error/Error";
 import {UserCard} from "@layout/Card";
-import {api} from "@recoils/constants";
 import {getSoonListQuery} from "@recoils/soon/query";
 import {userState} from "@recoils/user/state";
-import {styles} from "@layout/styles";
 
 export default function SoonList() {
   const loginUser: any = useRecoilValue(userState);

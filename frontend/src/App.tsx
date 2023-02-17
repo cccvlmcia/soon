@@ -1,6 +1,6 @@
 import {Suspense, useEffect} from "react";
 import {Box} from "@mui/material";
-import {Routes, Route, Navigate, useNavigate} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 
 import Layout from "@layout/Layout";
 import Home from "@pages/Home";

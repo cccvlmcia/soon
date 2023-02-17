@@ -1,4 +1,4 @@
-import {Box, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {Box, List, ListItemButton, ListItemText} from "@mui/material";
 
 import {getSoonHistorySJListQuery, getSoonHistorySWListQuery} from "@recoils/soon/query";
 import Loading from "components/Loading/Loading";

@@ -1,13 +1,13 @@
-import {Box, Stack} from "@mui/material";
-
-import Error from "components/Error/Error";
-import Loading from "react-loading";
-import {UserCard} from "@layout/Card";
 import {useRecoilValue} from "recoil";
+import Loading from "react-loading";
+import {Box} from "@mui/material";
 import {userState} from "@recoils/user/state";
 import {campusState} from "@recoils/campus/state";
 import {authState} from "@recoils/auth/state";
-import { getCampusUserQuery } from "@recoils/campus/query";
+import {getCampusUserQuery} from "@recoils/campus/query";
+import {UserCard} from "@layout/Card";
+import Error from "components/Error/Error";
+
 export default function Campus() {
   const loginUser: any = useRecoilValue(userState);
   const campusList: any = useRecoilValue(campusState);

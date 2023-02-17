@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useRecoilState} from "recoil";
 import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup, AppBar, Toolbar, IconButton, Typography} from "@mui/material";
@@ -42,8 +42,6 @@ export default function MyProfile() {
   const [user, setUser]: any = useState(null);
   const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
-
-  //{campusid, cccyn,gender, major,nickname,sid}
 
   function getSid(camid: string) {
     return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.sid;

@@ -1,15 +1,13 @@
-import {Box, Button, List, ListItem, ListItemText} from "@mui/material";
-import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
-
-import {userState} from "@recoils/user/state";
-import Error from "components/Error/Error";
-import Loading from "components/Loading/Loading";
 import {useEffect, useState} from "react";
 import {useRecoilValue} from "recoil";
+
+import {Box, Button, List, ListItemText, ListItemButton, Divider} from "@mui/material";
+import {getCampusUserQuery} from "@recoils/campus/query";
+import {userState} from "@recoils/user/state";
+import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
+import Error from "components/Error/Error";
+import Loading from "components/Loading/Loading";
 import UserDialog from "./modal/UserDialog";
-import {ListItemButton, IconButton, Divider} from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { getCampusUserQuery } from "@recoils/campus/query";
 
 export default function Admin() {
   const loginUser: any = useRecoilValue(userState);

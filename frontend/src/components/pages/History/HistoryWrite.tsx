@@ -1,5 +1,19 @@
 import {ChangeEvent, useEffect, useState, useRef} from "react";
-import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText, FormControlLabel} from "@mui/material";
+import {
+  Box,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  SelectChangeEvent,
+  Checkbox,
+  ListItemText,
+  FormControlLabel,
+  AppBar,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
@@ -12,7 +26,6 @@ import Error from "components/Error/Error";
 import HistoryCampusDialog from "./HistoryCampusDialog";
 import {getCampusUserQuery} from "@recoils/campus/query";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import {AppBar, IconButton, Toolbar, Typography} from "@mui/material";
 import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
