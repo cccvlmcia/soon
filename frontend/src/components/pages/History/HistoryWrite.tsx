@@ -46,7 +46,7 @@ type Category = {
 
 export default function HistoryWrite() {
   const ref = useRef(null);
-  const loginUser = useRecoilValue(userState);
+  const loginUser : any = useRecoilValue(userState);
   const {historyid} = useParams();
   const navigate = useNavigate();
   const {register, handleSubmit, setValue, getValues} = useForm<FormData>(); // user
@@ -307,12 +307,51 @@ export default function HistoryWrite() {
         <Button variant="outlined" fullWidth onClick={handleAddPrayerField}>
           기도제목 추가
         </Button>
-
-        {/* <Box sx={{width: "100%", display: "flex", justifyContent: "center", marginTop: "10px"}}> */}
+        <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
+      </Box>
+      <Box className="row">
+        <Box className="header">날짜</Box>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <MobileDatePicker
+            label="Date mobile"
+            inputFormat="MM/DD/YYYY"
+            value={date}
+            onChange={handleDateChange}
+            renderInput={params => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+      </Box>
+      <Box className="row">
+        <Box className="header">내용</Box>
+        <Box>
+          <TextField multiline rows={4} {...register("contents")} />
+        </Box>
+      </Box>
+      <Box className="row">
+        <Box className="header">기도 제목</Box>
+        <Box>
+          {prayers.map((value, index) => (
+            <Box key={index} sx={{display: "flex", alignItems: "center", mb: 2}}>
+              <TextField sx={{mr: 2}} value={value.pray} onChange={(event: ChangeEvent<HTMLInputElement>) => handlePrayerFieldChange(event, index)} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={value.publicyn === "Y" ? true : false}
+                    onChange={event => handlPublicynChange(event, index)}
+                    name={`publicyn-${index}`}
+                  />
+                }
+                label="Public"
+              />
+              <Button sx={{ml: 2}} onClick={() => handleDeletePrayerField(index)}>
+                Delete
+              </Button>
+            </Box>
+          ))}
         <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
           저장
         </Button>
-        {/* </Box> */}
+        </Box>
       </Box>
     </>
   );
