@@ -20,31 +20,8 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {userState} from "@recoils/user/state";
 import {selectedCampusState} from "@recoils/campus/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
-
-type Prayer = {
-  pray: string;
-  publicyn: string;
-};
-type FormData = {
-  sjid: string;
-  swid: string;
-  kind: string;
-  progress: string;
-  historydate: Date;
-  contents: string;
-  prayer: string;
-  prays: Prayer[];
-};
-
-type User = {
-  userid: string;
-  nickname: string;
-};
-
-type Category = {
-  id: string;
-  name: string;
-};
+import {categoryState} from "@recoils/history/state";
+import {HistoryForm, Prayer, User} from "@recoils/types";
 
 export default function HistoryWrite() {
   const ref = useRef(null);
@@ -121,17 +98,12 @@ function MyHeader({onConfirm}: any) {
 function HistoryWriteContents({SubmitButton, campusid}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
-  const {register, handleSubmit, setValue, getValues} = useForm<FormData>(); // user
+  const {register, handleSubmit, setValue, getValues} = useForm<HistoryForm>(); // user
   const [SoonwonOpen, setSoonwonOpen]: any = useState(false);
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const [date, setDate]: any = useState(new Date());
   const [userList, setUserList] = useState<User[]>([]);
-  const [categoryList, setCategoryList] = useState<Category[]>([
-    {id: "soon", name: "순모임"}, //순모임
-    {id: "coffee", name: "커피 타임"}, //커피타임
-    {id: "activity", name: "외부 활동"}, //외부활동
-    {id: "unity", name: "합동 순모임"}, //합동 순모임
-  ]);
+  const categoryList = useRecoilValue(categoryState);
   const [categorySelected, setCategorySelected]: any = useState(null);
 
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
@@ -197,7 +169,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     setCategorySelected(value);
   };
   //error 처리....
-  const sendHistory: SubmitHandler<FormData> = async (params: FormData) => {
+  const sendHistory: SubmitHandler<HistoryForm> = async (params: HistoryForm) => {
     console.log("순장 순원 ", soonjang, soonwon);
     //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
     if (soonjang.userid == "0" || soonwon.userid == "0") {
@@ -237,17 +209,6 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     });
     setUserList(userList || []);
   };
-
-  // 순모임 종류 선택 사항
-  const categoryFunc = () => {
-    setCategoryList([
-      {id: "soon", name: "순모임"}, //순모임
-      {id: "coffee", name: "커피 타임"}, //커피타임
-      {id: "activity", name: "외부 활동"}, //외부활동
-      {id: "unity", name: "합동 순모임"}, //합동 순모임
-    ]);
-  };
-
 
   const onConfirm = () => {
     console.log("onConfirm >");
