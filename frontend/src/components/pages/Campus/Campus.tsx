@@ -10,8 +10,9 @@ import {selectedCampusState} from "@recoils/campus/state";
 import {authState} from "@recoils/auth/state";
 import {getCampusUserQuery} from "@recoils/campus/query";
 import NoData from "components/common/NoData";
-import {Button} from "@material-ui/core";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 export default function Campus() {
   const loginUser: any = useRecoilValue(userState);
   const [campusList, setCampusList] = useState([]);
@@ -31,7 +32,10 @@ export default function Campus() {
   return (
     <>
       <Box sx={{textAlign: "center", fontSize: "20px", margin: "20px 0"}}>
-        <Box onClick={() => setOpen(true)}>{campus?.name}</Box>
+        <Box onClick={() => setOpen(true)} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <Box>{campus?.name}</Box>
+          <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+        </Box>
       </Box>
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
       <CampusUserList campus={campus} />
@@ -47,7 +51,6 @@ function CampusUserList({campus}: any) {
   const auth = loginUser?.auth;
   const isAdmin = auth?.filter(({authid}: {authid: string}) => authes?.filter(({id}) => id == authid)?.length > 0)?.length > 0;
 
-  console.log("data >", data);
   useEffect(() => {
     refetch();
   }, [campus]);

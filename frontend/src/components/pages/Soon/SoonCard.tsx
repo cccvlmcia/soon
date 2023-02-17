@@ -6,7 +6,7 @@ import {Typography} from "@material-ui/core";
 import {useNavigate, useParams} from "react-router-dom";
 import {format} from "date-fns";
 import NoData from "components/common/NoData";
-import {getUserInfoQuery} from "@recoils/User/query";
+import {getUserInfoQuery} from "@recoils/user/query";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
@@ -46,7 +46,7 @@ export default function SoonCard() {
   }
   return (
     <Box sx={{display: "flex", flexDirection: "column", gap: "5px"}}>
-      <SoonCardHeader nickname={data?.nickname} major={campus.major} sid={campus?.sid} campusList={campusList} />
+      <SoonCardHeader nickname={data?.nickname} major={campus?.major} sid={campus?.sid} campusList={campusList} />
       <Box sx={{">div": {background: "#F7F9FA", padding: "10px 20px", fontWeight: "700"}}}>
         <Box>받은 순모임 히스토리</Box>
         <SoonHistorySW swid={userid} />

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import ListItemText from "@mui/material/ListItemText";
 import List from "@mui/material/List";
@@ -12,6 +12,7 @@ import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
@@ -34,6 +35,7 @@ export default function CampusDialog({
   campusSelected: any;
   handleCampus: any;
 }) {
+  // campuslist ,setcampuslist
   const handleClose = () => {
     setOpen(false);
   };
@@ -41,6 +43,7 @@ export default function CampusDialog({
     setOpen(false);
     handleCampus(campus);
   };
+
   const itemList = items?.map(item => (
     <Box key={item?.campusid} sx={{padding: "0 10px"}}>
       <ListItemButton onClick={() => handleItem(item)}>
@@ -51,7 +54,7 @@ export default function CampusDialog({
     </Box>
   ));
   return (
-    <div>
+    <>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
           <Toolbar>
@@ -63,23 +66,10 @@ export default function CampusDialog({
                 캠퍼스 선택
               </Typography>
             </Box>
-
-            {/* <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button> */}
           </Toolbar>
         </AppBar>
-        <List>
-          {itemList}
-          {/* <ListItemButton onClick={handleItem}>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton>
-            <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-          </ListItemButton> */}
-        </List>
+        <List>{itemList}</List>
       </Dialog>
-    </div>
+    </>
   );
 }
