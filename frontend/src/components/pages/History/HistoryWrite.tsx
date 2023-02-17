@@ -54,8 +54,14 @@ export default function HistoryWrite() {
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const [date, setDate]: any = useState(new Date());
   const [userList, setUserList] = useState<User[]>([]);
-  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [categoryList, setCategoryList] = useState<Category[]>([
+    {id: "soon", name: "순모임"}, //순모임
+    {id: "coffee", name: "커피 타임"}, //커피타임
+    {id: "activity", name: "외부 활동"}, //외부활동
+    {id: "unity", name: "합동 순모임"}, //합동 순모임
+  ]);
   const [categorySelected, setCategorySelected]: any = useState(null);
+  //FIXME: 하드 코딩 된 부분 수정 할 것
   const campusid = loginUser?.campus[0]?.campusid || "UNIV102";
   const {isLoading, isError, data, error} = getCampusUserQuery(campusid);
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
@@ -147,7 +153,6 @@ export default function HistoryWrite() {
 
   useEffect(() => {
     userListFunc();
-    categoryFunc();
     fetchData();
   }, [data, historyid, soonjang, soonwon]);
 
@@ -161,15 +166,6 @@ export default function HistoryWrite() {
     });
     // console.log("user list : ", userList);
     setUserList(userList || []);
-  };
-  // 순모임 종류 선택 사항
-  const categoryFunc = () => {
-    setCategoryList([
-      {id: "soon", name: "순모임"}, //순모임
-      {id: "coffee", name: "커피 타임"}, //커피타임
-      {id: "activity", name: "외부 활동"}, //외부활동
-      {id: "unity", name: "합동 순모임"}, //합동 순모임
-    ]);
   };
   const onConfirm = () => {
     console.log("onConfirm >");
