@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Box, Stack} from "@mui/material";
+import {Box} from "@mui/material";
 
 import Error from "components/Error/Error";
 import Loading from "react-loading";

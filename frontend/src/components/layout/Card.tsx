@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useRecoilValue} from "recoil";
 import {makeStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import {useNavigate} from "react-router-dom";
 import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import Popover from "@mui/material/Popover";
 import {api} from "@recoils/constants";
-import {useRecoilValue} from "recoil";
 import {authState} from "@recoils/auth/state";
 
 const useStyles = makeStyles({
@@ -45,6 +45,7 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
         <Box sx={{display: "flex"}}>
           <Box>
             <Typography variant="body1">이름: {nickname}</Typography>
+            <Typography variant="body1">ID: {userid}</Typography>
             {major && <Typography variant="body1">전공: {major}</Typography>}
             {sid && <Typography variant="body1">학번: {sid}</Typography>}
           </Box>

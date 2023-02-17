@@ -39,7 +39,7 @@ export default class SoonHistory extends BaseEntity {
   contents: string;
 
   @OneToMany(() => SoonPray, pray => pray.history)
-  prays: SoonPray[];
+  prays: SoonPray;
 
   @CreateDateColumn()
   createdate: Date;
