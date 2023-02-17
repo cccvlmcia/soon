@@ -210,7 +210,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
               순장선택
             </Button>
           </Box>
-          <Box sx={{width: "200px"}}>{soonjang.nickname}</Box>
+          <Box sx={{width: "200px"}}>{soonjang?.nickname}</Box>
           <Box>
             <HistoryCampusDialog
               open={SoonjangOpen}
