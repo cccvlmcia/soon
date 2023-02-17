@@ -1,37 +1,30 @@
-import React, {useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useRecoilValue} from "recoil";
+import {makeStyles} from "@material-ui/core/styles";
 import {Box, Button, Checkbox, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import Popover from "@mui/material/Popover";
 import {api} from "@recoils/constants";
-import {useRecoilValue} from "recoil";
 import {authState} from "@recoils/auth/state";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const useStyles = makeStyles({
   root: {
     width: 290,
-    height: 400,
     display: "flex",
     margin: "0 auto",
     flexDirection: "column",
-  },
-  media: {
-    height: 300,
+    padding: "16px",
+    border: "solid 1px #DDD",
+    borderRadius: "4px",
   },
 });
 
-const avatar =
-  "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150403_67%2Fe2voo_14280514292377Sadp_JPEG%2Fkakako-03.jpg&type=a340";
-export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, sid, isAdmin, authList}: any) {
+export function UserCard({userid, nickname, pictureUrl, campus, major, sid, isAdmin, authList}: any) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState<Boolean>(false);
-
   const openSubMenu = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -39,15 +32,32 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
     setAnchorEl(e.currentTarget);
   };
   return (
-    <Card className={classes.root} onClick={() => navigate(`/soon/card/${userid}`)}>
-      <CardMedia className={classes.media} image={pictureUrl} title={nickname} />
-      <CardContent>
+    <Box className={classes.root} onClick={() => navigate(`/soon/card/${userid}`)}>
+      <Box>
         <Box sx={{display: "flex"}}>
-          <Box>
-            <Typography variant="body1">이름: {nickname}</Typography>
-            <Typography variant="body1">ID: {userid}</Typography>
-            {major && <Typography variant="body1">전공: {major}</Typography>}
-            {sid && <Typography variant="body1">학번: {sid}</Typography>}
+          <AccountCircleIcon sx={{width: 80, height: 80, marginRight: "10px", opacity: "0.5"}} />
+          {/* <Box
+            component="img"
+            sx={{
+              display: "inline-block",
+              width: 80,
+              height: 80,
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+            src={pictureUrl}
+            alt={nickname}
+          /> */}
+          <Box sx={{">div": {display: "flex"}, div: {wordBreak: "break-all"}}}>
+            <Box>
+              <Box>
+                {nickname}
+                <Box component="span" sx={{fontSize: "0.8em", opacity: "0.5", marginLeft: "6px"}}>
+                  {sid}학번
+                </Box>
+              </Box>
+            </Box>
+            <Box sx={{opacity: "0.5"}}>{major}</Box>
           </Box>
           {/* isAdmin(순코디/관리자) 일때만 조회*/}
           {isAdmin && (
@@ -59,8 +69,8 @@ export function UserCard({userid, nickname, pictureUrl = avatar, campus, major, 
             </Box>
           )}
         </Box>
-      </CardContent>
-    </Card>
+      </Box>
+    </Box>
   );
 }
 
