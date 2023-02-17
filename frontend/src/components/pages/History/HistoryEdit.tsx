@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState, useRef, forwardRef} from "react";
+import {useEffect, useState, useRef, forwardRef} from "react";
 import {Box, TextField, Select, MenuItem, Button, SelectChangeEvent, Checkbox, ListItemText, FormControlLabel} from "@mui/material";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
@@ -33,13 +33,6 @@ export default function HistoryEdit() {
   const [campus, setCampus]: any = useRecoilState(selectedCampusState);
   const [open, setOpen] = useState(false);
 
-  const SubmitButton = forwardRef((props: any, ref: any) => {
-    return (
-      <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
-        저장
-      </Button>
-    );
-  });
   useEffect(() => {
     const list = loginUser?.campus?.map(({campus}: any) => campus);
     setCampusList(list);
@@ -47,6 +40,15 @@ export default function HistoryEdit() {
       setCampus(list[0]);
     }
   }, [loginUser]);
+
+  const SubmitButton = forwardRef((props: any, ref: any) => {
+    return (
+      <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
+        저장
+      </Button>
+    );
+  });
+
   const handleCampus = (campus: any) => {
     setCampus(campus);
     setCampusid(campus?.campusid);
@@ -98,33 +100,40 @@ function MyHeader({onConfirm}: any) {
   );
 }
 function HistoryWriteContents({SubmitButton, campusid}: any) {
+  const {register, handleSubmit} = useForm<HistoryEditForm>(); // user
+
   const {historyid} = useParams();
   const navigate = useNavigate();
   const [SoonwonOpen, setSoonwonOpen]: any = useState(false);
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const categoryList = useRecoilValue(categoryState);
-  const {register, handleSubmit, setValue, getValues} = useForm<HistoryEditForm>(); // user
 
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
   const {isLoading: historyIsLoading, isError: historyIsError, data: historyData, error: historyError} = getSoonHistoryQuery(Number(historyid));
-  if (isLoading || historyIsLoading) return <Loading />;
-  if (isError || historyIsError) return <Error error={error} />;
   // dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")
-  const [date, setDate]: any = useState(new Date(dayjs(historyData.historydate).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")));
+  const [date, setDate]: any = useState(new Date(dayjs(historyData?.historydate).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")));
   const [userList, setUserList] = useState<User[]>([]);
   const [categorySelected, setCategorySelected]: any = useState(null);
   // FIXME: prays 못가져오는 듯
-  const [prayers, setPrayers] = useState<Prayer[]>(historyData.prays);
+  const [prayers, setPrayers] = useState<Prayer[]>(historyData?.prays);
 
   //선택 된 유저는 공통 관리
   const [selectedUsers, setSeletedUsers] = useState<User[]>([]);
   //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
-  const [soonjang, setSoonjang] = useState<User>(historyData.soonjang);
-  const [soonwon, setSoonwon] = useState<User>(historyData.soonwon);
+  const [soonjang, setSoonjang] = useState<User>(historyData?.soonjang);
+  const [soonwon, setSoonwon] = useState<User>(historyData?.soonwon);
 
   useEffect(() => {
     refetch();
   }, [campusid]);
+  useEffect(() => {
+    if (data && historyData) {
+      userListFunc();
+    }
+  }, [data, historyData, historyid, soonjang, soonwon]);
+
+  if (isLoading || historyIsLoading) return <Loading />;
+  if (isError || historyIsError) return <Error error={error} />;
 
   const onChangeSoonjang = (e: any) => {
     setSoonjangOpen(true);
@@ -180,17 +189,13 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
     }
   };
 
-  useEffect(() => {
-    userListFunc();
-  }, [data, historyid, soonjang, soonwon]);
-
   const userListFunc = () => {
     const userList: User[] = data?.map(({user}: {user: User}) => {
-      return {userid: user.userid, nickname: user.nickname};
+      return {userid: user.userid, nickname: user?.nickname};
     });
     setUserList(userList || []);
   };
-
+  console.log("categorySelected >", categorySelected);
   return (
     <>
       <Box
@@ -247,7 +252,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         <Box className="row">
           <Box className="header">진도</Box>
           <Box>
-            <TextField size="small" defaultValue={historyData.progress} {...register("progress")} />
+            <TextField size="small" defaultValue={historyData.progress} {...register("progress", {required: true})} />
           </Box>
         </Box>
         <Box className="row">
@@ -258,7 +263,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
               받은 사람
             </Button>
           </Box>
-          <Box sx={{width: "200px"}}>{soonwon.nickname}</Box>
+          <Box sx={{width: "200px"}}>{soonwon?.nickname}</Box>
           <HistoryCampusDialog
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
@@ -281,7 +286,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         <Box className="row">
           <Box className="header">내용</Box>
           <Box>
-            <TextField size="small" defaultValue={historyData.contents} multiline rows={4} {...register("contents")} />
+            <TextField size="small" defaultValue={historyData?.contents} multiline rows={4} {...register("contents", {required: true})} />
           </Box>
         </Box>
 

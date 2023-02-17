@@ -35,6 +35,7 @@ import {selectedCampusState} from "@recoils/campus/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 import {categoryState} from "@recoils/history/state";
 import {HistoryForm, Prayer, User} from "@recoils/types";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function HistoryWrite() {
   const ref = useRef(null);
@@ -89,11 +90,13 @@ export default function HistoryWrite() {
   return (
     <>
       <MyHeader onConfirm={onConfirm} />
-      <Box sx={{textAlign: "center"}}>
-        <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
-          {campus?.name}
-        </Button>
+      <Box sx={{textAlign: "center", fontSize: "20px", padding: "20px 0", borderBottom: "1px solid gray"}}>
+        <Box onClick={() => setOpen(true)} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <Box>{campus?.name}</Box>
+          <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+        </Box>
       </Box>
+
       <HistoryWriteContents
         SubmitButton={<SubmitButton ref={ref} />}
         InitButton={(handleClick: any) => <InitButton ref={campusRef} onClick={handleClick} />}
@@ -195,7 +198,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
     setPrayers(newValues);
     setValue("prays", newValues); // Update the value of the 'prays' field in the form data object
   };
-  const handleCategoryReceive = (event: SelectChangeEvent<never>) => {
+  const handleCategoryReceive = (event: any) => {
     const value = event.target.value;
     console.log("value >", value);
     setCategorySelected(value);
@@ -303,7 +306,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
             <TextField
               size="small"
               fullWidth
-              {...register("progress")}
+              {...register("progress", {required: true})}
               value={progress}
               onChange={(e: any) => {
                 setProgress(e.target.value);
@@ -350,7 +353,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
               fullWidth
               multiline
               rows={4}
-              {...register("contents")}
+              {...register("contents", {required: true})}
               value={contents}
               onChange={(e: any) => {
                 setContents(e.target.value);
@@ -368,6 +371,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
                   fullWidth
                   value={value.pray}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => handlePrayerFieldChange(event, index)}
+                  required={true}
                 />
                 <Box sx={{display: "flex", alignItems: "center", minWidth: "105px", marginLeft: "10px"}}>
                   <FormControlLabel

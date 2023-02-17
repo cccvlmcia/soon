@@ -138,7 +138,7 @@ export default function MyProfile() {
         <Box className="row">
           <Box className="header">이름</Box>
           <Box className="value">
-            <TextField {...register("name")} value={name} onChange={handleName} />
+            <TextField {...register("name", {required: true})} value={name} onChange={handleName} />
           </Box>
         </Box>
         <Box className="row">
@@ -155,13 +155,13 @@ export default function MyProfile() {
         <Box className="row">
           <Box className="header">학번</Box>
           <Box className="value">
-            <TextField {...register("sid")} value={sid} onChange={handleSid} />
+            <TextField type={"number"} {...register("sid", {required: true})} value={sid} onChange={handleSid} />
           </Box>
         </Box>
         <Box className="row">
           <Box className="header">학과</Box>
           <Box className="value">
-            <TextField {...register("major")} value={major} onChange={handleMajor} />
+            <TextField {...register("major", {required: true})} value={major} onChange={handleMajor} />
           </Box>
         </Box>
         <Box className="row">
