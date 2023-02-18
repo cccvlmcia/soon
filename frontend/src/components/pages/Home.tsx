@@ -125,7 +125,7 @@ function RightPanel({data, campus, myCampus, setOpen}: any) {
             <Box sx={{fontWeight: "700", fontSize: "24px", lineHeight: "24px", color: "#FFF"}}>{data?.nickname}</Box>
             <Box
               sx={{cursor: "pointer", color: "#FFF", display: "flex", alignItems: "flex-end", marginLeft: "4px"}}
-              onClick={() => navigate(`/myprofile/${data?.userid}`)}>
+              onClick={() => navigate(`/myprofile`)}>
               <SettingsIcon sx={{width: 20, height: 20}} />
             </Box>
           </Box>
