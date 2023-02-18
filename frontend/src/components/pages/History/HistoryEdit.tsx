@@ -209,7 +209,8 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
           styles.web.writeform,
           {
             ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-            ".header": {width: "120px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+            ".header": {minWidth: "95px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+            ".value": {width: "100%"},
           },
         ]}>
         <Box className="row">
@@ -233,7 +234,7 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
           {/* 선택방법.. 분류 종류 */}
           <Box className="header">분류</Box>
 
-          <Box sx={{width: "calc(100% - 200px)"}}>
+          <Box className="value">
             <Select
               size="small"
               value={categorySelected?.name || ""}
@@ -254,8 +255,8 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         </Box>
         <Box className="row">
           <Box className="header">진도</Box>
-          <Box>
-            <TextField size="small" defaultValue={historyData.progress} {...register("progress", {required: true})} />
+          <Box className="value">
+            <TextField size="small" fullWidth defaultValue={historyData.progress} {...register("progress", {required: true})} />
           </Box>
         </Box>
         <Box className="row">
@@ -277,19 +278,21 @@ function HistoryWriteContents({SubmitButton, campusid}: any) {
         </Box>
         <Box className="row">
           <Box className="header">날짜</Box>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
-              inputFormat="YYYY/MM/DD/"
-              value={date}
-              onChange={handleDateChange}
-              renderInput={params => <TextField size="small" {...params} />}
-            />
-          </LocalizationProvider>
+          <Box sx={{width: "100%"}}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                inputFormat="YYYY/MM/DD/"
+                value={date}
+                onChange={handleDateChange}
+                renderInput={params => <TextField fullWidth size="small" {...params} />}
+              />
+            </LocalizationProvider>
+          </Box>
         </Box>
         <Box className="row">
           <Box className="header">내용</Box>
-          <Box>
-            <TextField size="small" defaultValue={historyData?.contents} multiline rows={4} {...register("contents", {required: true})} />
+          <Box className="value">
+            <TextField size="small" defaultValue={historyData?.contents} fullWidth multiline rows={4} {...register("contents", {required: true})} />
           </Box>
         </Box>
 
