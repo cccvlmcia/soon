@@ -26,7 +26,7 @@ export default function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {
   };
   const handleUser = () => {
     handleMenuOpen();
-    navigate(`/myprofile/${data?.userid}`);
+    navigate(`/myprofile`);
   };
   return (
     <Drawer open={open} onClose={handleMenuOpen}>
@@ -51,6 +51,7 @@ export default function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {
           </Box>
         )}
         <Box onClick={() => move("/campus")}>내 캠퍼스</Box>
+        <Box onClick={() => move("/myprofile/add")}>캠퍼스 추가</Box>
         <Box onClick={() => move("/soon/list")}>내 순원</Box>
         <Box onClick={() => move("/admin")}>관리자</Box>
         <Box onClick={() => handleLogout()}>로그아웃</Box>
