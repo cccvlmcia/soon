@@ -4,6 +4,6 @@ export const authState = atom({
   key: "authState",
   default: [
     {name: "순코디", id: "SOON"},
-    {name: "관리자", id: "ADMIN"},
+    // {name: "관리자", id: "ADMIN"},
   ],
 });
