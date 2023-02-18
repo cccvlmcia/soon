@@ -25,7 +25,6 @@ export default function Error({error}: any) {
         });
       return <Loading />;
     } else {
-      console.log("goto login");
       navigate("/login");
     }
   }

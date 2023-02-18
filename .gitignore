@@ -33,3 +33,4 @@ server/src/dump.ts
 server/src/jwt.ts
 server/dist
 server/src/test.ts
+frontend/tsconfig.tsbuildinfo

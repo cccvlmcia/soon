@@ -49,8 +49,9 @@ function CampusUserList({campus}: any) {
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campus?.campusid || campusid);
   const authes = useRecoilValue(authState);
   const auth = loginUser?.auth;
-  const isAdmin = auth?.filter(({authid}: {authid: string}) => authes?.filter(({id}) => id == authid)?.length > 0)?.length > 0;
-
+  const hasAmin = loginUser?.config?.adminyn == "Y";
+  const isAdmin =
+    hasAmin || auth?.filter((u: any) => authes?.filter(({id}) => id == u.authid && u.campusid == campus?.campusid)?.length > 0)?.length > 0;
   useEffect(() => {
     refetch();
   }, [campus]);
@@ -67,7 +68,7 @@ function CampusUserList({campus}: any) {
         key={userid}
         userid={userid}
         nickname={user?.nickname}
-        campus={campus?.name}
+        campus={campus}
         major={major}
         sid={sid}
         isAdmin={isAdmin}

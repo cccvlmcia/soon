@@ -1,6 +1,6 @@
-import {Suspense} from "react";
+import {Suspense, useEffect} from "react";
 import {Box} from "@mui/material";
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, Navigate} from "react-router-dom";
 
 import Layout from "@layout/Layout";
 import Home from "@pages/Home";
@@ -16,7 +16,7 @@ import SoonGraph from "@pages/Soon/SoonGraph";
 import Admin from "@pages/Admin/Admin";
 import MyProfile from "@pages/MyProfile/MyProfile";
 import Withdrawal from "@pages/Withdrawal/Withdrawal";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import Loading from "components/Loading/Loading";
 import {userState} from "@recoils/user/state";
 import MenuHeader from "@layout/header/MenuHeader";
@@ -24,6 +24,8 @@ import BlankHeader from "@layout/header/BlankHeader";
 import PrevHeader from "@layout/header/PrevHeader";
 import HistoryEdit from "@pages/History/HistoryEdit";
 import HistoryContents from "@pages/History/HistoryContents";
+import {selectedCampusState} from "@recoils/campus/state";
+import AddMyProfile from "@pages/MyProfile/AddMyProfile";
 
 export default function App() {
   return (
@@ -36,7 +38,12 @@ export default function App() {
 
 function AppRoutes() {
   const loginUser = useRecoilValue(userState);
-
+  const [campusSelected, setCampusSelected]: any = useRecoilState(selectedCampusState);
+  useEffect(() => {
+    if (campusSelected == null) {
+      setCampusSelected(loginUser?.campus[0]?.campus);
+    }
+  }, [loginUser]);
   return (
     <Box>
       <Routes>
@@ -51,7 +58,6 @@ function AppRoutes() {
               <MenuHeader />
             </Layout>
           }>
-          {/*Login */}
           <Route path="/" element={Auth(Home, true, loginUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser)}></Route>
           <Route path="/soon/list" element={Auth(SoonList, true, loginUser)}></Route>
@@ -74,10 +80,11 @@ function AppRoutes() {
             </Layout>
           }>
           <Route path="/login" element={Auth(Login, false)}></Route>
-          <Route path="/register" element={Auth(Register, null)}></Route>
         </Route>
         {/* Custom AppBar */}
-        <Route path="/myprofile/:userid" element={Auth(MyProfile, true, loginUser)}></Route>
+        <Route path="/register" element={Auth(Register, null)}></Route>
+        <Route path="/myprofile" element={Auth(MyProfile, true, loginUser)}></Route>
+        <Route path="/myprofile/add" element={Auth(AddMyProfile, true, loginUser)}></Route>
         <Route path="/history" element={Auth(HistoryWrite, true, loginUser)}></Route>
         <Route path="/history/:historyid" element={Auth(HistoryContents, true, loginUser)}></Route>
         <Route path="/admin" element={Auth(Admin, true, loginUser)}></Route>
@@ -85,9 +92,9 @@ function AppRoutes() {
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}
-        <Route path="/register/:userid" element={Auth(Register, null)}></Route>
         {/* <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser)}></Route> */}
-        <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser)}></Route>
+        {/* <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser)}></Route> */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Box>
   );

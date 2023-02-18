@@ -12,6 +12,7 @@ import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+import NoData from "components/common/NoData";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -22,6 +23,8 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+//TODO: 캠퍼스 삭제도 추가
+// 캠퍼스 추가를 여기에 붙일까? 싶기도하고?
 export default function CampusDialog({
   open,
   setOpen,
@@ -68,7 +71,7 @@ export default function CampusDialog({
             </Box>
           </Toolbar>
         </AppBar>
-        <List>{itemList}</List>
+        {itemList?.length ? <List>{itemList}</List> : <NoData height="140px" />}
       </Dialog>
     </>
   );

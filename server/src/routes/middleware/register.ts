@@ -31,8 +31,8 @@ export default async function (fastify: FastifyInstance) {
   // fastify.register(pointOfView, {engine: {ejs}});
   fastify.register(fastifyView, {engine: {ejs}});
   /* STATIC */
-  // fastify.register(statics, {root: path.join(__dirname, "../../../dist/assets"), prefix: "/assets/", decorateReply: false});
   fastify.register(statics, {root: path.join(__dirname, "../../../public"), prefix: "/public/", decorateReply: false});
+  fastify.register(statics, {root: path.join(__dirname, "../../../public/assets"), prefix: "/assets/", decorateReply: false});
   fastify.register(statics, {
     root: path.join(__dirname, "../../../node_modules"),
     prefix: "/node_modules/",
