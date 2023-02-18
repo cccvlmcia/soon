@@ -1,7 +1,7 @@
 import {api, axiosProcess, server} from "@recoils/constants";
 import {postUser} from "@recoils/types";
 
-export const getAuthUser = () => server.get("/auth/user");
+// export const getAuthUser = () => server.get("/auth/user");
 export const postLogout = () => server.post("/auth/logout");
 export const removeUser = (userid: number) => api.delete(`/user/${userid}`);
 

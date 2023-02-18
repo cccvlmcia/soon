@@ -5,9 +5,7 @@ import {haqqaton} from "@config/haqqaton.config";
 import {FastifyRequest, FastifyReply} from "fastify";
 import {getUserAuthList} from "@user/service/UserAuthService";
 import {ERROR_AUTH_EXPIRED, ERROR_AUTH_MALFORMED, ERROR_AUTH_NOAUTH, ERROR_AUTH_NOTEXISTS} from "@error/AuthCode";
-import UserAuth from "@user/entity/UserAuth";
 import {AUTH} from "@auth/AuthConstants";
-import {getUserInfo} from "@user/service/UserService";
 
 const {token} = haqqaton;
 
@@ -44,7 +42,7 @@ export const checkSSO = async (type: string, ssoid: string, params: {email?: str
   if (oauth) {
     const user = oauth.user;
     //FIXME: 로그인 하는데 파라미터를 더 받기 위해 가져옵니다 - 범수
-    return {status: LOGIN_STATUS.LOGIN, auth: {type, ssoid, ...params}, user};// 있으면 유저를 가저 온다.
+    return {status: LOGIN_STATUS.LOGIN, auth: {type, ssoid, ...params}, user}; // 있으면 유저를 가저 온다.
   } else {
     return {status: LOGIN_STATUS.REGISTER, auth: {type, ssoid, ...params}};
   }
