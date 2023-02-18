@@ -3,16 +3,18 @@ import {Box} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
 import {getGoogleInfoAxios} from "@recoils/login/axios";
 import {userState} from "@recoils/user/state";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useSetRecoilState} from "recoil";
 import ModalDialog from "./modal/ModalDialog";
 import {postLogout, removeUser} from "@recoils/user/axios";
 import {useNavigate} from "react-router-dom";
 import GoogleButton from "react-google-button";
+import {selectedCampusState} from "@recoils/campus/state";
 
 export default function Withdrawal() {
   const [open, setOpen] = useState(false);
   const [loginUser, setLoginUser]: any = useRecoilState(userState);
   const navigate = useNavigate();
+  const setSelectedCampus = useSetRecoilState(selectedCampusState);
 
   console.log("loginUser >", loginUser);
 
@@ -37,12 +39,20 @@ export default function Withdrawal() {
     },
     flow: "auth-code",
   });
+  /*
+    setSelectedCampus(null);
+    handleMenuOpen();
+    navigate("/login");
+
+  */
   const handleOK = async () => {
     console.log("handleOK");
     //사용자 삭제, 로그아웃 처리
     await removeUser(loginUser?.userid);
     await postLogout();
     setLoginUser(null);
+    setSelectedCampus(null);
+
     alert("탈퇴 되었습니다.");
     navigate("/login");
   };
