@@ -1,7 +1,7 @@
 import Campus from "@campus/entity/Campus";
 import {txProcess} from "@lib/db";
 
-export async function getCampusList(areaid?: string) {
+export async function getCampusList(areaid = "VLM") {
   return await Campus.find({where: {areaid}, relations: {area: true}});
 }
 export async function getCampusInfo(campusid: string) {
@@ -19,4 +19,3 @@ export async function removeCampus(campusid: string) {
     return await repository.delete({campusid});
   });
 }
-
