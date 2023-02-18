@@ -12,6 +12,7 @@ import {postUser} from "@recoils/types";
 import {userState} from "@recoils/user/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 import {getCampusListQuery} from "@recoils/campus/query";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 type FormData = {
   name: string;
@@ -30,18 +31,21 @@ type campusType = {
 };
 const Register: React.FC = () => {
   const {isLoading, isError, data, error} = getCampusListQuery();
-  const {register, handleSubmit} = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<FormData>();
   const setLoginUser = useSetRecoilState(userState);
   const [campusList, setCampusList] = useState<campusType[]>([]);
   const [campus, setCampus] = useState<any>(null);
   const [campusSelected, setCampusSelected] = useState<string[]>([]);
-  const [genderSelected, setGenderSelected] = useState<string>();
-  const [cccYNSelected, setCccYNSelected] = useState<string>();
+  const [genderSelected, setGenderSelected] = useState<string>("female");
+  const [cccYNSelected, setCccYNSelected] = useState<string>("Y");
   const [campusIdSelected, setCampusIdSelected] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const googleAuth = useRecoilValue(userGoogleAuthState);
   const navigate = useNavigate();
-
   const onChangeCampus = () => {
     setOpen(true);
   };
@@ -61,7 +65,12 @@ const Register: React.FC = () => {
     console.log("cccYN : ", value);
     setCccYNSelected(value);
   };
-  const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
+  const writeRegister = async (params: any) => {
+    if (campus == null) {
+      alert("캠퍼스를 선택해주세요.");
+      return;
+    }
+    console.log("params >", params);
     const {auth} = googleAuth;
     const userRegistInfo: postUser = {
       nickname: params.name,
@@ -105,46 +114,55 @@ const Register: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        // alignItems: "center",
         justifyContent: "left",
-        ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-        ".header": {width: "80px", textAlign: "right", paddingRight: "10px", fontSize: "20px"},
-        ".value": {minWidth: "200px"},
+        marginTop: "20px",
+        ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
+        ".header": {
+          width: "70px",
+          minHeight: "48px",
+          padding: "0 10px 0 40px",
+          fontSize: "16px",
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        },
+        ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
       }}>
       <Box className="row">
         <Box className="header">이름</Box>
         <Box className="value">
-          <TextField {...register("name")} />
+          <TextField {...register("name", {required: true})} />
         </Box>
       </Box>
       {/*단일만 선택 가능하도록 일단 마무리 */}
       <Box className="row">
         <Box className="header">캠퍼스</Box>
-        <Box className="value" sx={{display: "flex", alignItems: "center", gap: 1}}>
-          <Button variant="outlined" onClick={onChangeCampus}>
-            캠퍼스 선택
-          </Button>
-          <Box>{...campusSelected}</Box>
+        <Box className="value">
+          <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
+            {campusSelected?.length > 0 ? campusSelected : "캠퍼스를 선택해주세요."}
+            <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+          </Box>
           <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
         </Box>
       </Box>
       <Box className="row">
         <Box className="header">학번</Box>
         <Box className="value">
-          <TextField {...register("sid")} />
+          <TextField type={"number"} {...register("sid", {required: true})} />
         </Box>
       </Box>
       <Box className="row">
         <Box className="header">학과</Box>
         <Box className="value">
-          <TextField {...register("major")} />
+          <TextField {...register("major", {required: true})} />
         </Box>
       </Box>
       <Box className="row">
         <Box className="header">ccc 여부</Box>
         <Box className="value">
           <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
-            <FormControlLabel value="Y" control={<Radio />} label="Y" />
+            <FormControlLabel value="Y" control={<Radio checked />} label="Y" />
             <FormControlLabel value="N" control={<Radio />} label="N" />
           </RadioGroup>
         </Box>
@@ -152,9 +170,9 @@ const Register: React.FC = () => {
       <Box className="row">
         <Box className="header">성별</Box>
         <Box className="value">
-          <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
-            <FormControlLabel value="female" control={<Radio />} label="female" />
-            <FormControlLabel value="male" control={<Radio />} label="male" />
+          <RadioGroup row aria-labelledby="radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
+            <FormControlLabel value="female" control={<Radio />} label="여" />
+            <FormControlLabel value="male" control={<Radio />} label="남" />
           </RadioGroup>
         </Box>
       </Box>

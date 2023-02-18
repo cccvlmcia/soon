@@ -45,7 +45,6 @@ export default function MyProfile() {
   const [user, setUser]: any = useState(null);
   const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
-
   function getSid(camid: string) {
     return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.sid;
   }
@@ -54,7 +53,9 @@ export default function MyProfile() {
   }
   useEffect(() => {
     if (loginUser) {
-      // setSeleceted()
+      if (campusSelected == null && campusList?.length > 0) {
+        setCampusSelected(campusList[0]);
+      }
     }
   }, [loginUser]);
   //FIXME: set 하는 방식을 id > obj로 변경 필요
@@ -137,13 +138,11 @@ export default function MyProfile() {
         <Box className="row">
           <Box className="header">이름</Box>
           <Box className="value">
-            <TextField {...register("name")} value={name} onChange={handleName} />
+            <TextField {...register("name", {required: true})} value={name} onChange={handleName} />
           </Box>
         </Box>
         <Box className="row">
-          <Box className="header" onClick={onChangeCampus}>
-            캠퍼스
-          </Box>
+          <Box className="header">캠퍼스</Box>
           <Box className="value">
             <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
               {campusSelected?.name}
@@ -156,13 +155,13 @@ export default function MyProfile() {
         <Box className="row">
           <Box className="header">학번</Box>
           <Box className="value">
-            <TextField {...register("sid")} value={sid} onChange={handleSid} />
+            <TextField type={"number"} {...register("sid", {required: true})} value={sid} onChange={handleSid} />
           </Box>
         </Box>
         <Box className="row">
           <Box className="header">학과</Box>
           <Box className="value">
-            <TextField {...register("major")} value={major} onChange={handleMajor} />
+            <TextField {...register("major", {required: true})} value={major} onChange={handleMajor} />
           </Box>
         </Box>
         <Box className="row">
