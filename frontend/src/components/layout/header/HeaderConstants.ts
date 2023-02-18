@@ -7,6 +7,7 @@ export const titles: any = {
   "/soon/list": "순 목록",
   "/withdrawal": "회원탈퇴",
   "/myprofile": "프로필",
+  "/myprofile/add": "캠퍼스 추가",
   "/": " ",
 };
 
