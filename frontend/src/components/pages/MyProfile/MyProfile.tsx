@@ -28,6 +28,7 @@ type campusType = {
   useyn: string;
   createdate: string;
 };
+//TODO: 캠퍼스 추가는 Register 인가?
 export default function MyProfile() {
   // const {isLoading, isError, data, error} = getCampusListQuery();
   const ref = useRef(null);
@@ -40,9 +41,8 @@ export default function MyProfile() {
   const [genderSelected, setGenderSelected] = useState<string>(loginUser?.gender);
   const [cccYNSelected, setCccYNSelected] = useState<string>(loginUser?.config?.cccyn);
   const [name, setName] = useState<string>(loginUser?.nickname);
-  const [sid, setSid] = useState<string>(getSid(campusSelected?.campusid));
-  const [major, setMajor] = useState<string>(getMajor(campusSelected?.campusid));
-  const [user, setUser]: any = useState(null);
+  const [sid, setSid] = useState<string>(getSid(campusSelected?.campusid || ""));
+  const [major, setMajor] = useState<string>(getMajor(campusSelected?.campusid || ""));
   const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
   function getSid(camid: string) {
@@ -51,13 +51,7 @@ export default function MyProfile() {
   function getMajor(camid: string) {
     return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.major;
   }
-  useEffect(() => {
-    if (loginUser) {
-      if (campusSelected == null && campusList?.length > 0) {
-        setCampusSelected(campusList[0]);
-      }
-    }
-  }, [loginUser]);
+
   //FIXME: set 하는 방식을 id > obj로 변경 필요
   const handleCampus = (campus: any) => {
     setCampusSelected(campus);
