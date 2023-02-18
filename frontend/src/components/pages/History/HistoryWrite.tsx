@@ -5,7 +5,6 @@ import {
   Select,
   MenuItem,
   Button,
-  SelectChangeEvent,
   Checkbox,
   ListItemText,
   FormControlLabel,
@@ -55,8 +54,15 @@ export default function HistoryWrite() {
     );
   });
   const InitButton = forwardRef((props: any, ref: any) => {
+    // console.log("props?.campusid >", props?.campusid);
     return (
-      <Button ref={ref} variant="outlined" onClick={props?.onClick} sx={{display: "none"}}>
+      <Button
+        ref={ref}
+        variant="outlined"
+        onClick={() => {
+          props?.onClick(props?.campusid);
+        }}
+        sx={{display: "none"}}>
         Init 버튼
       </Button>
     );
@@ -67,10 +73,10 @@ export default function HistoryWrite() {
     if (campus == null && list?.length > 0) {
       setCampus(list[0]);
     }
-  }, [loginUser]);
+  }, [loginUser, campus]);
 
   const handleCampus = (campus: any) => {
-    initHistoryForm();
+    initHistoryForm(campus);
     setCampus(campus);
     setCampusid(campus?.campusid);
   };
@@ -81,8 +87,8 @@ export default function HistoryWrite() {
     target?.click();
   };
 
-  const initHistoryForm = () => {
-    console.log("캠퍼스를 변경했으므로 폼을 초기화 합니다");
+  const initHistoryForm = (campus: any) => {
+    console.log("캠퍼스를 변경했으므로 폼을 초기화 합니다", campus, campus?.campusid);
     const target: any = campusRef.current;
     target?.click();
   };
@@ -99,57 +105,30 @@ export default function HistoryWrite() {
 
       <HistoryWriteContents
         SubmitButton={<SubmitButton ref={ref} />}
-        InitButton={(handleClick: any) => <InitButton ref={campusRef} onClick={handleClick} />}
-        campusid={campusid}
+        InitButton={(handleClick: any) => <InitButton ref={campusRef} onClick={handleClick} campusid={campusid} />}
+        campus={campus}
       />
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
     </>
   );
 }
 
-function MyHeader({onConfirm}: any) {
-  const {pathname} = useLocation();
-
-  const navigate = useNavigate();
-  const handlePrev = () => {
-    navigate(-1);
-  };
-  return (
-    <>
-      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
-            <ArrowBackIosNewIcon color="secondary" />
-          </IconButton>
-          <Typography sx={{flex: 1}} variant="h6" component="div">
-            {getTitle(pathname)}
-          </Typography>
-          <IconButton edge="end" color="inherit" onClick={onConfirm} aria-label="close">
-            <CheckIcon color="secondary" />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-    </>
-  );
-}
-function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
+function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
-  const loginUser: any = useRecoilValue(userState);
 
-  const {register, handleSubmit, setValue, getValues} = useForm<HistoryForm>(); // user
+  const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campus?.campusid);
+  const loginUser: any = useRecoilValue(userState);
+  const categoryList = useRecoilValue(categoryState);
+
+  const {register, handleSubmit, setValue} = useForm<HistoryForm>(); // user
   const [SoonwonOpen, setSoonwonOpen]: any = useState(false);
   const [SoonjangOpen, setSoonjangOpen]: any = useState(false);
   const [date, setDate]: any = useState(new Date());
-  const [userList, setUserList] = useState<User[]>([]);
-  const categoryList = useRecoilValue(categoryState);
   const [categorySelected, setCategorySelected]: any = useState({id: "soon", name: "순모임"});
-
-  const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campusid);
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
 
   //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
-
   const [soonjang, setSoonjang] = useState<User>({userid: loginUser?.userid, nickname: loginUser?.nickname});
   const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
   const [progress, setProgress] = useState("");
@@ -159,7 +138,10 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
 
   useEffect(() => {
     refetch();
-  }, [campusid]);
+  }, [campus]);
+
+  if (isLoading) return <Loading />;
+  if (isError) return <Error error={error} />;
 
   const onChangeSoonjang = (e: any) => {
     setSoonjangOpen(true);
@@ -213,7 +195,6 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
     }
     params.kind = categorySelected?.id;
     params.historydate = new Date(dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
-    // params.historydate = Date(date);
     params.prays = prayers;
     params.sjid = soonjang.userid;
     params.swid = soonwon.userid;
@@ -227,24 +208,11 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
     }
   };
 
-  useEffect(() => {
-    userListFunc();
-    fetchData();
-  }, [data, historyid, soonjang, soonwon]);
+  const userList: User[] = data?.map(({user}: {user: User}) => {
+    return {userid: user.userid, nickname: user.nickname};
+  });
 
-  function fetchData() {
-    if (isLoading) return <Loading />;
-    if (isError) return <Error error={error} />;
-  }
-  const userListFunc = () => {
-    const userList: User[] = data?.map(({user}: {user: User}) => {
-      return {userid: user.userid, nickname: user.nickname};
-    });
-    setUserList(userList || []);
-  };
-
-  const handleInit = () => {
-    console.log("init! 내부 함수 실행!!");
+  const handleInit = (id: any) => {
     const sj = {userid: loginUser?.userid, nickname: loginUser?.nickname};
     setSoonjang(sj);
     setSoonwon({userid: "0", nickname: ""});
@@ -398,6 +366,32 @@ function HistoryWriteContents({SubmitButton, InitButton, campusid}: any) {
         {SubmitButton}
         {InitButton(handleInit)}
       </Box>
+    </>
+  );
+}
+
+function MyHeader({onConfirm}: any) {
+  const {pathname} = useLocation();
+
+  const navigate = useNavigate();
+  const handlePrev = () => {
+    navigate(-1);
+  };
+  return (
+    <>
+      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
+            <ArrowBackIosNewIcon color="secondary" />
+          </IconButton>
+          <Typography sx={{flex: 1}} variant="h6" component="div">
+            {getTitle(pathname)}
+          </Typography>
+          <IconButton edge="end" color="inherit" onClick={onConfirm} aria-label="close">
+            <CheckIcon color="secondary" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
     </>
   );
 }
