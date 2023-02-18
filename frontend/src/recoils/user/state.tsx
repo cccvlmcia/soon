@@ -13,5 +13,6 @@ export const userSelector: any = selector({
 
 export const userState = atom({
   key: "userState",
-  default: userSelector,
+  // default: userSelector,
+  default: null,
 });

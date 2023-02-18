@@ -35,6 +35,7 @@ import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 import {categoryState} from "@recoils/history/state";
 import {HistoryForm, Prayer, User} from "@recoils/types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {postSoonHistory} from "@recoils/history/axios";
 
 export default function HistoryWrite() {
   const ref = useRef(null);
@@ -44,6 +45,14 @@ export default function HistoryWrite() {
   const [campusList, setCampusList] = useState([]);
   const [campus, setCampus]: any = useRecoilState(selectedCampusState);
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const list = loginUser?.campus?.map(({campus}: any) => campus);
+    setCampusList(list);
+    if (campus == null && list?.length > 0) {
+      setCampus(list[0]);
+    }
+  }, [loginUser, campus]);
+
   //forwarRef로 초기화 하는거 만들어서, 안에서 클릭할 버튼을 만들고, 실제 이벤트는 initRef/fowardRef  , init 이벤트 초기화 ㄱㄱ
   const SubmitButton = forwardRef((props: any, ref: any) => {
     return (
@@ -67,14 +76,6 @@ export default function HistoryWrite() {
       </Button>
     );
   });
-  useEffect(() => {
-    const list = loginUser?.campus?.map(({campus}: any) => campus);
-    setCampusList(list);
-    if (campus == null && list?.length > 0) {
-      setCampus(list[0]);
-    }
-  }, [loginUser, campus]);
-
   const handleCampus = (campus: any) => {
     initHistoryForm(campus);
     setCampus(campus);
@@ -116,7 +117,6 @@ export default function HistoryWrite() {
 function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
-
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campus?.campusid);
   const loginUser: any = useRecoilValue(userState);
   const categoryList = useRecoilValue(categoryState);
@@ -135,13 +135,15 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
   const [contents, setContents] = useState("");
   //선택 된 유저는 공통 관리
   const [selectedUsers, setSeletedUsers] = useState<User[]>([soonjang, soonwon]);
-
   useEffect(() => {
     refetch();
-  }, [campus]);
+  }, [campus, data]);
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error error={error} />;
+  if (isError) {
+    console.log("isError >>", isError, error);
+    return <Error error={error} />;
+  }
 
   const onChangeSoonjang = (e: any) => {
     setSoonjangOpen(true);
@@ -199,7 +201,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
     params.sjid = soonjang.userid;
     params.swid = soonwon.userid;
 
-    const result = await api.post(`soon/history`, params);
+    const result = await postSoonHistory(params);
     if (result) {
       alert("순 히스토리 쓰기 완료!");
       navigate("/");
@@ -207,7 +209,6 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
       console.log("SERVER에서 응답하지 않습니다");
     }
   };
-
   const userList: User[] = data?.map(({user}: {user: User}) => {
     return {userid: user.userid, nickname: user.nickname};
   });

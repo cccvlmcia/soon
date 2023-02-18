@@ -7,6 +7,7 @@ import Popover from "@mui/material/Popover";
 import {api} from "@recoils/constants";
 import {authState} from "@recoils/auth/state";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {postUserAuth} from "@recoils/user/axios";
 
 const useStyles = makeStyles({
   root: {
@@ -99,7 +100,7 @@ function SubMenu({id, anchorEl, setAnchorEl, open, setOpen, authList, campusid}:
         dataset: {authid},
       },
     } = e;
-    const {data} = await api.post(`/user/${id}/auth`, {authid, campusid});
+    const {data} = await postUserAuth(id, {authid, campusid});
     if (data?.affected) {
       //deleted
       const idx = selected?.findIndex((item: any) => item?.authid == authid && item?.campusid == campusid);

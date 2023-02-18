@@ -21,6 +21,7 @@ import {categoryState} from "@recoils/history/state";
 import {HistoryForm, Prayer, User} from "@recoils/types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {getSoonHistoryQuery} from "@recoils/soon/query";
+import {putSoonHistory} from "@recoils/history/axios";
 
 export default function HistoryWrite() {
   const ref = useRef(null);
@@ -136,7 +137,7 @@ function HistoryWriteContents({SubmitButton, campus}: any) {
     console.log("params >>", params);
 
     //*
-    const result = await api.put(`soon/history/${historyid}`, params);
+    const result = await putSoonHistory(historyid, params);
     if (result) {
       alert("순 히스토리 수정 완료!");
       navigate("/");

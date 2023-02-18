@@ -52,10 +52,13 @@ function CampusUserList({campus}: any) {
   const hasAmin = loginUser?.config?.adminyn == "Y";
   const isAdmin =
     hasAmin || auth?.filter((u: any) => authes?.filter(({id}) => id == u.authid && u.campusid == campus?.campusid)?.length > 0)?.length > 0;
+  const [users, setUsers] = useState([]);
   useEffect(() => {
-    refetch();
-  }, [campus]);
-
+    if (users?.length == 0 && data != null) {
+      refetch();
+      setUsers(data);
+    }
+  }, [campus, data]);
   const newData =
     data &&
     data.sort((prev: any, next: any) => {
@@ -81,11 +84,11 @@ function CampusUserList({campus}: any) {
     return <Loading />;
   }
   if (isError) {
-    if (loginUser?.campus?.length == 0) {
-      return <NoData />;
-    } else {
-      return <Error error={error} />;
-    }
+    console.log("isError >> campus");
+    return <Error error={error} />;
+  }
+  if (loginUser?.campus?.length == 0) {
+    return <NoData />;
   }
 
   return (
