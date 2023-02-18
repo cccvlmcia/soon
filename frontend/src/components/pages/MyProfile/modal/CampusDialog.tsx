@@ -12,6 +12,7 @@ import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+import NoData from "components/common/NoData";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -70,7 +71,7 @@ export default function CampusDialog({
             </Box>
           </Toolbar>
         </AppBar>
-        <List>{itemList}</List>
+        {itemList?.length ? <List>{itemList}</List> : <NoData height="140px" />}
       </Dialog>
     </>
   );
