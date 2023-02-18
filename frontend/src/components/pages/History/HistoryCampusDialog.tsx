@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
+import NoData from "components/common/NoData";
 
 type User = {
   userid: string;
@@ -71,7 +72,7 @@ export default function HistoryCampusDialog({
             </Typography>
           </Toolbar>
         </AppBar>
-        <UserList filteredUsers={filteredUsers} handleSelectedUser={handleSelectedUser} />
+        {filteredUsers?.length ? <UserList filteredUsers={filteredUsers} handleSelectedUser={handleSelectedUser} /> : <NoData height="140px" />}
       </Dialog>
     </Box>
     // <div>

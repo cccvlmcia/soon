@@ -6,8 +6,22 @@ import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import {postLogout} from "@recoils/user/axios";
-
-export default function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {data: any; open: any; handleMenuOpen: any; setLoginUser: any}) {
+import {useSetRecoilState} from "recoil";
+import {selectedCampusState} from "@recoils/campus/state";
+export default function DrawerMenu({
+  data,
+  open,
+  handleMenuOpen,
+  loginUser,
+  setLoginUser,
+}: {
+  data: any;
+  open: any;
+  handleMenuOpen: any;
+  loginUser: any;
+  setLoginUser: any;
+}) {
+  const setSelectedCampus = useSetRecoilState(selectedCampusState);
   const navigate = useNavigate();
   const move = (route: string) => {
     handleMenuOpen();
@@ -21,6 +35,7 @@ export default function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {
     await postLogout();
     alert("로그아웃 되었습니다.");
     setLoginUser(null);
+    setSelectedCampus(null);
     handleMenuOpen();
     navigate("/login");
   };
@@ -28,6 +43,7 @@ export default function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {
     handleMenuOpen();
     navigate(`/myprofile`);
   };
+  const isAdmin = loginUser?.config?.adminyn == "Y";
   return (
     <Drawer open={open} onClose={handleMenuOpen}>
       <Box>
@@ -53,7 +69,7 @@ export default function DrawerMenu({data, open, handleMenuOpen, setLoginUser}: {
         <Box onClick={() => move("/campus")}>내 캠퍼스</Box>
         <Box onClick={() => move("/myprofile/add")}>캠퍼스 추가</Box>
         <Box onClick={() => move("/soon/list")}>내 순원</Box>
-        <Box onClick={() => move("/admin")}>관리자</Box>
+        {isAdmin && <Box onClick={() => move("/admin")}>관리자</Box>}
         <Box onClick={() => handleLogout()}>로그아웃</Box>
         <Box onClick={() => move("/withdrawal")}>회원탈퇴</Box>
       </Box>

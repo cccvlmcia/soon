@@ -13,6 +13,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PersonIcon from "@mui/icons-material/Person";
+import NoData from "components/common/NoData";
 
 export default function Home() {
   const loginUser: any = useRecoilValue(userState);
@@ -56,34 +57,40 @@ function MySoon({userid}: any) {
   const handleClick = (swid: number) => {
     navigate(`soon/card/${swid}`);
   };
+  if (data?.length == 0) {
+    return <NoData height={"140px"} />;
+  }
   return (
-    <Box
-      sx={{
-        width: "100%",
-        margin: "0 auto",
-        display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(calc(90% / 3),1fr))",
-        gridGap: "10px",
-      }}>
-      {data.map(({soonwon}: any) => {
-        return (
-          <Box
-            key={soonwon?.userid}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "20px 0",
-              borderRadius: "5px",
-              background: "rgba(41, 41, 41, 0.15)",
-              cursor: "pointer",
-            }}
-            onClick={() => handleClick(soonwon?.userid)}>
-            <PersonIcon sx={{width: 80, heigth: 80}} />
-            {soonwon?.nickname}
-          </Box>
-        );
-      })}
+    <Box sx={{width: "90%", margin: "0 auto"}}>
+      <Box sx={{fontSize: "16px", width: "100%", margin: "25px 0 5px"}}>나의 순원</Box>
+      <Box
+        sx={{
+          width: "100%",
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(calc(90% / 3),1fr))",
+          gridGap: "10px",
+        }}>
+        {data?.map(({soonwon}: any) => {
+          return (
+            <Box
+              key={soonwon?.userid}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "20px 0",
+                borderRadius: "5px",
+                background: "rgba(41, 41, 41, 0.15)",
+                cursor: "pointer",
+              }}
+              onClick={() => handleClick(soonwon?.userid)}>
+              <PersonIcon sx={{width: 80, heigth: 80}} />
+              {soonwon?.nickname}
+            </Box>
+          );
+        })}
+      </Box>
     </Box>
   );
 }
@@ -139,10 +146,7 @@ function RightPanel({data, campus, myCampus, setOpen}: any) {
           </Box>
         </Box>
       </Box>
-      <Box sx={{width: "90%", margin: "0 auto"}}>
-        <Box sx={{fontSize: "16px", width: "100%", margin: "25px 0 5px"}}>나의 순원</Box>
-        <MySoon userid={data?.userid} />
-      </Box>
+      <MySoon userid={data?.userid} />
     </Box>
   );
 }

@@ -34,7 +34,7 @@ export default async function (fastify: any) {
     const nickname = profile?.name;
     console.log("Parsed jwt >> ", profile);
     const login = await checkSSO(LOGIN_TYPE.GOOGLE, ssoid, {email, nickname});
-    console.log("login ", login);
+    // console.log("login ", login);
     reply.send(login);
   });
 }

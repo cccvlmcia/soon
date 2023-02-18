@@ -29,7 +29,7 @@ export default function MenuHeader() {
           </Box>
         </Toolbar>
       </AppBar>
-      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
+      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} loginUser={loginUser} setLoginUser={setLoginUser} />
     </>
   );
 }
