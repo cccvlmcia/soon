@@ -20,11 +20,4 @@ export default async function (fastify: FastifyInstance) {
     iat: number;
     exp: number;
   };
-
-  fastify.get("/test", {
-    preHandler: authHandler([]),
-    handler: async (req: FastifyRequest<{Body: {jwt: jwt}}>, reply: FastifyReply) => {
-      reply.send("test!");
-    },
-  });
 }

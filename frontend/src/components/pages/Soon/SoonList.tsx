@@ -12,12 +12,13 @@ import NoData from "components/common/NoData";
 export default function SoonList() {
   const loginUser: any = useRecoilValue(userState);
   const [soonlist, setSoonlist] = useState([]);
-  const {isLoading, isError, data, error} = getSoonListQuery(loginUser?.userid);
+  const {isLoading, isError, data, error, refetch} = getSoonListQuery(loginUser?.userid);
   useEffect(() => {
     if (data) {
       setSoonlist(data);
+      refetch();
     }
-  }, [data]);
+  }, [loginUser, data]);
 
   if (isLoading) {
     return <Loading />;

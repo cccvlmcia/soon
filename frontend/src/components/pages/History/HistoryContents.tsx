@@ -26,6 +26,7 @@ import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
+import {deleteSoonPray} from "@recoils/history/axios";
 const type: any = {
   soon: "순모임",
   coffee: "커피타임",
@@ -61,7 +62,7 @@ export default function HistoryContents() {
   // }
 
   const handlePrayRemove = async (prayid: number) => {
-    const {data} = await api.delete(`/soon/pray/${prayid}`);
+    const {data} = await deleteSoonPray(prayid);
     if (data?.affected > 0) {
       alert(" 기도가 삭제 되었습니다!");
       refetch();
@@ -79,7 +80,6 @@ export default function HistoryContents() {
         )}
       </ListItem>
     </ListItemButton>
-
   ));
 
   return (

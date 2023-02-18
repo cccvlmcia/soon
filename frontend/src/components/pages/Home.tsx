@@ -45,8 +45,12 @@ export default function Home() {
 }
 
 function MySoon({userid}: any) {
-  const {isLoading, isError, data, error} = getSoonListQuery(userid);
+  const {isLoading, isError, data, error, refetch} = getSoonListQuery(userid);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    refetch();
+  }, [userid, data]);
 
   if (isLoading) {
     return <Loading />;

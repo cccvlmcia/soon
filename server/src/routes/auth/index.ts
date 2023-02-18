@@ -117,7 +117,7 @@ export default async function (fastify: FastifyInstance) {
       const access = await signJWT({userid, ssoid, email});
       const access_token = encrypted(access);
       reply.cookie("access_token", access_token, {path: "/", signed: true});
-      addLoginHistory({userid, ssoid, token: access_token});
+      await addLoginHistory({userid, ssoid, token: access_token});
       return reply.send("USER_AUTHENTICATED");
     } catch (err) {
       return reply.code(ERROR_AUTH_REFRESH_EXPIRED).send("ERROR_AUTH_REFRESH_EXPIRED");

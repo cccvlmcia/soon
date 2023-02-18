@@ -6,7 +6,8 @@ import {ERROR_AUTH_EXPIRED, ERROR_AUTH_MALFORMED, ERROR_AUTH_NOTEXISTS, ERROR_AU
 import {decrypted} from "@utils/CipherUtils";
 import {verifyJWT} from "@utils/OAuth2Utils";
 import {EXCEPT_URL} from "@config/haqqaton.config";
-
+const isProd = process.env.NODE_ENV == "production";
+console.log("isProd >", isProd);
 export default function (fastify: FastifyInstance) {
   //1. preValidation : xxsFilter
   fastify.addHook("preValidation", async (req: FastifyRequest, _: FastifyReply) => {
@@ -40,12 +41,14 @@ export default function (fastify: FastifyInstance) {
         } catch (err: any) {
           console.error(err);
           const isExcept = EXCEPT_URL.filter(url => req.url?.startsWith(url))?.length > 0;
+          // if (req?.url == "/auth/user") reply.cookie("access_token", "", {path: "/", signed: true, expires: new Date()});
           if (!isExcept) {
+            // reply.cookie("access_token", "", {path: "/", signed: true, expires: new Date()});
             if (err.message == "jwt expired") {
-              //얘만 /auth/refreshToken 호출
-              reply.code(ERROR_AUTH_EXPIRED).send("ERROR_AUTH_EXPIRED");
+              //FIXME: 실제 에러 말고,,,, errorCode로 만들어서 던진다....[해결방안 찾을 것]
+              //만료 시, 재발급 처리??
+              // reply.code(ERROR_AUTH_EXPIRED).send(err);
             } else if (err.message == "jwt malformed" || err.message == "invalid signature") {
-              // 로그인으로 가야함.
               reply.code(ERROR_AUTH_MALFORMED).send("ERROR_AUTH_MALFORMED");
             }
           }

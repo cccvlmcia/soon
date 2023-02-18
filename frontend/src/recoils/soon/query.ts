@@ -3,8 +3,8 @@ import {api, options} from "@recoils/constants";
 import {getSoonHistory, getSoonHistorySJList, getSoonHistorySWList, getSoonId, getSoonInfo, getSoonList} from "./axios";
 
 export const getSoonListQuery = (sjid: Number) => {
-  const {isLoading, isError, data, error} = useQuery("getSoonList", () => getSoonList(sjid), options);
-  return {isLoading, isError, data: data?.data, error};
+  const {isLoading, isError, data, error, refetch} = useQuery("getSoonList", () => getSoonList(sjid), options);
+  return {isLoading, isError, data: data?.data, error, refetch};
 };
 
 export const getSoonInfoQuery = (swid: Number) => {
