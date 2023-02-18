@@ -1,6 +1,6 @@
 import {Suspense, useEffect} from "react";
 import {Box} from "@mui/material";
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, Navigate} from "react-router-dom";
 
 import Layout from "@layout/Layout";
 import Home from "@pages/Home";
@@ -58,7 +58,6 @@ function AppRoutes() {
               <MenuHeader />
             </Layout>
           }>
-          {/*Login */}
           <Route path="/" element={Auth(Home, true, loginUser)}></Route>
           <Route path="/campus" element={Auth(Campus, true, loginUser)}></Route>
           <Route path="/soon/list" element={Auth(SoonList, true, loginUser)}></Route>
@@ -94,7 +93,8 @@ function AppRoutes() {
 
         {/* 이건 왜 필요?? */}
         {/* <Route path="/history/:historyid" element={Auth(HistoryWrite, true, loginUser)}></Route> */}
-        <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser)}></Route>
+        {/* <Route path="/soon/graph" element={Auth(SoonGraph, true, loginUser)}></Route> */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Box>
   );
