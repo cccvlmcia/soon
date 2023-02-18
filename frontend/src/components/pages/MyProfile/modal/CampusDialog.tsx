@@ -22,6 +22,8 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+//TODO: 캠퍼스 삭제도 추가
+// 캠퍼스 추가를 여기에 붙일까? 싶기도하고?
 export default function CampusDialog({
   open,
   setOpen,

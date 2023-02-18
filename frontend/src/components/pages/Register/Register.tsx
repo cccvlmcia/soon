@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {useForm, SubmitHandler} from "react-hook-form";
-import {useNavigate} from "react-router-dom";
+import {useRef, useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import Loading from "react-loading";
 import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup} from "@mui/material";
@@ -13,6 +13,12 @@ import {userState} from "@recoils/user/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 import {getCampusListQuery} from "@recoils/campus/query";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import {getTitle} from "@layout/header/HeaderConstants";
+import CheckIcon from "@mui/icons-material/Check";
 
 type FormData = {
   name: string;
@@ -29,13 +35,11 @@ type campusType = {
   useyn: string;
   createdate: string;
 };
-const Register: React.FC = () => {
+export default function Register() {
+  const ref = useRef(null);
+
   const {isLoading, isError, data, error} = getCampusListQuery();
-  const {
-    register,
-    handleSubmit,
-    formState: {errors},
-  } = useForm<FormData>();
+  const {register, handleSubmit} = useForm<FormData>();
   const setLoginUser = useSetRecoilState(userState);
   const [campusList, setCampusList] = useState<campusType[]>([]);
   const [campus, setCampus] = useState<any>(null);
@@ -107,82 +111,115 @@ const Register: React.FC = () => {
     fetchData();
   }, [data]);
 
-  return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit(writeRegister)}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        // alignItems: "center",
-        justifyContent: "left",
-        marginTop: "20px",
-        ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
-        ".header": {
-          width: "70px",
-          minHeight: "48px",
-          padding: "0 10px 0 40px",
-          fontSize: "16px",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        },
-        ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
-      }}>
-      <Box className="row">
-        <Box className="header">이름</Box>
-        <Box className="value">
-          <TextField {...register("name", {required: true})} />
-        </Box>
-      </Box>
-      {/*단일만 선택 가능하도록 일단 마무리 */}
-      <Box className="row">
-        <Box className="header">캠퍼스</Box>
-        <Box className="value">
-          <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
-            {campusSelected?.length > 0 ? campusSelected : "캠퍼스를 선택해주세요."}
-            <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
-          </Box>
-          <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
-        </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">학번</Box>
-        <Box className="value">
-          <TextField type={"number"} {...register("sid", {required: true})} />
-        </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">학과</Box>
-        <Box className="value">
-          <TextField {...register("major", {required: true})} />
-        </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">ccc 여부</Box>
-        <Box className="value">
-          <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
-            <FormControlLabel value="Y" control={<Radio checked />} label="Y" />
-            <FormControlLabel value="N" control={<Radio />} label="N" />
-          </RadioGroup>
-        </Box>
-      </Box>
-      <Box className="row">
-        <Box className="header">성별</Box>
-        <Box className="value">
-          <RadioGroup row aria-labelledby="radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
-            <FormControlLabel value="female" control={<Radio />} label="여" />
-            <FormControlLabel value="male" control={<Radio />} label="남" />
-          </RadioGroup>
-        </Box>
-      </Box>
+  const onConfirm = () => {
+    console.log("onConfirm >");
+    const target: any = ref.current;
+    target?.click();
+  };
 
-      <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}>
-        <Button variant="outlined" type="submit">
-          저장
-        </Button>
+  return (
+    <Box>
+      <MyHeader onConfirm={onConfirm} />
+      <Box
+        component="form"
+        onSubmit={handleSubmit(writeRegister)}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          // alignItems: "center",
+          justifyContent: "left",
+          marginTop: "20px",
+          ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
+          ".header": {
+            width: "70px",
+            minHeight: "48px",
+            padding: "0 10px 0 40px",
+            fontSize: "16px",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          },
+          ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
+        }}>
+        <Box className="row">
+          <Box className="header">이름</Box>
+          <Box className="value">
+            <TextField {...register("name", {required: true})} />
+          </Box>
+        </Box>
+        {/*단일만 선택 가능하도록 일단 마무리 */}
+        <Box className="row">
+          <Box className="header">캠퍼스</Box>
+          <Box className="value">
+            <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
+              {campusSelected?.length > 0 ? campusSelected : "캠퍼스를 선택해주세요."}
+              <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+            </Box>
+            <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
+          </Box>
+        </Box>
+        <Box className="row">
+          <Box className="header">학번</Box>
+          <Box className="value">
+            <TextField type={"number"} {...register("sid", {required: true})} />
+          </Box>
+        </Box>
+        <Box className="row">
+          <Box className="header">학과</Box>
+          <Box className="value">
+            <TextField {...register("major", {required: true})} />
+          </Box>
+        </Box>
+        <Box className="row">
+          <Box className="header">ccc 여부</Box>
+          <Box className="value">
+            <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
+              <FormControlLabel value="Y" control={<Radio checked />} label="Y" />
+              <FormControlLabel value="N" control={<Radio />} label="N" />
+            </RadioGroup>
+          </Box>
+        </Box>
+        <Box className="row">
+          <Box className="header">성별</Box>
+          <Box className="value">
+            <RadioGroup row aria-labelledby="radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
+              <FormControlLabel value="female" control={<Radio />} label="여" />
+              <FormControlLabel value="male" control={<Radio />} label="남" />
+            </RadioGroup>
+          </Box>
+        </Box>
+
+        <Box sx={{width: "100%", display: "none", justifyContent: "center"}}>
+          <Button ref={ref} variant="outlined" type="submit">
+            저장
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
-};
-export default Register;
+}
+function MyHeader({onConfirm}: any) {
+  const {pathname} = useLocation();
+
+  const navigate = useNavigate();
+  const handlePrev = () => {
+    navigate(-1);
+  };
+  return (
+    <>
+      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
+        <Toolbar>
+          {/* <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
+            <MenuIcon color="secondary" />
+          </IconButton> */}
+          <Typography sx={{flex: 1}} variant="h6" component="div">
+            {getTitle(pathname)}
+          </Typography>
+          <IconButton edge="end" color="inherit" onClick={onConfirm} aria-label="close">
+            <CheckIcon color="secondary" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </>
+  );
+}
