@@ -7,22 +7,28 @@ import Error from "components/Error/Error";
 import {UserCard} from "@layout/Card";
 import {getSoonListQuery} from "@recoils/soon/query";
 import {userState} from "@recoils/user/state";
+import NoData from "components/common/NoData";
 
 export default function SoonList() {
   const loginUser: any = useRecoilValue(userState);
   const [soonlist, setSoonlist] = useState([]);
-  const {isLoading, isError, data, error} = getSoonListQuery(loginUser?.userid);
+  const {isLoading, isError, data, error, refetch} = getSoonListQuery(loginUser?.userid);
   useEffect(() => {
     if (data) {
       setSoonlist(data);
+      refetch();
     }
-  }, [data]);
+  }, [loginUser, data]);
 
   if (isLoading) {
     return <Loading />;
   }
   if (isError) {
     return <Error error={error} />;
+  }
+
+  if (data?.length == 0) {
+    return <NoData height={"140px"} />;
   }
 
   return (
@@ -34,9 +40,7 @@ export default function SoonList() {
           const major = campus?.major;
           return <UserCard key={soonid} userid={soonwon.userid} nickname={soonwon.nickname} campus={campus} sid={sid} major={major} />;
         })}
-
       </Box>
-      {/*FIXME: 순원 추가/삭제는 관리자 권한! */}
     </>
   );
 }

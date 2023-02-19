@@ -64,7 +64,7 @@ export default function UserDialog({
       <ListItemButton onClick={() => onClickSW(item?.userid)}>
         <ListItemText
           primary={item?.user?.nickname + `${item?.user?.sw?.length ? "(" + item?.user?.sw?.map(({soonjang}: any) => soonjang?.nickname) + ")" : ""}`}
-          secondary={item?.user?.sj?.map(({soonwon}: any) => soonwon?.nickname)}
+          secondary={item?.user?.sj?.map(({soonwon}: any) => soonwon?.nickname).join(", ")}
         />
         <IconButton edge="end">
           <ArrowForwardIosIcon />

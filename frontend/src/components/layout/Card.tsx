@@ -7,6 +7,7 @@ import Popover from "@mui/material/Popover";
 import {api} from "@recoils/constants";
 import {authState} from "@recoils/auth/state";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {postUserAuth} from "@recoils/user/axios";
 
 const useStyles = makeStyles({
   root: {
@@ -65,7 +66,15 @@ export function UserCard({userid, nickname, pictureUrl, campus, major, sid, isAd
               <Button variant="outlined" onClick={openSubMenu}>
                 권한
               </Button>
-              <SubMenu id={userid} anchorEl={anchorEl} setAnchorEl={setAnchorEl} open={open} setOpen={setOpen} authList={authList} />
+              <SubMenu
+                id={userid}
+                anchorEl={anchorEl}
+                setAnchorEl={setAnchorEl}
+                open={open}
+                setOpen={setOpen}
+                authList={authList}
+                campusid={campus?.campusid}
+              />
             </Box>
           )}
         </Box>
@@ -74,7 +83,7 @@ export function UserCard({userid, nickname, pictureUrl, campus, major, sid, isAd
   );
 }
 
-function SubMenu({id, anchorEl, setAnchorEl, open, setOpen, authList}: any) {
+function SubMenu({id, anchorEl, setAnchorEl, open, setOpen, authList, campusid}: any) {
   const authes = useRecoilValue(authState);
   const [selected, setSelected] = useState(authList);
   const handleClose = () => {
@@ -91,10 +100,10 @@ function SubMenu({id, anchorEl, setAnchorEl, open, setOpen, authList}: any) {
         dataset: {authid},
       },
     } = e;
-    const {data} = await api.post(`/user/${id}/auth`, {authid});
+    const {data} = await postUserAuth(id, {authid, campusid});
     if (data?.affected) {
       //deleted
-      const idx = selected?.findIndex((item: any) => item?.authid == authid);
+      const idx = selected?.findIndex((item: any) => item?.authid == authid && item?.campusid == campusid);
       if (idx > -1) {
         setSelected([...selected.slice(0, idx), ...selected.slice(idx + 1, selected?.length)]);
       }
@@ -106,7 +115,10 @@ function SubMenu({id, anchorEl, setAnchorEl, open, setOpen, authList}: any) {
   const items = authes?.map(({name, id}: any) => (
     <ListItem key={id} onClick={handleAuth} data-authid={id}>
       <ListItemIcon>
-        <Checkbox edge="start" checked={selected?.find(({authid}: {authid: string}) => authid == id) ? true : false} />
+        <Checkbox
+          edge="start"
+          checked={selected?.find((item: {authid: string; campusid: string}) => item?.authid == id && item?.campusid == campusid) ? true : false}
+        />
         <ListItemText id={id} primary={name} />
       </ListItemIcon>
     </ListItem>

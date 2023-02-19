@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, Fragment} from "react";
 import {Box, Button, List, ListItemText, ListItemButton, Divider} from "@mui/material";
 import {userState} from "@recoils/user/state";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
@@ -14,6 +14,8 @@ import {getTitle} from "@layout/header/HeaderConstants";
 import {useLocation} from "react-router-dom";
 import DrawerMenu from "@layout/header/drawer/DrawerMenu";
 import AddIcon from "@mui/icons-material/Add";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 export default function Admin() {
   const loginUser: any = useRecoilValue(userState);
   const [campusList, setCampusList] = useState([]);
@@ -56,10 +58,11 @@ export default function Admin() {
         },
       }}>
       <MyHeader onChangeSoonjang={onChangeSoonjang} />
-      <Box sx={{textAlign: "center"}}>
-        <Button fullWidth variant="outlined" onClick={() => setOpen(true)}>
-          {campus?.name}
-        </Button>
+      <Box sx={{textAlign: "center", fontSize: "20px", padding: "20px 0", borderBottom: "1px solid gray"}}>
+        <Box onClick={() => setOpen(true)} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <Box>{campus?.name}</Box>
+          <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+        </Box>
       </Box>
       {campus && <SoonSetting campus={campus} sjopen={sjopen} setSjOpen={setSjOpen} />}
       <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
@@ -94,12 +97,12 @@ function SoonSetting({campus, sjopen, setSjOpen}: any) {
   }
 
   const itemList = campusUserList?.map((item: any) => (
-    <Box key={item?.userid}>
+    <Fragment key={item?.userid}>
       <ListItemButton>
-        <ListItemText primary={item?.user?.nickname} secondary={item?.user?.sj?.map(({soonwon}: any) => soonwon?.nickname)} />
+        <ListItemText primary={item?.user?.nickname} secondary={item?.user?.sj?.map(({soonwon}: any) => soonwon?.nickname).join(", ")} />
       </ListItemButton>
       <Divider />
-    </Box>
+    </Fragment>
   ));
 
   return (
@@ -145,7 +148,7 @@ function MyHeader({onChangeSoonjang}: any) {
           </Box>
         </Toolbar>
       </AppBar>
-      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} setLoginUser={setLoginUser} />
+      <DrawerMenu data={loginUser} open={open} handleMenuOpen={handleMenuOpen} loginUser={loginUser} setLoginUser={setLoginUser} />
     </>
   );
 }

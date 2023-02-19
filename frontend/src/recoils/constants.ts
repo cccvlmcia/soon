@@ -13,6 +13,7 @@ export async function axiosProcess(caller: Function, isLogin = false) {
   try {
     return await caller();
   } catch (err: any) {
+    console.error(" axiosProcess >>", err);
     if (err?.response?.status == 500) {
       console.error(err);
     } else if (isLogin) {
@@ -24,6 +25,7 @@ export async function axiosProcess(caller: Function, isLogin = false) {
       }
     } else {
       console.error("access_token 있지만, 만료되어 재접속");
+      throw err;
     }
     //FIXME: alert으로 알려주고 넘어가야하는지 확인
     return null;
@@ -32,9 +34,9 @@ export async function axiosProcess(caller: Function, isLogin = false) {
 export const options = {
   refetchOnWindowFocus: false,
   retry: 0,
-  onSuccess: ({data}: any) => {
+  onSuccess: (result: any) => {
     //api 호출 성공
-    console.log("onSuccess >>", data);
+    console.log("onSuccess >>", result?.data);
   },
   onError: (error: any) => {
     //api 호출 실패

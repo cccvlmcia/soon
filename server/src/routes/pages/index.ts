@@ -1,7 +1,8 @@
 import {FastifyInstance, FastifyRequest, FastifyReply} from "fastify";
 
 export default async function (fastify: FastifyInstance) {
-  fastify.get("/", (req: FastifyRequest, reply: FastifyReply) => {
-    reply.view("/views/index.ejs");
+  fastify.get("/*", (req: FastifyRequest, reply: FastifyReply) => {
+    // reply.view("/views/index.ejs");
+    reply.view("/views/index.html");
   });
 }

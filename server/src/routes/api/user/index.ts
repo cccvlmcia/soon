@@ -1,4 +1,5 @@
 import {CommonYN} from "@common/CommonConstants";
+import {addUserCampus} from "@user/service/UserCampusService";
 import {addUserLogin, removeUserLogin} from "@user/service/UserLoginService";
 import {addUser, editUser, getUserInfo, getUserList, removeUser} from "@user/service/UserService";
 import {Gender} from "@user/UserConstants";
@@ -9,6 +10,14 @@ import userAuth from "./auth";
 export default async function (fastify: FastifyInstance) {
   fastify.register(userArticle, {prefix: "/:userid/article/:articleid"});
   fastify.register(userAuth, {prefix: "/:userid/auth"});
+  fastify.post(
+    "/:userid/campus",
+    async (req: FastifyRequest<{Params: {userid: number}; Body: {campusid: string; major: string; sid: number}}>, reply: FastifyReply) => {
+      const {userid} = req.params;
+      const user = await addUserCampus({userid, ...req.body});
+      reply.send(user);
+    },
+  );
 
   //FIXME: 사용자 목록... 처리 방안 필요
   fastify.get("/", async (req: FastifyRequest, reply: FastifyReply) => {

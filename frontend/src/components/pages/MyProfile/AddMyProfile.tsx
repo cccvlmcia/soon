@@ -1,17 +1,19 @@
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState, useEffect} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {Box, TextField, Button, SelectChangeEvent, FormControlLabel, Radio, RadioGroup, AppBar, Toolbar, IconButton, Typography} from "@mui/material";
+import {useRecoilValue} from "recoil";
+import {Box, TextField, Button, AppBar, Toolbar, IconButton, Typography} from "@mui/material";
 
-import {editUser} from "@recoils/user/axios";
+import {addUserCampus} from "@recoils/user/axios";
 import {userState} from "@recoils/user/state";
 import CampusDialog from "./modal/CampusDialog";
 import {useLocation, useNavigate} from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
-import {selectedCampusState} from "@recoils/campus/state";
+import {getCampusListQuery} from "@recoils/campus/query";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Loading from "components/Loading/Loading";
+import Error from "components/Error/Error";
 
 type FormData = {
   name: string;
@@ -29,66 +31,46 @@ type campusType = {
   createdate: string;
 };
 //TODO: 캠퍼스 추가는 Register 인가?
-export default function MyProfile() {
-  // const {isLoading, isError, data, error} = getCampusListQuery();
+export default function AddMyProfile() {
   const ref = useRef(null);
+  const {isLoading, isError, data, error} = getCampusListQuery();
 
   const {register, handleSubmit} = useForm<FormData>();
   const loginUser: any = useRecoilValue(userState);
-  const campuses = loginUser?.campus?.map(({campus}: any) => campus);
-  const [campusList, setCampusList] = useState(campuses);
-  const [campusSelected, setCampusSelected]: any = useRecoilState(selectedCampusState);
-  const [genderSelected, setGenderSelected] = useState<string>(loginUser?.gender);
-  const [cccYNSelected, setCccYNSelected] = useState<string>(loginUser?.config?.cccyn);
-  const [name, setName] = useState<string>(loginUser?.nickname);
-  const [sid, setSid] = useState<string>(getSid(campusSelected?.campusid || ""));
-  const [major, setMajor] = useState<string>(getMajor(campusSelected?.campusid || ""));
+  const [campusList, setCampusList] = useState([]);
+  const [myCampusList]: any = useState(loginUser?.campus);
+  const [campusSelected, setCampusSelected]: any = useState();
+  const [name] = useState<string>(loginUser?.nickname);
+  const [sid, setSid] = useState<string>("");
+  const [major, setMajor] = useState<string>("");
   const [open, setOpen]: any = useState(false);
   const navigate = useNavigate();
-  function getSid(camid: string) {
-    return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.sid;
-  }
-  function getMajor(camid: string) {
-    return loginUser?.campus?.find(({campusid}: any) => campusid == camid)?.major;
-  }
+
+  useEffect(() => {
+    if (campusList?.length == 0 && data?.length > 0) {
+      const list = data?.filter(({campusid}: any) => myCampusList?.filter((cam: any) => cam?.campusid == campusid) == 0);
+      setCampusList(list);
+    }
+  }, [data]);
 
   //FIXME: set 하는 방식을 id > obj로 변경 필요
   const handleCampus = (campus: any) => {
     setCampusSelected(campus);
-    setSid(getSid(campus?.campusid));
-    setMajor(getMajor(campus?.campusid));
   };
 
-  const handleGednerReceive = (event: SelectChangeEvent<never>) => {
-    const value = event.target.value;
-
-    console.log("gender : ", value);
-    setGenderSelected(value);
-  };
-  const handleCCCYNReceive = (event: SelectChangeEvent<never>) => {
-    const value = event.target.value;
-    console.log("cccYN : ", value);
-    setCccYNSelected(value);
-  };
   const writeRegister: SubmitHandler<FormData> = async (params: FormData) => {
     const userInfo = {
-      nickname: name,
-      gender: genderSelected || "",
-      cccyn: cccYNSelected || "",
       campusid: campusSelected?.campusid, //FIXME: 단일 선택 문제 해결되면 지우도록
       major: major,
       sid: sid,
     };
-    const {data} = await editUser(loginUser?.userid, userInfo);
-    if (data?.affected > 0) {
-      alert("저장되었습니다, 재 로그인 적용됩니다.");
+    const {data} = await addUserCampus(loginUser?.userid, userInfo);
+    if (data) {
+      alert("캠퍼스가 추가되었습니다! 재접속시 갱신됩니다.");
       navigate(-1);
     }
   };
 
-  const handleName = (e: any) => {
-    setName(e.target.value);
-  };
   const handleSid = (e: any) => {
     setSid(e.target.value);
   };
@@ -105,6 +87,10 @@ export default function MyProfile() {
     const target: any = ref.current;
     target?.click();
   };
+
+  if (isLoading) return <Loading />;
+  if (isError) return <Error error={error} />;
+
   return (
     <>
       <MyHeader onConfirm={onConfirm} />
@@ -132,14 +118,14 @@ export default function MyProfile() {
         <Box className="row">
           <Box className="header">이름</Box>
           <Box className="value">
-            <TextField {...register("name", {required: true})} value={name} onChange={handleName} />
+            <TextField {...register("name", {required: true})} value={name} InputProps={{readOnly: true}} />
           </Box>
         </Box>
         <Box className="row">
           <Box className="header">캠퍼스</Box>
           <Box className="value">
             <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
-              {campusSelected?.name}
+              {campusSelected?.name || "캠퍼스를 선택해주세요."}
               <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
             </Box>
             <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
@@ -158,25 +144,7 @@ export default function MyProfile() {
             <TextField {...register("major", {required: true})} value={major} onChange={handleMajor} />
           </Box>
         </Box>
-        <Box className="row">
-          <Box className="header">ccc 여부</Box>
-          <Box className="value">
-            <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
-              <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
-              <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
-            </RadioGroup>
-          </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">성별</Box>
-          <Box className="value">
-            <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
-              <FormControlLabel value="female" control={<Radio checked={genderSelected == "female"} />} label="여자" />
-              <FormControlLabel value="male" control={<Radio checked={genderSelected == "male"} />} label="남자" />
-            </RadioGroup>
-          </Box>
-        </Box>
-        {/* <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}> */}
+
         <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
           저장
         </Button>

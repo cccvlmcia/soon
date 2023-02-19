@@ -13,6 +13,7 @@ import {TransitionProps} from "@mui/material/transitions";
 import {Box, Checkbox, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import {api} from "@recoils/constants";
+import {deleteSoon} from "@recoils/soon/axios";
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
@@ -33,7 +34,7 @@ export default function SWDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   items: any[];
-  selectedId: string;
+  selectedId: any;
   handleOK: any;
 }) {
   const [list, setList]: any = useState([]);
@@ -53,7 +54,8 @@ export default function SWDialog({
   const onChangeSW = async (item: any) => {
     const idx = list?.findIndex((obj: any) => obj.userid == item?.userid);
     if (idx > -1) {
-      await api.delete(`/soon/${selectedId}/${item?.userid}`);
+      await deleteSoon(selectedId, item?.userid);
+
       setList([...list.slice(0, idx), ...list.slice(idx + 1, list.length)]);
     } else {
       await api.post(`/soon`, {sjid: selectedId, swid: item?.userid});

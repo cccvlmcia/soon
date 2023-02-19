@@ -3,7 +3,7 @@
     {
       "name": "soon",
       "script": "./node_modules/.bin/ts-node -r tsconfig-paths/register -r src/index.ts",
-      "watch": false,
+      "watch": true,
       "ignore_watch": ["node_modules", "logs", "config", "dist", "public"],
       "env_development": {
         "PORT": 4000,

@@ -4,29 +4,33 @@ import {userState} from "@recoils/user/state";
 import Loading from "components/Loading/Loading";
 import {useNavigate, useLocation} from "react-router-dom";
 import {useRecoilValue} from "recoil";
+import {Navigate} from "react-router-dom";
 
 export default function Error({error}: any) {
   const loginUser = useRecoilValue(userState);
   const location = useLocation();
   const navigate = useNavigate();
   if (Number(error?.response?.status) > 500) {
-    // alert("로그인 페이지로 이동합니다.");
     if (loginUser) {
       server
         .post("/auth/refreshToken")
         .then(data => {
-          const {pathname} = location;
-          if (pathname) {
+          if (data?.data == "USER_AUTHENTICATED") {
             navigate(0);
+          }
+          const {pathname} = location;
+
+          if (pathname) {
           }
         })
         .catch(err => {
-          navigate("/login");
+          console.log("refreshToken err >", err);
+          return <Navigate to="/login" />;
         });
       return <Loading />;
     } else {
-      console.log("goto login");
-      navigate("/login");
+      console.error(" loginUser 여기! ", error);
+      return <Navigate to="/login" />;
     }
   }
   return (
