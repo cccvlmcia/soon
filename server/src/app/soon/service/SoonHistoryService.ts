@@ -28,8 +28,6 @@ export async function getSoonHistorySJListNotMe(sjid: number, campues: string[])
 export async function editSoonHistory(
   historyid: number,
   history: {
-    userid?: number;
-    sjid: number;
     kind: SoonType;
     progress: string;
     historydate: Date;
@@ -38,11 +36,8 @@ export async function editSoonHistory(
 ) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(SoonHistory);
-    if (history.userid == undefined) {
-      history.userid = history.sjid;
-    }
-    const {userid, sjid, kind, progress, historydate, contents} = history;
-    const historyData = await repository.update({historyid}, {userid, sjid, kind, progress, historydate, contents});
+    const {kind, progress, historydate, contents} = history;
+    const historyData = await repository.update({historyid}, {kind, progress, historydate, contents});
     console.log("history data : ", history);
     return historyData;
   });
