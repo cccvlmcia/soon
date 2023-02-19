@@ -203,8 +203,6 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
     }
   };
 
-  // const prayList = data?.prays;
-  console.log("prayList >", prayList);
   const prayView = prayList?.map(({prayid, pray, publicyn}: any) => (
     <ListItemButton dense={true} key={prayid} sx={{display: "flex"}}>
       <ListItem>

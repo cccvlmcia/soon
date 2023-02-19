@@ -1,7 +1,10 @@
 import {CommonYN, COMMON_Y} from "@common/CommonConstants";
 import {txProcess} from "@lib/db";
 import Soon from "@soon/entity/Soon";
+import User from "@user/entity/User";
 import UserCampus from "@user/entity/UserCampus";
+import UserCampusRequest from "@user/entity/UserCampusRequest";
+import UserConfig from "@user/entity/UserConfig";
 
 export async function editUserCampus(userid: number, campus: {campusid: string; major: string; sid: number}) {
   return await txProcess(async manager => {
@@ -12,7 +15,16 @@ export async function editUserCampus(userid: number, campus: {campusid: string; 
 export async function addUserCampus(campus: {userid: number; campusid: string; major: string; sid: number}) {
   return await txProcess(async manager => {
     const repository = manager.getRepository(UserCampus);
-    return await repository.save(campus);
+    const reqRepository = manager.getRepository(UserCampusRequest);
+    const configRepo = manager.getRepository(UserConfig);
+    const config = await configRepo.findOne({where: {userid: campus?.userid}});
+    if (config?.adminyn == COMMON_Y) {
+      return await repository.save(campus);
+    } else {
+      // FIXME: 패치 전까지, req랑 실 데이터랑 둘 다 저장
+      await repository.save(campus);
+      return await reqRepository.save(campus);
+    }
   });
 }
 export async function getUserCampus(userid: number) {

@@ -158,7 +158,6 @@ function MyHeader({hasAuth, setEditMode}: any) {
   };
   //FIXME: Modal로 변경
   const onClickEdit = () => {
-    console.log("onClickEdit >", historyid);
     if (historyid) {
       setEditMode(true);
       // navigate(`/history/${historyid}/edit`);
