@@ -17,7 +17,7 @@ import {api} from "@recoils/constants";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {format} from "date-fns";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -65,10 +65,13 @@ export default function HistoryContents() {
   // }
 
   const handlePrayRemove = async (prayid: number) => {
-    const {data} = await deleteSoonPray(prayid);
-    if (data?.affected > 0) {
-      alert(" 기도가 삭제 되었습니다!");
-      refetch();
+    const result = confirm("삭제하시겠습니까?");
+    if (result) {
+      const {data} = await deleteSoonPray(prayid);
+      if (data?.affected > 0) {
+        alert(" 기도가 삭제 되었습니다!");
+        refetch();
+      }
     }
   };
   const handleEditMode = (editMode: any) => {
@@ -76,10 +79,13 @@ export default function HistoryContents() {
     refetch();
   };
   const prayList = hasPrayAuth ? prays : prays?.filter((pray: any) => pray.publicyn == "Y");
-  const prayView = prayList?.map(({prayid, pray}: any) => (
+  const prayView = prayList?.map(({prayid, pray, publicyn}: any) => (
     <ListItemButton dense={true} key={prayid} sx={{display: "flex"}}>
       <ListItem>
-        <ListItemText>{pray}</ListItemText>
+        <ListItemText>
+          {publicyn == "N" && "[비공개] "}
+          {pray}
+        </ListItemText>
         {hasPrayAuth && (
           <IconButton onClick={() => handlePrayRemove(prayid)}>
             <RemoveCircleOutlineIcon />
