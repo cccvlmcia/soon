@@ -13,6 +13,7 @@ import SoonHistory from "@soon/entity/SoonHistory";
 import pray from "@routes/api/soon/pray";
 import SoonPray from "@soon/entity/SoonPray";
 import {In} from "typeorm";
+import SoonHistoryUser from "@soon/entity/SoonHistoryUser";
 
 export async function getUserList() {
   return await User.find({relations: {campus: true, login: true, config: true}});
@@ -57,7 +58,7 @@ export async function addUser({
     const config = await setAuthAdmin(manager, userid, email, {cccyn});
     const campus = await campusRepository.save({userid, campusid, major, sid});
     user.config = config;
-    user.campus = campus;
+    user.campus = [campus];
     return user;
   });
 }
@@ -121,6 +122,7 @@ export async function removeUser(userid: number) {
     const soonRepository = manager.getRepository(Soon);
     const prayRepository = manager.getRepository(SoonPray);
     const soonHistoryRepository = manager.getRepository(SoonHistory);
+    const soonHistoryUserRepository = manager.getRepository(SoonHistoryUser);
 
     /*
       article이랑은 삭제 안만듦..
@@ -133,15 +135,16 @@ export async function removeUser(userid: number) {
 
     await soonRepository.delete({sjid: userid});
     await soonRepository.delete({swid: userid});
-    const histories = await soonHistoryRepository.find({where: [{sjid: userid}, {swid: userid}]});
+    //순장인것은 지우고,,, 순원인것은 나둔다
+    const histories = await soonHistoryRepository.find({where: [{sjid: userid}]});
     if (histories?.length > 0) {
       const ids = histories?.map(({historyid}) => historyid);
       if (ids?.length > 0) {
         await prayRepository.delete({historyid: In(ids)});
+        await soonHistoryUserRepository.delete({historyid: In(ids)});
       }
     }
     await soonHistoryRepository.delete({sjid: userid});
-    await soonHistoryRepository.delete({swid: userid});
     return await repository.delete({userid});
     // return repository.delete({userid});
   });
