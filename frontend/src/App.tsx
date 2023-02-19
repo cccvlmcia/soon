@@ -22,7 +22,6 @@ import {userState} from "@recoils/user/state";
 import MenuHeader from "@layout/header/MenuHeader";
 import BlankHeader from "@layout/header/BlankHeader";
 import PrevHeader from "@layout/header/PrevHeader";
-import HistoryEdit from "@pages/History/HistoryEdit";
 import HistoryContents from "@pages/History/HistoryContents";
 import {selectedCampusState} from "@recoils/campus/state";
 import AddMyProfile from "@pages/MyProfile/AddMyProfile";
@@ -105,7 +104,6 @@ function AppRoutes() {
         <Route path="/history" element={Auth(HistoryWrite, true, user)}></Route>
         <Route path="/history/:historyid" element={Auth(HistoryContents, true, user)}></Route>
         <Route path="/admin" element={Auth(Admin, true, user)}></Route>
-        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, user)}></Route>
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}

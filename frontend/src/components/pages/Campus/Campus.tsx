@@ -9,7 +9,7 @@ import {userState} from "@recoils/user/state";
 import {selectedCampusState} from "@recoils/campus/state";
 import {authState} from "@recoils/auth/state";
 import {getCampusUserQuery} from "@recoils/campus/query";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 import CampusDialog from "@pages/MyProfile/modal/CampusDialog";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 

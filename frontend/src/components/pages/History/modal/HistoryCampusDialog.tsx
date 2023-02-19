@@ -11,7 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 
 type User = {
   userid: string;
@@ -50,14 +50,6 @@ export default function HistoryCampusDialog({
   //FIXME: 시간 복잡도가 문제 때문에, set을 사용했습니다.
   const selectedUserSet = new Set(selectedUsers?.map(user => user.userid));
   const filteredUsers = users?.filter(user => !selectedUserSet.has(user.userid));
-  // const userList = filteredUsers.map(user => (
-  //   <Box key={user.userid}>
-  //     <ListItemButton onClick={() => handleSelectedUser(user)}>
-  //       <ListItemText primary={user.nickname} />
-  //     </ListItemButton>
-  //     <Divider />
-  //   </Box>
-  // ));
 
   return (
     <Box>

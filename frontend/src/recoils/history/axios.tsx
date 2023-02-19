@@ -15,3 +15,8 @@ export async function deleteSoonPray(prayid: any) {
     return await api.delete(`/soon/pray/${prayid}`);
   });
 }
+export async function postSoonPrays(historyid: any, prays: any) {
+  return await axiosProcess(async () => {
+    return await api.post(`/soon/history/${historyid}/pray`, {prays});
+  });
+}

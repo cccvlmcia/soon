@@ -88,6 +88,7 @@ export default async function (fastify: FastifyInstance) {
     }
 
     reply.cookie("refresh_token", refreshToken, {path: "/", signed: true});
+    //FIXME: access_token을 30분 짜리로 만들어서 줘?!
     reply.cookie("access_token", accessToken, {path: "/", signed: true});
     //발급한 토큰을 저장한다
     addLoginHistory({userid: userId, ssoid, token: accessToken});
@@ -116,6 +117,7 @@ export default async function (fastify: FastifyInstance) {
       const {userid, ssoid, email} = await verifyJWT(decryptStr);
       const access = await signJWT({userid, ssoid, email});
       const access_token = encrypted(access);
+      //FIXME: access_token을 30분 짜리로 만들어서 줘?!
       reply.cookie("access_token", access_token, {path: "/", signed: true});
       await addLoginHistory({userid, ssoid, token: access_token});
       return reply.send("USER_AUTHENTICATED");

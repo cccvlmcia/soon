@@ -22,7 +22,7 @@ import dayjs, {Dayjs} from "dayjs";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import Loading from "react-loading";
 import Error from "components/Error/Error";
-import HistoryCampusDialog from "./HistoryCampusDialog";
+import HistoryCampusDialog from "./modal/HistoryCampusDialog";
 import {getCampusUserQuery} from "@recoils/campus/query";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import {getTitle} from "@layout/header/HeaderConstants";
