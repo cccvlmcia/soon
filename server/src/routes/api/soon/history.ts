@@ -89,8 +89,6 @@ export default async function (fastify: FastifyInstance) {
       req: FastifyRequest<{
         Params: {historyid: number};
         Body: {
-          userid?: number;
-          sjid: number;
           kind: SoonType;
           progress: string;
           historydate: Date;
