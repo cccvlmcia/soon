@@ -7,7 +7,7 @@ import Error from "components/Error/Error";
 import {UserCard} from "@layout/Card";
 import {getSoonListQuery} from "@recoils/soon/query";
 import {userState} from "@recoils/user/state";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 
 export default function SoonList() {
   const loginUser: any = useRecoilValue(userState);

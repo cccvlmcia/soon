@@ -12,7 +12,7 @@ import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
 import {Box, ListItemButton} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

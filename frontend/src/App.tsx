@@ -22,7 +22,6 @@ import {userState} from "@recoils/user/state";
 import MenuHeader from "@layout/header/MenuHeader";
 import BlankHeader from "@layout/header/BlankHeader";
 import PrevHeader from "@layout/header/PrevHeader";
-import HistoryEdit from "@pages/History/HistoryEdit";
 import HistoryContents from "@pages/History/HistoryContents";
 import {selectedCampusState} from "@recoils/campus/state";
 import AddMyProfile from "@pages/MyProfile/AddMyProfile";
