@@ -5,7 +5,7 @@ import Error from "components/Error/Error";
 import {Typography} from "@material-ui/core";
 import {useNavigate, useParams} from "react-router-dom";
 import {format} from "date-fns";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 import {getUserInfoQuery} from "@recoils/user/query";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";

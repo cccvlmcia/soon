@@ -17,7 +17,7 @@ import {api} from "@recoils/constants";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {format} from "date-fns";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -26,6 +26,8 @@ import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
+import {deleteSoonPray} from "@recoils/history/axios";
+import HistoryEditDialog from "./modal/HistoryEditDialog";
 const type: any = {
   soon: "순모임",
   coffee: "커피타임",
@@ -34,6 +36,8 @@ const type: any = {
 };
 
 export default function HistoryContents() {
+  const [editMode, setEditMode] = useState(false);
+
   const {historyid} = useParams();
   const {isLoading, isError, data, error, refetch} = getSoonHistoryQuery(Number(historyid));
   const loginUser: any = useRecoilValue(userState);
@@ -61,17 +65,27 @@ export default function HistoryContents() {
   // }
 
   const handlePrayRemove = async (prayid: number) => {
-    const {data} = await api.delete(`/soon/pray/${prayid}`);
-    if (data?.affected > 0) {
-      alert(" 기도가 삭제 되었습니다!");
-      refetch();
+    const result = confirm("삭제하시겠습니까?");
+    if (result) {
+      const {data} = await deleteSoonPray(prayid);
+      if (data?.affected > 0) {
+        alert(" 기도가 삭제 되었습니다!");
+        refetch();
+      }
     }
   };
+  const handleEditMode = (editMode: any) => {
+    setEditMode(editMode);
+    refetch();
+  };
   const prayList = hasPrayAuth ? prays : prays?.filter((pray: any) => pray.publicyn == "Y");
-  const prayView = prayList?.map(({prayid, pray}: any) => (
+  const prayView = prayList?.map(({prayid, pray, publicyn}: any) => (
     <ListItemButton dense={true} key={prayid} sx={{display: "flex"}}>
       <ListItem>
-        <ListItemText>{pray}</ListItemText>
+        <ListItemText>
+          {publicyn == "N" && "[비공개] "}
+          {pray}
+        </ListItemText>
         {hasPrayAuth && (
           <IconButton onClick={() => handlePrayRemove(prayid)}>
             <RemoveCircleOutlineIcon />
@@ -79,12 +93,11 @@ export default function HistoryContents() {
         )}
       </ListItem>
     </ListItemButton>
-
   ));
 
   return (
     <>
-      <MyHeader hasAuth={hasPrayAuth} />
+      <MyHeader hasAuth={hasPrayAuth} setEditMode={setEditMode} />
       <Box
         sx={[
           historyid ? styles.mobile.container : styles.web.container,
@@ -131,20 +144,24 @@ export default function HistoryContents() {
           {prayList?.length == 0 && <NoData />}
         </Box>
       </Box>
+      <HistoryEditDialog historyid={historyid} editMode={editMode} handleEditMode={handleEditMode} data={data} />
     </>
   );
 }
 
-function MyHeader({hasAuth}: any) {
+function MyHeader({hasAuth, setEditMode}: any) {
   const {pathname} = useLocation();
   const {historyid} = useParams();
   const navigate = useNavigate();
   const handlePrev = () => {
     navigate(-1);
   };
+  //FIXME: Modal로 변경
   const onClickEdit = () => {
+    console.log("onClickEdit >", historyid);
     if (historyid) {
-      navigate(`/history/${historyid}/edit`);
+      setEditMode(true);
+      // navigate(`/history/${historyid}/edit`);
     }
   };
   return (
@@ -165,6 +182,7 @@ function MyHeader({hasAuth}: any) {
           )}
         </Toolbar>
       </AppBar>
+      {/* <HistoryEditDialog historyid={historyid} editMode={editMode} setEditMode={setEditMode} /> */}
     </>
   );
 }
