@@ -105,7 +105,6 @@ function AppRoutes() {
         <Route path="/history" element={Auth(HistoryWrite, true, user)}></Route>
         <Route path="/history/:historyid" element={Auth(HistoryContents, true, user)}></Route>
         <Route path="/admin" element={Auth(Admin, true, user)}></Route>
-        <Route path="/history/:historyid/edit" element={Auth(HistoryEdit, true, user)}></Route>
         {/* Custom AppBar */}
 
         {/* 이건 왜 필요?? */}

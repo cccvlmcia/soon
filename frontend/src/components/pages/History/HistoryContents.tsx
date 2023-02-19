@@ -27,6 +27,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import {deleteSoonPray} from "@recoils/history/axios";
+import HistoryEditDialog from "./modal/HistoryEditDialog";
 const type: any = {
   soon: "순모임",
   coffee: "커피타임",
@@ -35,6 +36,8 @@ const type: any = {
 };
 
 export default function HistoryContents() {
+  const [editMode, setEditMode] = useState(false);
+
   const {historyid} = useParams();
   const {isLoading, isError, data, error, refetch} = getSoonHistoryQuery(Number(historyid));
   const loginUser: any = useRecoilValue(userState);
@@ -68,6 +71,10 @@ export default function HistoryContents() {
       refetch();
     }
   };
+  const handleEditMode = (editMode: any) => {
+    setEditMode(editMode);
+    refetch();
+  };
   const prayList = hasPrayAuth ? prays : prays?.filter((pray: any) => pray.publicyn == "Y");
   const prayView = prayList?.map(({prayid, pray}: any) => (
     <ListItemButton dense={true} key={prayid} sx={{display: "flex"}}>
@@ -84,7 +91,7 @@ export default function HistoryContents() {
 
   return (
     <>
-      <MyHeader hasAuth={hasPrayAuth} />
+      <MyHeader hasAuth={hasPrayAuth} setEditMode={setEditMode} />
       <Box
         sx={[
           historyid ? styles.mobile.container : styles.web.container,
@@ -131,20 +138,24 @@ export default function HistoryContents() {
           {prayList?.length == 0 && <NoData />}
         </Box>
       </Box>
+      <HistoryEditDialog historyid={historyid} editMode={editMode} handleEditMode={handleEditMode} data={data} />
     </>
   );
 }
 
-function MyHeader({hasAuth}: any) {
+function MyHeader({hasAuth, setEditMode}: any) {
   const {pathname} = useLocation();
   const {historyid} = useParams();
   const navigate = useNavigate();
   const handlePrev = () => {
     navigate(-1);
   };
+  //FIXME: Modal로 변경
   const onClickEdit = () => {
+    console.log("onClickEdit >", historyid);
     if (historyid) {
-      navigate(`/history/${historyid}/edit`);
+      setEditMode(true);
+      // navigate(`/history/${historyid}/edit`);
     }
   };
   return (
@@ -165,6 +176,7 @@ function MyHeader({hasAuth}: any) {
           )}
         </Toolbar>
       </AppBar>
+      {/* <HistoryEditDialog historyid={historyid} editMode={editMode} setEditMode={setEditMode} /> */}
     </>
   );
 }
