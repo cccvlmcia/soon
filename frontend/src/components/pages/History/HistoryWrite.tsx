@@ -16,7 +16,6 @@ import {
 import {useForm, SubmitHandler} from "react-hook-form";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {styles} from "@layout/styles";
-import {api} from "@recoils/constants";
 import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
 import dayjs, {Dayjs} from "dayjs";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
@@ -37,6 +36,14 @@ import {HistoryForm, Prayer, User} from "@recoils/types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {postSoonHistory} from "@recoils/history/axios";
 
+//받은 사람 명단 수정해야 함.
+/*
+  0. 캠퍼스 선택해서 userList 하지말고, 모두 가져와서 dialog에서 캠퍼스별로 구분 해야 함.....
+  1. "순장이 가진" 전체 캠퍼스의 사용자 명단 보여줄 것
+  2. 선택 할 수 없는 사람 disabled 할 것
+  3. 선택된 사람들 checkbox로 표기
+  4. 다른캠퍼스소속의 내 순원도 선택 할 수 있어야 함.(여러명 순모임)
+*/
 export default function HistoryWrite() {
   const ref = useRef(null);
   const campusRef = useRef(null);

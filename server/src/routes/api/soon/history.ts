@@ -65,7 +65,7 @@ export default async function (fastify: FastifyInstance) {
         Body: {
           userid?: number;
           sjid: number;
-          swid: number;
+          swids: number[];
           kind: string;
           progress: string;
           historydate: Date;
@@ -91,7 +91,6 @@ export default async function (fastify: FastifyInstance) {
         Body: {
           userid?: number;
           sjid: number;
-          swid: number;
           kind: SoonType;
           progress: string;
           historydate: Date;
