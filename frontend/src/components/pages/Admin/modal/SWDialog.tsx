@@ -74,7 +74,7 @@ export default function SWDialog({
       ?.filter(({sjid}: any) => sjid != selectedId)
       ?.map(({soonjang}: any) => "(" + soonjang.nickname + ")")
       .join();
-    console.log("item user", soonjang);
+    // console.log("item user", soonjang);
     return (
       <Box key={item?.userid}>
         <ListItemButton onClick={() => onChangeSW(item)} disabled={disabled}>
