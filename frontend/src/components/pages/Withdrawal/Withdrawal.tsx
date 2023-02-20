@@ -16,8 +16,6 @@ export default function Withdrawal() {
   const navigate = useNavigate();
   const setSelectedCampus = useSetRecoilState(selectedCampusState);
 
-  console.log("loginUser >", loginUser);
-
   const googleSocialLogin = useGoogleLogin({
     scope: "email profile",
     onSuccess: async ({code}) => {
