@@ -73,8 +73,20 @@ function SoonHistoryCard({historyid, user, kind, progress, historydate}: any) {
       sx={{display: "flex", justifyContent: "space-between", margin: "8px 20px", fontWeight: "300"}}>
       <Box sx={{overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{`[${type[kind]}] ${progress}`}</Box>
       <Box sx={{display: "flex", flexDirection: "column", opacity: "0.5"}}>
-        <Box>{user?.nickname}</Box>
-        <Box sx={{display: "flex", alignItems: "center", fontSize: "10px"}}>
+        <Box
+          sx={{
+            display: "-webkit-box",
+            whiteSpace: "initial",
+            WebkitBoxOrient: "vertical",
+            maxWidth: "170px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            WebkitLineClamp: 1,
+            textAlign: "right",
+          }}>
+          <Box>{user?.nickname}</Box>
+        </Box>
+        <Box sx={{display: "flex", alignItems: "center", fontSize: "10px", justifyContent: "right"}}>
           <AccessTimeIcon sx={{fontSize: "10px", margin: "2.5px 2px 0 0"}} />
           {dateStr}
         </Box>
@@ -112,9 +124,10 @@ function SoonHistorySJ({sjid}: any) {
     return <Error error={error} />;
   }
   //TODO: id => nickname
-  const soonHistorySJ = data?.map(({historyid, soonwon, kind, progress, historydate}: any) => (
-    <SoonHistoryCard key={historyid} historyid={historyid} user={soonwon} kind={kind} progress={progress} historydate={historydate} />
-  ));
+  const soonHistorySJ = data?.map(({historyid, users, kind, progress, historydate}: any) => {
+    const user = {nickname: users?.map(({nickname}: any) => nickname).join(", ")};
+    return <SoonHistoryCard key={historyid} historyid={historyid} user={user} kind={kind} progress={progress} historydate={historydate} />;
+  });
   return (
     <>
       {data.length > 0 && <List>{soonHistorySJ}</List>}
