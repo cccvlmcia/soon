@@ -89,7 +89,7 @@ function UserList({filteredUsers, handleSelectedUser}: any) {
 function CampusUserList({campusUserList, handleSelectedUser, selectedSoonjang}: any) {
   // console.log("campusUserList  : ", campusUserList);
   return (
-    <List>
+    <List sx={{padding: 0}}>
       {campusUserList?.map(({users, campus}: any) => (
         <Box key={campus?.campusid}>
           <ListItem sx={{backgroundColor: "#ccc"}}>{campus.name}</ListItem>
