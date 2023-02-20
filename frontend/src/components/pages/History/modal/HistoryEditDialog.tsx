@@ -323,7 +323,7 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
                     sx={{minWidth: "75px"}}
                     control={
                       <Checkbox
-                        checked={value.publicyn === "Y" ? true : false}
+                        checked={value.publicyn == "Y" ? true : false}
                         onChange={event => handlPublicynChange(event, index)}
                         name={`publicyn-${index}`}
                       />
