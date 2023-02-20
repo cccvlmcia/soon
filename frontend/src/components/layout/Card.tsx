@@ -54,7 +54,7 @@ export function UserCard({userid, nickname, pictureUrl, campus, major, sid, isAd
               <Box>
                 {nickname}
                 <Box component="span" sx={{fontSize: "0.8em", opacity: "0.5", marginLeft: "6px"}}>
-                  {sid}학번
+                  {String(sid).padStart(2, "0")}학번
                 </Box>
               </Box>
             </Box>

@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
-import {getGoogleInfoAxios, getToken} from "@recoils/Login/axios";
-import {userGoogleAuthState} from "@recoils/Login/state";
+import {getGoogleInfoAxios, getToken} from "@recoils/login/axios";
+import {userGoogleAuthState} from "@recoils/login/state";
 import {userState} from "@recoils/user/state";
 import {useNavigate} from "react-router-dom";
 import {useRecoilState, useSetRecoilState} from "recoil";
@@ -19,7 +19,7 @@ const Login = () => {
     } = await getGoogleInfoAxios(code);
 
     if (status == "REGISTER") {
-      setGoogleAuth(data);//구글 sso 로그인 등록을 하기 위한, 정보를 state에 저장함
+      setGoogleAuth(data); //구글 sso 로그인 등록을 하기 위한, 정보를 state에 저장함
 
       //TODO: 회원 가입 폼 이동
       // console.log("회원 가입하시죠");
