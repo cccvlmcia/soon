@@ -11,3 +11,9 @@ export const getCampusUser = async (campusid: string) => {
     return api.get(`/campus/${campusid}/user`);
   });
 };
+export const getCampusUserByUserId = async (userid: string) => {
+  return axiosProcess(async () => {
+    //TODO: api 만들어야함
+    return api.get(`/user/${userid}/campus/user`);
+  });
+};

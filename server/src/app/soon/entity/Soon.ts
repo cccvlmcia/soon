@@ -19,7 +19,7 @@ export default class Soon extends BaseEntity {
 
   @ManyToOne(() => User, user => user.sw)
   @JoinColumn({name: "swid"})
-  soonwon: User;
+  soonwon: User[];
 
   @CreateDateColumn()
   createdate: Date;
