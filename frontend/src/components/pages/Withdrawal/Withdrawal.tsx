@@ -59,10 +59,12 @@ export default function Withdrawal() {
 
   return (
     <Box>
-      <Box sx={{display: "flex", alignItems: "center", width: "100%", height: "300px", justifyContent: "center"}}>
+      <Box sx={{display: "flex", alignItems: "center", gap: "15px", width: "100%", height: "300px", justifyContent: "center", flexDirection: "column"}}>
+      <Box component="img" src="/public/images/goodbye.jpg" sx={{maxWidth: "100%", maxHeight: "100%"}}></Box>
         <GoogleButton onClick={googleSocialLogin} />
       </Box>
       <ModalDialog open={open} setOpen={setOpen} handleOK={handleOK} />
     </Box>
   );
-}
+};
+
