@@ -22,7 +22,6 @@ export default async function (fastify: FastifyInstance) {
     const {userid} = req.params;
 
     const users = await getCampusUserList(userid);
-    console.log("users : ", users);
     reply.send(users);
   });
 
@@ -81,7 +80,6 @@ export default async function (fastify: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const {userid} = req.params;
-      console.log("userid, req.body >>>>", userid, req.body);
       const selected = await editUser(userid, req.body);
       reply.send(selected);
     },

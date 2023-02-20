@@ -38,7 +38,7 @@ export async function editSoonHistory(
     const repository = manager.getRepository(SoonHistory);
     const {kind, progress, historydate, contents} = history;
     const historyData = await repository.update({historyid}, {kind, progress, historydate, contents});
-    console.log("history data : ", history);
+    // console.log("history data : ", history);
     return historyData;
   });
 }

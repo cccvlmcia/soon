@@ -32,7 +32,10 @@ export async function getUserCampus(userid: number) {
   return await UserCampus.find({where: {userid}, relations: {campus: true, user: true}});
 }
 export async function getCampusUser(campusid: string) {
-  return await UserCampus.find({where: {campusid}, relations: {user: {auth: true, sj: {soonwon: true}, sw: {soonjang: true}}, campus: true}});
+  return await UserCampus.find({
+    where: {campusid},
+    relations: {user: {auth: true, sj: {soonwon: {campus: true}}, sw: {soonjang: true}}, campus: true},
+  });
 }
 export async function getCampusUserList(userid: number) {
   const result = await UserCampus.find({where: {userid}, relations: {campus: true}});

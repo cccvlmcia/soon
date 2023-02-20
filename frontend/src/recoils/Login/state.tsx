@@ -6,7 +6,7 @@ export const localStorageEffect =
   (key: string) =>
   ({setSelf, onSet}: any) => {
     const savedValue = getStorage(key);
-    console.log("saveValue : ", savedValue);
+    // console.log("saveValue : ", savedValue);
     if (isEmpty(savedValue)) {
       setSelf(null);
     } else {

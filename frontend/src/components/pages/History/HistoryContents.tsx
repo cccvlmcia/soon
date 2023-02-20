@@ -57,10 +57,10 @@ export default function HistoryContents() {
 
   //  const  config  =loginUser?.config?.userid === data.swid || loginUser?.config?.userid === data.sjid)
   // let prays: Prayer[] = data?.prays;
-  const isSoonjang = loginUser?.userid === data.sjid;
+  const isSoonjang = loginUser?.userid == data.sjid;
   // const isSoonwon = loginUser?.userid === data.swid;
   //TODO: 순원의 기도제목............. 빌런짓하면 어쩌냐(자기 기도제목만.. 삭제...??????????)
-  const isSoonwon = data?.users?.filter(({swid}: any) => swid === loginUser?.userid)?.length > 0;
+  const isSoonwon = data?.users?.filter(({swid}: any) => swid == loginUser?.userid)?.length > 0;
   const hasPrayAuth = isSoonjang || isSoonwon;
   // if (!hasPrayAuth) {
   //   setPrays(prays?.filter((pray: any) => ));

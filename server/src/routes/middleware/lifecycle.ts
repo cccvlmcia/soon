@@ -7,7 +7,7 @@ import {decrypted} from "@utils/CipherUtils";
 import {verifyJWT} from "@utils/OAuth2Utils";
 import {EXCEPT_URL} from "@config/haqqaton.config";
 const isProd = process.env.NODE_ENV == "production";
-console.log("isProd >", isProd);
+// console.log("isProd >", isProd);
 export default function (fastify: FastifyInstance) {
   //1. preValidation : xxsFilter
   fastify.addHook("preValidation", async (req: FastifyRequest, _: FastifyReply) => {

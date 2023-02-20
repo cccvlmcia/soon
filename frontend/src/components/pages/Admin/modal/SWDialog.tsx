@@ -65,18 +65,23 @@ export default function SWDialog({
 
   const itemList = items?.map(item => {
     /* disabled 조건 > 나 또는 이미 순장이 있을때*/
-    console.log("item >>", item)
+    // console.log("item >>", item)
     const isMe = item?.userid == selectedId;
     const hasSJ = item?.user?.sw?.length > 0 ? item?.user?.sw?.filter(({sjid}: any) => sjid != selectedId)?.length > 0 : false;
     const mySJ = item?.user?.sj?.length > 0 ? item?.user?.sj?.filter(({swid}: any) => swid == selectedId)?.length > 0 : false;
     const disabled = isMe || hasSJ || mySJ;
+    const soonjang = item?.user?.sw
+      ?.filter(({sjid}: any) => sjid != selectedId)
+      ?.map(({soonjang}: any) => "(" + soonjang.nickname + ")")
+      .join();
+    console.log("item user", soonjang);
     return (
       <Box key={item?.userid}>
         <ListItemButton onClick={() => onChangeSW(item)} disabled={disabled}>
           <IconButton edge="start">
             <Checkbox checked={list?.find((obj: any) => obj?.userid == item?.userid) ? true : false} />
           </IconButton>
-          <ListItemText primary={item?.user?.nickname} secondary={`${item?.sid} / ${item?.major}`} />
+          <ListItemText primary={`${item?.user?.nickname}${soonjang}`} secondary={`${item?.sid} / ${item?.major}`} />
         </ListItemButton>
         <Divider />
       </Box>

@@ -8,7 +8,7 @@ const auth = haqqaton.oauth.kakao;
 const redirectUri = `${SERVER_URI}${auth.redirectUri}`;
 export default async function (fastify: FastifyInstance) {
   fastify.get("/callback", async (req: FastifyRequest<{Querystring: {code: string}}>, reply: FastifyReply) => {
-    console.log("req.query >>", req.query);
+    // console.log("req.query >>", req.query);
     try {
       const data: any = await kakaoOAuth2.getAccessTokenFromAuthorizationCodeFlow(req);
       const ssoid = data.id;

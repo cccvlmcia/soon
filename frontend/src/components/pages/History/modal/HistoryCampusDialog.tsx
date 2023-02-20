@@ -51,7 +51,7 @@ export default function HistoryCampusDialog({
   //FIXME: 시간 복잡도가 문제 때문에, set을 사용했습니다.
   // const selectedUserSet = new Set(selectedUsers?.map(user => user.userid));
   // const filteredUsers = users?.filter(user => !selectedUserSet.has(user.userid));
-  console.log("users - history dialog :", users);
+  // console.log("users - history dialog :", users);
   return (
     <Box>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -87,7 +87,7 @@ function UserList({filteredUsers, handleSelectedUser}: any) {
   );
 }
 function CampusUserList({campusUserList, handleSelectedUser, selectedSoonjang}: any) {
-  console.log("campusUserList  : ", campusUserList);
+  // console.log("campusUserList  : ", campusUserList);
   return (
     <List>
       {campusUserList?.map(({users, campus}: any) => (

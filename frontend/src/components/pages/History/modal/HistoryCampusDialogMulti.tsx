@@ -59,7 +59,7 @@ export default function HistoryCampusDialogMulti({
   }
   const handleItem = () => {
     setOpen(false);
-    console.log("handle item : ", selected);
+    // console.log("handle item : ", selected);
     handleUser(selected);
     setSelected([]);
   };
@@ -81,7 +81,7 @@ export default function HistoryCampusDialogMulti({
   //FIXME: 시간 복잡도가 문제 때문에, set을 사용했습니다.
   // const selectedUserSet = new Set(selectedUsers?.map(user => user.userid));
   // const filteredUsers = users?.filter(user => !selectedUserSet.has(user.userid));
-  console.log("users - history dialogMulti :", soonjang, data);
+  // console.log("users - history dialogMulti :", soonjang, data);
   return (
     <Box>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -98,20 +98,20 @@ export default function HistoryCampusDialogMulti({
             </IconButton>
           </Toolbar>
         </AppBar>
-        <CampusUserList campusUserList={swList} handleSelectedUser={handleSelectedUser} selected={selected} />
+        <CampusUserList campusUserList={swList} handleSelectedUser={handleSelectedUser} selected={selected} soonjang={soonjang} />
       </Dialog>
     </Box>
   );
 }
 
-function CampusUserList({campusUserList, handleSelectedUser, selected}: any) {
-  console.log("campusUserList  : ", campusUserList);
+function CampusUserList({campusUserList, handleSelectedUser, selected, soonjang}: any) {
+  // console.log("campusUserList  : ", campusUserList);
   return (
     <List>
       {campusUserList?.map(({users, campus}: any) => (
         <Box key={campus?.campusid}>
           <ListItem sx={{backgroundColor: "#ccc"}}>{campus.name}</ListItem>
-          <UserItems users={users} handleSelectedUser={handleSelectedUser} selected={selected} />
+          <UserItems users={users} handleSelectedUser={handleSelectedUser} selected={selected} soonjang={soonjang} />
 
           <Divider />
         </Box>
@@ -120,13 +120,13 @@ function CampusUserList({campusUserList, handleSelectedUser, selected}: any) {
   );
 }
 
-function UserItems({users, handleSelectedUser, selected}: any) {
-  console.log("seletedUsers : ", selected);
+function UserItems({soonjang, users, handleSelectedUser, selected}: any) {
+  // console.log("seletedUsers : ", selected);
   return (
     <>
       {users.map((user: any) => {
         return (
-          <ListItemButton key={user?.userid} onClick={() => handleSelectedUser(user)}>
+          <ListItemButton key={user?.userid} onClick={() => handleSelectedUser(user)} disabled={user?.userid == soonjang?.userid}>
             <Checkbox checked={selected?.find((seletedUser: any) => seletedUser?.userid == user?.userid) ? true : false}></Checkbox>
             <ListItemText primary={user?.nickname} secondary={user?.userid} />
           </ListItemButton>

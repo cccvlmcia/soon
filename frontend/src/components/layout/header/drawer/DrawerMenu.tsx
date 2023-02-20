@@ -43,7 +43,8 @@ export default function DrawerMenu({
     handleMenuOpen();
     navigate(`/myprofile`);
   };
-  const isAdmin = loginUser?.config?.adminyn == "Y";
+  const hasSoon = loginUser?.auth?.find(({authid}: any) => authid == "SOON") ? true : false;
+  const isAdmin = loginUser?.config?.adminyn == "Y" || hasSoon;
   return (
     <Drawer open={open} onClose={handleMenuOpen}>
       <Box>
