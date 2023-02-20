@@ -198,7 +198,7 @@ function MyHeader({onConfirm}: any) {
   };
   return (
     <>
-      <AppBar sx={{position: "relative", backgroundColor: "#000000!important", color: "white!important"}}>
+      <AppBar sx={{position: "relative", backgroundColor: "#292929!important", color: "white!important"}}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={handlePrev} aria-label="close">
             <ArrowBackIosNewIcon color="secondary" />
