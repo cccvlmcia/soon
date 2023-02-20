@@ -57,8 +57,10 @@ export default function HistoryContents() {
 
   //  const  config  =loginUser?.config?.userid === data.swid || loginUser?.config?.userid === data.sjid)
   // let prays: Prayer[] = data?.prays;
-  const isSoonjang = loginUser?.config?.userid === data.sjid;
-  const isSoonwon = loginUser?.config?.userid === data.swid;
+  const isSoonjang = loginUser?.userid === data.sjid;
+  // const isSoonwon = loginUser?.userid === data.swid;
+  //TODO: 순원의 기도제목............. 빌런짓하면 어쩌냐(자기 기도제목만.. 삭제...??????????)
+  const isSoonwon = data?.users?.filter(({swid}: any) => swid === loginUser?.userid)?.length > 0;
   const hasPrayAuth = isSoonjang || isSoonwon;
   // if (!hasPrayAuth) {
   //   setPrays(prays?.filter((pray: any) => ));
@@ -113,7 +115,7 @@ export default function HistoryContents() {
         <Box sx={{paddingLeft: "20px", display: "flex", gap: 1, borderBottom: "1px solid gray"}}>
           <Box sx={{textAlign: "center"}}>
             <AccountCircleIcon sx={{width: 80, height: 80, opacity: "0.5"}} />
-            <Box>{data?.soonwon?.nickname}</Box>
+            <Box>{data?.soonjang?.nickname}</Box>
           </Box>
           <Box sx={{display: "flex", flexDirection: "column", fontSize: "20px"}}>
             {/* <Box sx={{opacity: "0.5"}}> */}
@@ -123,7 +125,7 @@ export default function HistoryContents() {
               </Box>
             </Box>
             <Box sx={{marginTop: "auto", opacity: "0.5", fontSize: "16px"}}>
-              <Box>순장: {data?.soonjang?.nickname}</Box>
+              <Box>순원: {data?.users?.map(({nickname}: any) => nickname).join(", ")}</Box>
               <Box sx={{display: "flex", alignItems: "center"}}>
                 <AccessTimeIcon sx={{fontSize: "18px", margin: "2.5px 2px 0 0"}} />
                 {format(new Date(data?.historydate), "MM-dd hh:mm")}
@@ -158,7 +160,6 @@ function MyHeader({hasAuth, setEditMode}: any) {
   };
   //FIXME: Modal로 변경
   const onClickEdit = () => {
-    console.log("onClickEdit >", historyid);
     if (historyid) {
       setEditMode(true);
       // navigate(`/history/${historyid}/edit`);

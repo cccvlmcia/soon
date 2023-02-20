@@ -114,8 +114,8 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
 
   //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
   // {userid: loginUser?.userid, nickname: loginUser?.nickname}
-  const [soonjang, setSoonjang]: any = useState(data?.soonjang);
-  const [soonwon, setSoonwon]: any = useState(data?.soonwon);
+  const [soonjang]: any = useState(data?.soonjang);
+  const [soonwon]: any = useState(data?.users);
   const [progress, setProgress]: any = useState(data?.progress);
   const [contents, setContents]: any = useState(data?.contents);
   const [date, setDate]: any = useState(dayjs(data?.historydate).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
@@ -133,16 +133,8 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
   };
   //error 처리....
   const sendHistory: SubmitHandler<HistoryForm> = async (params: HistoryForm) => {
-    console.log("순장 순원 ", soonjang, soonwon);
-    //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
-    if (soonjang?.userid == "0" || soonwon?.userid == "0") {
-      alert("순장/순원 선택 바랍니다");
-      return;
-    }
     params.kind = categorySelected?.id;
     params.historydate = new Date(dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
-    params.sjid = soonjang?.userid || "";
-    params.swid = soonwon?.userid || "";
 
     console.log("params >>", params);
 
@@ -203,8 +195,6 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
     }
   };
 
-  // const prayList = data?.prays;
-  console.log("prayList >", prayList);
   const prayView = prayList?.map(({prayid, pray, publicyn}: any) => (
     <ListItemButton dense={true} key={prayid} sx={{display: "flex"}}>
       <ListItem>
@@ -273,7 +263,7 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
           {/* 선택방법.. 사용자 선택 */}
           <Box className="header">받은 사람</Box>
           <Box className="value">
-            <TextField fullWidth size="small" value={soonwon?.nickname} InputProps={{readOnly: true}} />
+            <TextField fullWidth size="small" value={soonwon?.map(({nickname}: any) => nickname).join(", ")} InputProps={{readOnly: true}} />
           </Box>
         </Box>
         <Box className="row">

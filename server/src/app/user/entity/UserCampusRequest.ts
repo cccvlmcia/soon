@@ -1,10 +1,13 @@
-import {COLUMN_TYPE_BIGINT, COLUMN_TYPE_ENUM, CommonYN} from "@common/CommonConstants";
+import {COLUMN_TYPE_BIGINT} from "@common/CommonConstants";
 import Campus from "@campus/entity/Campus";
-import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn, OneToMany, UpdateDateColumn} from "typeorm";
+import {Entity, Column, BaseEntity, CreateDateColumn, PrimaryColumn, ManyToOne, JoinColumn, PrimaryGeneratedColumn} from "typeorm";
 import User from "./User";
 @Entity()
-export default class UserCampus extends BaseEntity {
-  @PrimaryColumn({type: COLUMN_TYPE_BIGINT})
+export default class UserCampusRequest extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  reqid: number;
+
+  @Column({type: COLUMN_TYPE_BIGINT})
   userid: number;
 
   @Column({length: 40})
@@ -24,12 +27,6 @@ export default class UserCampus extends BaseEntity {
   @JoinColumn({name: "campusid"})
   campus: Campus;
 
-  @Column({type: COLUMN_TYPE_ENUM, enum: CommonYN, default: CommonYN.Y})
-  defaultyn: CommonYN;
-
   @CreateDateColumn()
   createdate: Date;
-
-  @UpdateDateColumn()
-  updatedate: Date;
 }

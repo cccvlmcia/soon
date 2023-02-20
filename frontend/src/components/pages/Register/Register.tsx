@@ -74,7 +74,7 @@ export default function Register() {
       alert("캠퍼스를 선택해주세요.");
       return;
     }
-    console.log("params >", params);
+    // console.log("params >", params);
     const {auth} = googleAuth;
     const userRegistInfo: postUser = {
       nickname: params.name,
@@ -87,10 +87,10 @@ export default function Register() {
       email: auth.email,
       type: auth.type,
     };
-    console.log("userRegist data", userRegistInfo);
+    // console.log("userRegist data", userRegistInfo);
     // userInfo: {name: string; campus: string; sid: string; major: string; cccYN: string; gender: string}
     const userRegist = await postUserRegistAxios(userRegistInfo);
-    console.log("userRegist >", userRegist);
+    // console.log("userRegist >", userRegist);
     // 기존 사용자 정보 삭제 및 로그아웃 처리
     await postLogout();
     setLoginUser(null);
@@ -120,79 +120,81 @@ export default function Register() {
   return (
     <Box>
       <MyHeader onConfirm={onConfirm} />
-      <Box
-        component="form"
-        onSubmit={handleSubmit(writeRegister)}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          // alignItems: "center",
-          justifyContent: "left",
-          marginTop: "20px",
-          ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
-          ".header": {
-            width: "70px",
-            minHeight: "48px",
-            padding: "0 10px 0 40px",
-            fontSize: "16px",
+      <Box sx={{display: "flex", justifyContent: "center"}}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(writeRegister)}
+          sx={{
             display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          },
-          ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
-        }}>
-        <Box className="row">
-          <Box className="header">이름</Box>
-          <Box className="value">
-            <TextField {...register("name", {required: true})} />
-          </Box>
-        </Box>
-        {/*단일만 선택 가능하도록 일단 마무리 */}
-        <Box className="row">
-          <Box className="header">캠퍼스</Box>
-          <Box className="value">
-            <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
-              {campusSelected?.length > 0 ? campusSelected : "캠퍼스를 선택해주세요."}
-              <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+            flexDirection: "column",
+            // alignItems: "center",
+            justifyContent: "left",
+            marginTop: "20px",
+            ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
+            ".header": {
+              width: "70px",
+              minHeight: "48px",
+              padding: "0 10px 0 0",
+              fontSize: "16px",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            },
+            ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
+          }}>
+          <Box className="row">
+            <Box className="header">이름</Box>
+            <Box className="value">
+              <TextField {...register("name", {required: true})} />
             </Box>
-            <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">학번</Box>
-          <Box className="value">
-            <TextField type={"number"} {...register("sid", {required: true})} />
+          {/*단일만 선택 가능하도록 일단 마무리 */}
+          <Box className="row">
+            <Box className="header">캠퍼스</Box>
+            <Box className="value">
+              <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
+                {campusSelected?.length > 0 ? campusSelected : "캠퍼스를 선택해주세요."}
+                <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+              </Box>
+              <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
+            </Box>
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">학과</Box>
-          <Box className="value">
-            <TextField {...register("major", {required: true})} />
+          <Box className="row">
+            <Box className="header">학번</Box>
+            <Box className="value">
+              <TextField type={"number"} {...register("sid", {required: true})} />
+            </Box>
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">ccc 여부</Box>
-          <Box className="value">
-            <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
-              <FormControlLabel value="Y" control={<Radio checked />} label="Y" />
-              <FormControlLabel value="N" control={<Radio />} label="N" />
-            </RadioGroup>
+          <Box className="row">
+            <Box className="header">학과</Box>
+            <Box className="value">
+              <TextField {...register("major", {required: true})} />
+            </Box>
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">성별</Box>
-          <Box className="value">
-            <RadioGroup row aria-labelledby="radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
-              <FormControlLabel value="female" control={<Radio />} label="여" />
-              <FormControlLabel value="male" control={<Radio />} label="남" />
-            </RadioGroup>
+          <Box className="row">
+            <Box className="header">ccc 여부</Box>
+            <Box className="value">
+              <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
+                <FormControlLabel value="Y" control={<Radio checked />} label="Y" />
+                <FormControlLabel value="N" control={<Radio />} label="N" />
+              </RadioGroup>
+            </Box>
           </Box>
-        </Box>
+          <Box className="row">
+            <Box className="header">성별</Box>
+            <Box className="value">
+              <RadioGroup row aria-labelledby="radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
+                <FormControlLabel value="female" control={<Radio />} label="여" />
+                <FormControlLabel value="male" control={<Radio />} label="남" />
+              </RadioGroup>
+            </Box>
+          </Box>
 
-        <Box sx={{width: "100%", display: "none", justifyContent: "center"}}>
-          <Button ref={ref} variant="outlined" type="submit">
-            저장
-          </Button>
+          <Box sx={{width: "100%", display: "none", justifyContent: "center"}}>
+            <Button ref={ref} variant="outlined" type="submit">
+              저장
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>
