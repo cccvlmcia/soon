@@ -81,7 +81,7 @@ export default function SWDialog({
           <IconButton edge="start">
             <Checkbox checked={list?.find((obj: any) => obj?.userid == item?.userid) ? true : false} />
           </IconButton>
-          <ListItemText primary={`${item?.user?.nickname}${soonjang}`} secondary={`${item?.sid} / ${item?.major}`} />
+          <ListItemText primary={`${item?.user?.nickname}${soonjang}`} secondary={`${String(item?.sid).padStart(2, "0")}학번 / ${item?.major}`} />
         </ListItemButton>
         <Divider />
       </Box>

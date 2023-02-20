@@ -125,10 +125,11 @@ function UserItems({soonjang, users, handleSelectedUser, selected}: any) {
   return (
     <>
       {users.map((user: any) => {
+        console.log("user >", user);
         return (
           <ListItemButton key={user?.userid} onClick={() => handleSelectedUser(user)} disabled={user?.userid == soonjang?.userid}>
             <Checkbox checked={selected?.find((seletedUser: any) => seletedUser?.userid == user?.userid) ? true : false}></Checkbox>
-            <ListItemText primary={user?.nickname} secondary={user?.userid} />
+            <ListItemText primary={user?.nickname} />
           </ListItemButton>
         );
       })}

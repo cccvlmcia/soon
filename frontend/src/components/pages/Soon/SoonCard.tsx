@@ -26,7 +26,7 @@ function SoonCardHeader({nickname, major, sid, campusList}: any) {
       {/* <Box sx={{marginTop: "40px", borderRadius: "50%", width: "100px"}} component={"img"} src={avatar}></Box> */}
       <AccountCircleIcon sx={{width: 80, height: 80, opacity: "0.5"}} />
       <Box sx={{textAlign: "center"}}>
-        {nickname} {sid} <Box sx={{opacity: "0.5"}}>{major}</Box>
+        {nickname} {String(sid).padStart(2, "0")}학번 <Box sx={{opacity: "0.5"}}>{major}</Box>
       </Box>
     </Box>
   );
