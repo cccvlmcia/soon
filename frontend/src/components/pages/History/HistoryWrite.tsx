@@ -345,7 +345,7 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
             ))}
           </Box>
         </Box>
-        <Box sx={{display:"flex", justifyContent:"center", paddingTop: "35px"}}><Button sx={{background: "#292929"}} variant="contained" fullWidth onClick={handleAddPrayerField}>
+        <Box sx={{display:"flex", justifyContent:"center", paddingTop: "15px"}}><Button sx={{fontSize: 15, background: "#cad1d9"}} variant="contained" onClick={handleAddPrayerField}>
           기도제목 추가
         </Button></Box>
 
