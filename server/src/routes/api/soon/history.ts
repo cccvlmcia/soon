@@ -29,7 +29,7 @@ export default async function (fastify: FastifyInstance) {
     const {historyid} = req.params;
 
     const histories = await getSoonHistory(historyid);
-    console.log("histories >>", histories);
+    // console.log("histories >>", histories);
     reply.send(histories);
   });
 
@@ -98,7 +98,7 @@ export default async function (fastify: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const {historyid} = req.params;
-      console.log("req.body : ", req.body);
+      // console.log("req.body : ", req.body);
       const history = await editSoonHistory(historyid, req.body);
       reply.send(history);
     },

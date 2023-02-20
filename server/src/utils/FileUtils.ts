@@ -13,7 +13,7 @@ export const addArticleThumbnail = async (filename: string, filepath: string, re
     .resize(200) //  .resize(320, 240)
     .jpeg({mozjpeg: true})
     .toFile(next);
-  console.log("info >>", info);
+  // console.log("info >>", info);
   const fileid = generatedUUID();
   return await addMetaFile({fileid, filename, filepath, filesize: info.size, refid, filetype: "thumb", sortno: 1, reftype: "thumb"});
 };

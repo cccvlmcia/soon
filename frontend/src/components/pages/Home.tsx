@@ -175,7 +175,7 @@ function MyImage({userid}: any) {
 function MoveHistory({navigate}: any) {
   return (
     <Box sx={{position: "absolute", bottom: "20px", right: "20px"}} onClick={() => navigate("/history")}>
-      <AddCircleIcon sx={{color: "#000000", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px"}} />
+      <AddCircleIcon sx={{color: "#292929", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px"}} />
     </Box>
   );
 }
