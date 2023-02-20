@@ -98,20 +98,20 @@ export default function HistoryCampusDialogMulti({
             </IconButton>
           </Toolbar>
         </AppBar>
-        <CampusUserList campusUserList={swList} handleSelectedUser={handleSelectedUser} selected={selected} />
+        <CampusUserList campusUserList={swList} handleSelectedUser={handleSelectedUser} selected={selected} soonjang={soonjang} />
       </Dialog>
     </Box>
   );
 }
 
-function CampusUserList({campusUserList, handleSelectedUser, selected}: any) {
+function CampusUserList({campusUserList, handleSelectedUser, selected, soonjang}: any) {
   console.log("campusUserList  : ", campusUserList);
   return (
     <List>
       {campusUserList?.map(({users, campus}: any) => (
         <Box key={campus?.campusid}>
           <ListItem sx={{backgroundColor: "#ccc"}}>{campus.name}</ListItem>
-          <UserItems users={users} handleSelectedUser={handleSelectedUser} selected={selected} />
+          <UserItems users={users} handleSelectedUser={handleSelectedUser} selected={selected} soonjang={soonjang} />
 
           <Divider />
         </Box>
@@ -120,13 +120,13 @@ function CampusUserList({campusUserList, handleSelectedUser, selected}: any) {
   );
 }
 
-function UserItems({users, handleSelectedUser, selected}: any) {
+function UserItems({soonjang, users, handleSelectedUser, selected}: any) {
   console.log("seletedUsers : ", selected);
   return (
     <>
       {users.map((user: any) => {
         return (
-          <ListItemButton key={user?.userid} onClick={() => handleSelectedUser(user)}>
+          <ListItemButton key={user?.userid} onClick={() => handleSelectedUser(user)} disabled={user?.userid == soonjang?.userid}>
             <Checkbox checked={selected?.find((seletedUser: any) => seletedUser?.userid == user?.userid) ? true : false}></Checkbox>
             <ListItemText primary={user?.nickname} secondary={user?.userid} />
           </ListItemButton>
