@@ -44,7 +44,7 @@ export default function Withdrawal() {
 
   */
   const handleOK = async () => {
-    console.log("handleOK");
+    // console.log("handleOK");
     //사용자 삭제, 로그아웃 처리
     await removeUser(loginUser?.userid);
     await postLogout();

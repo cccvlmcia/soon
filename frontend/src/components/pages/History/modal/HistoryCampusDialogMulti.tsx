@@ -59,7 +59,7 @@ export default function HistoryCampusDialogMulti({
   }
   const handleItem = () => {
     setOpen(false);
-    console.log("handle item : ", selected);
+    // console.log("handle item : ", selected);
     handleUser(selected);
     setSelected([]);
   };
@@ -81,7 +81,7 @@ export default function HistoryCampusDialogMulti({
   //FIXME: 시간 복잡도가 문제 때문에, set을 사용했습니다.
   // const selectedUserSet = new Set(selectedUsers?.map(user => user.userid));
   // const filteredUsers = users?.filter(user => !selectedUserSet.has(user.userid));
-  console.log("users - history dialogMulti :", soonjang, data);
+  // console.log("users - history dialogMulti :", soonjang, data);
   return (
     <Box>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -105,7 +105,7 @@ export default function HistoryCampusDialogMulti({
 }
 
 function CampusUserList({campusUserList, handleSelectedUser, selected, soonjang}: any) {
-  console.log("campusUserList  : ", campusUserList);
+  // console.log("campusUserList  : ", campusUserList);
   return (
     <List>
       {campusUserList?.map(({users, campus}: any) => (
@@ -121,7 +121,7 @@ function CampusUserList({campusUserList, handleSelectedUser, selected, soonjang}
 }
 
 function UserItems({soonjang, users, handleSelectedUser, selected}: any) {
-  console.log("seletedUsers : ", selected);
+  // console.log("seletedUsers : ", selected);
   return (
     <>
       {users.map((user: any) => {

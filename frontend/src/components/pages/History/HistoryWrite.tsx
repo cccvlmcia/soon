@@ -87,7 +87,7 @@ export default function HistoryWrite() {
   });
 
   const onConfirm = () => {
-    console.log("HistoryWrite onConfirm >");
+    // console.log("HistoryWrite onConfirm >");
     const target: any = ref.current;
     target?.click();
   };
@@ -131,7 +131,7 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
   const [selectedSoonjang, setSeletedSoonjang] = useState<User>(soonjang);
   useEffect(() => {
     refetch();
-    console.log("getCampusUserByUserIdQuery : ", data);
+    // console.log("getCampusUserByUserIdQuery : ", data);
   }, [data, userid]);
 
   if (isLoading) return <Loading />;
@@ -181,12 +181,12 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
   };
   const handleCategoryReceive = (event: any) => {
     const value = event.target.value;
-    console.log("value >", value);
+    // console.log("value >", value);
     setCategorySelected(value);
   };
   //error 처리....
   const sendHistory: SubmitHandler<HistoryForm> = async (params: HistoryForm) => {
-    console.log("순장 순원 ", soonjang, soonwon);
+    // console.log("순장 순원 ", soonjang, soonwon);
     //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
     if (soonjang == null || soonwon?.length == 0) {
       alert("순장/순원 선택 바랍니다");

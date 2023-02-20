@@ -136,7 +136,7 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
     params.kind = categorySelected?.id;
     params.historydate = new Date(dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
 
-    console.log("params >>", params);
+    // console.log("params >>", params);
 
     //*
     const result = await putSoonHistory(historyid, params);
@@ -151,16 +151,16 @@ function HistoryContents({historyid, SubmitButton, campus, data, handleClose}: a
   };
 
   const handleAddPrayerField = () => {
-    console.log("handleAddPrayerField >");
+    // console.log("handleAddPrayerField >");
     setPrayers([...prayers, {pray: "", publicyn: "Y"}]);
   };
   const handlePraysSave = async () => {
-    console.log("handlePraysSave >", historyid, prayers);
+    // console.log("handlePraysSave >", historyid, prayers);
     const {data} = await postSoonPrays(historyid, prayers);
-    console.log("result >>", data);
+    // console.log("result >>", data);
     if (data?.length > 0) {
       alert("기도제목이 추가되었습니다.");
-      console.log(">>>>>>>>>>", [...prayList, ...data]);
+      // console.log(">>>>>>>>>>", [...prayList, ...data]);
       setPrayLIst([...prayList, ...data]);
       setPrayers([]);
     }
