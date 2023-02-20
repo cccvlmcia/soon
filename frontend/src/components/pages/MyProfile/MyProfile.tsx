@@ -142,6 +142,7 @@ export default function MyProfile() {
               <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
                 {campusSelected?.name}
                 <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+                
               </Box>
               <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
             </Box>
@@ -161,7 +162,7 @@ export default function MyProfile() {
           <Box className="row">
             <Box className="header">ccc 여부</Box>
             <Box className="value">
-              <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
+              <RadioGroup sx={{svg:{color:"#3d99fc !important"}}} row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive} >
                 <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
                 <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
               </RadioGroup>
@@ -171,6 +172,7 @@ export default function MyProfile() {
             <Box className="header">성별</Box>
             <Box className="value">
               <RadioGroup
+              sx={{svg:{color:"#3d99fc !important"}}}
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
                 value={(genderSelected as never) || null}
