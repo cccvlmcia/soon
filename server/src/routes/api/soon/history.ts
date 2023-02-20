@@ -14,6 +14,8 @@ import {authHandler} from "@utils/OAuth2Utils";
 import {AUTH} from "@auth/AuthConstants";
 import Soon from "@soon/entity/Soon";
 import {SoonType} from "@soon/SoonConstants";
+import {addBatchSoonHistory} from "@soon/service/SoonPrayService";
+import {CommonYN} from "@common/CommonConstants";
 
 type jwt = {
   userid: number;
@@ -63,7 +65,7 @@ export default async function (fastify: FastifyInstance) {
         Body: {
           userid?: number;
           sjid: number;
-          swid: number;
+          swids: number[];
           kind: string;
           progress: string;
           historydate: Date;
@@ -87,9 +89,6 @@ export default async function (fastify: FastifyInstance) {
       req: FastifyRequest<{
         Params: {historyid: number};
         Body: {
-          userid?: number;
-          sjid: number;
-          swid: number;
           kind: SoonType;
           progress: string;
           historydate: Date;
@@ -110,4 +109,14 @@ export default async function (fastify: FastifyInstance) {
     const history = await removeSoonHistory(historyid);
     reply.send(history);
   });
+  fastify.post(
+    "/:historyid/pray",
+    async (req: FastifyRequest<{Params: {historyid: number}; Body: {prays: {pray: string; publicyn: CommonYN}[]}}>, reply: FastifyReply) => {
+      const {historyid} = req.params;
+      const {prays} = req.body;
+      const prayList = prays?.map((item: {pray: string; publicyn: string}) => ({...item, historyid}));
+      const result = await addBatchSoonHistory(prayList);
+      reply.send(result);
+    },
+  );
 }

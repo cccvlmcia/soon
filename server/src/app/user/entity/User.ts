@@ -30,10 +30,10 @@ export default class User extends BaseEntity {
   config: UserConfig;
 
   @OneToMany(() => UserLogin, login => login.user)
-  login: UserLogin;
+  login: UserLogin[];
 
   @OneToMany(() => UserCampus, campus => campus.user)
-  campus: UserCampus;
+  campus: UserCampus[];
 
   @OneToMany(() => UserAuth, auth => auth.user)
   auth: UserAuth;

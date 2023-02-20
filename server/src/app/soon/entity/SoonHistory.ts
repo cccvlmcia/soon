@@ -2,6 +2,7 @@ import {COLUMN_TYPE_ENUM, COLUMN_TYPE_TEXT} from "@common/CommonConstants";
 import User from "@user/entity/User";
 import {Entity, BaseEntity, CreateDateColumn, ManyToOne, JoinColumn, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import {SoonType} from "../SoonConstants";
+import SoonHistoryUser from "./SoonHistoryUser";
 import SoonPray from "./SoonPray";
 
 @Entity()
@@ -15,13 +16,15 @@ export default class SoonHistory extends BaseEntity {
   @Column()
   sjid: number;
 
-  @Column()
+  //FIXME: @deprecated
+  @Column({default: 102})
   swid: number;
 
   @ManyToOne(() => User, user => user.userid)
   @JoinColumn({name: "sjid"})
   soonjang: User;
 
+  //FIXME: @deprecated
   @ManyToOne(() => User, user => user.userid)
   @JoinColumn({name: "swid"})
   soonwon: User;
@@ -39,8 +42,11 @@ export default class SoonHistory extends BaseEntity {
   contents: string;
 
   @OneToMany(() => SoonPray, pray => pray.history)
-  prays: SoonPray;
+  prays: SoonPray[];
 
   @CreateDateColumn()
   createdate: Date;
+
+  @OneToMany(() => SoonHistoryUser, user => user.history)
+  users: SoonHistoryUser[];
 }

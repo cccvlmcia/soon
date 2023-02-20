@@ -108,78 +108,83 @@ export default function MyProfile() {
   return (
     <>
       <MyHeader onConfirm={onConfirm} />
-      <Box
-        component="form"
-        onSubmit={handleSubmit(writeRegister)}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          // alignItems: "center",
-          justifyContent: "left",
-          marginTop: "20px",
-          ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
-          ".header": {
-            width: "70px",
-            minHeight: "48px",
-            padding: "0 10px 0 40px",
-            fontSize: "16px",
+      <Box sx={{display: "flex", justifyContent: "center"}}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(writeRegister)}
+          sx={{
             display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          },
-          ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
-        }}>
-        <Box className="row">
-          <Box className="header">이름</Box>
-          <Box className="value">
-            <TextField {...register("name", {required: true})} value={name} onChange={handleName} />
-          </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">캠퍼스</Box>
-          <Box className="value">
-            <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
-              {campusSelected?.name}
-              <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+            flexDirection: "column",
+            // alignItems: "center",
+            justifyContent: "left",
+            marginTop: "20px",
+            ".row": {display: "flex", alignItems: "center", marginTop: "3px"},
+            ".header": {
+              width: "70px",
+              minHeight: "48px",
+              padding: "0 10px 0 0",
+              fontSize: "16px",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            },
+            ".value": {minWidth: "200px", div: {maxHeight: "30px"}},
+          }}>
+          <Box className="row">
+            <Box className="header">이름</Box>
+            <Box className="value">
+              <TextField {...register("name", {required: true})} value={name} onChange={handleName} />
             </Box>
-            <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
           </Box>
-        </Box>
-
-        <Box className="row">
-          <Box className="header">학번</Box>
-          <Box className="value">
-            <TextField type={"number"} {...register("sid", {required: true})} value={sid} onChange={handleSid} />
+          <Box className="row">
+            <Box className="header">캠퍼스</Box>
+            <Box className="value">
+              <Box sx={{display: "flex", alignItems: "flex-end"}} onClick={onChangeCampus}>
+                {campusSelected?.name}
+                <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
+              </Box>
+              <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campusSelected} handleCampus={handleCampus} />
+            </Box>
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">학과</Box>
-          <Box className="value">
-            <TextField {...register("major", {required: true})} value={major} onChange={handleMajor} />
+          <Box className="row">
+            <Box className="header">학번</Box>
+            <Box className="value">
+              <TextField type={"number"} {...register("sid", {required: true})} value={sid} onChange={handleSid} />
+            </Box>
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">ccc 여부</Box>
-          <Box className="value">
-            <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
-              <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
-              <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
-            </RadioGroup>
+          <Box className="row">
+            <Box className="header">학과</Box>
+            <Box className="value">
+              <TextField {...register("major", {required: true})} value={major} onChange={handleMajor} />
+            </Box>
           </Box>
-        </Box>
-        <Box className="row">
-          <Box className="header">성별</Box>
-          <Box className="value">
-            <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" value={(genderSelected as never) || null} onChange={handleGednerReceive}>
-              <FormControlLabel value="female" control={<Radio checked={genderSelected == "female"} />} label="여자" />
-              <FormControlLabel value="male" control={<Radio checked={genderSelected == "male"} />} label="남자" />
-            </RadioGroup>
+          <Box className="row">
+            <Box className="header">ccc 여부</Box>
+            <Box className="value">
+              <RadioGroup row value={(cccYNSelected as never) || null} onChange={handleCCCYNReceive}>
+                <FormControlLabel value="Y" control={<Radio checked={cccYNSelected == "Y"} />} label="Y" />
+                <FormControlLabel value="N" control={<Radio checked={cccYNSelected == "N"} />} label="N" />
+              </RadioGroup>
+            </Box>
           </Box>
+          <Box className="row">
+            <Box className="header">성별</Box>
+            <Box className="value">
+              <RadioGroup
+                row
+                aria-labelledby="demo-radio-buttons-group-label"
+                value={(genderSelected as never) || null}
+                onChange={handleGednerReceive}>
+                <FormControlLabel value="female" control={<Radio checked={genderSelected == "female"} />} label="여자" />
+                <FormControlLabel value="male" control={<Radio checked={genderSelected == "male"} />} label="남자" />
+              </RadioGroup>
+            </Box>
+          </Box>
+          {/* <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}> */}
+          <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
+            저장
+          </Button>{" "}
         </Box>
-        {/* <Box sx={{width: "100%", display: "flex", justifyContent: "center"}}> */}
-        <Button ref={ref} variant="outlined" type="submit" sx={{display: "none"}}>
-          저장
-        </Button>
       </Box>
     </>
   );

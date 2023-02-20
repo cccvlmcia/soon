@@ -13,7 +13,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PersonIcon from "@mui/icons-material/Person";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 
 export default function Home() {
   const loginUser: any = useRecoilValue(userState);

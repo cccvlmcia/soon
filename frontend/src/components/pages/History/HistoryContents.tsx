@@ -17,7 +17,7 @@ import {api} from "@recoils/constants";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {format} from "date-fns";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NoData from "components/common/NoData";
+import NoData from "@common/NoData";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -27,6 +27,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import {deleteSoonPray} from "@recoils/history/axios";
+import HistoryEditDialog from "./modal/HistoryEditDialog";
 const type: any = {
   soon: "순모임",
   coffee: "커피타임",
@@ -35,6 +36,8 @@ const type: any = {
 };
 
 export default function HistoryContents() {
+  const [editMode, setEditMode] = useState(false);
+
   const {historyid} = useParams();
   const {isLoading, isError, data, error, refetch} = getSoonHistoryQuery(Number(historyid));
   const loginUser: any = useRecoilValue(userState);
@@ -54,25 +57,37 @@ export default function HistoryContents() {
 
   //  const  config  =loginUser?.config?.userid === data.swid || loginUser?.config?.userid === data.sjid)
   // let prays: Prayer[] = data?.prays;
-  const isSoonjang = loginUser?.config?.userid === data.sjid;
-  const isSoonwon = loginUser?.config?.userid === data.swid;
+  const isSoonjang = loginUser?.userid === data.sjid;
+  // const isSoonwon = loginUser?.userid === data.swid;
+  //TODO: 순원의 기도제목............. 빌런짓하면 어쩌냐(자기 기도제목만.. 삭제...??????????)
+  const isSoonwon = data?.users?.filter(({swid}: any) => swid === loginUser?.userid)?.length > 0;
   const hasPrayAuth = isSoonjang || isSoonwon;
   // if (!hasPrayAuth) {
   //   setPrays(prays?.filter((pray: any) => ));
   // }
 
   const handlePrayRemove = async (prayid: number) => {
-    const {data} = await deleteSoonPray(prayid);
-    if (data?.affected > 0) {
-      alert(" 기도가 삭제 되었습니다!");
-      refetch();
+    const result = confirm("삭제하시겠습니까?");
+    if (result) {
+      const {data} = await deleteSoonPray(prayid);
+      if (data?.affected > 0) {
+        alert(" 기도가 삭제 되었습니다!");
+        refetch();
+      }
     }
   };
+  const handleEditMode = (editMode: any) => {
+    setEditMode(editMode);
+    refetch();
+  };
   const prayList = hasPrayAuth ? prays : prays?.filter((pray: any) => pray.publicyn == "Y");
-  const prayView = prayList?.map(({prayid, pray}: any) => (
+  const prayView = prayList?.map(({prayid, pray, publicyn}: any) => (
     <ListItemButton dense={true} key={prayid} sx={{display: "flex"}}>
       <ListItem>
-        <ListItemText>{pray}</ListItemText>
+        <ListItemText>
+          {publicyn == "N" && "[비공개] "}
+          {pray}
+        </ListItemText>
         {hasPrayAuth && (
           <IconButton onClick={() => handlePrayRemove(prayid)}>
             <RemoveCircleOutlineIcon />
@@ -84,7 +99,7 @@ export default function HistoryContents() {
 
   return (
     <>
-      <MyHeader hasAuth={hasPrayAuth} />
+      <MyHeader hasAuth={hasPrayAuth} setEditMode={setEditMode} />
       <Box
         sx={[
           historyid ? styles.mobile.container : styles.web.container,
@@ -100,7 +115,7 @@ export default function HistoryContents() {
         <Box sx={{paddingLeft: "20px", display: "flex", gap: 1, borderBottom: "1px solid gray"}}>
           <Box sx={{textAlign: "center"}}>
             <AccountCircleIcon sx={{width: 80, height: 80, opacity: "0.5"}} />
-            <Box>{data?.soonwon?.nickname}</Box>
+            <Box>{data?.soonjang?.nickname}</Box>
           </Box>
           <Box sx={{display: "flex", flexDirection: "column", fontSize: "20px"}}>
             {/* <Box sx={{opacity: "0.5"}}> */}
@@ -110,7 +125,7 @@ export default function HistoryContents() {
               </Box>
             </Box>
             <Box sx={{marginTop: "auto", opacity: "0.5", fontSize: "16px"}}>
-              <Box>순장: {data?.soonjang?.nickname}</Box>
+              <Box>순원: {data?.users?.map(({nickname}: any) => nickname).join(", ")}</Box>
               <Box sx={{display: "flex", alignItems: "center"}}>
                 <AccessTimeIcon sx={{fontSize: "18px", margin: "2.5px 2px 0 0"}} />
                 {format(new Date(data?.historydate), "MM-dd hh:mm")}
@@ -131,20 +146,23 @@ export default function HistoryContents() {
           {prayList?.length == 0 && <NoData />}
         </Box>
       </Box>
+      <HistoryEditDialog historyid={historyid} editMode={editMode} handleEditMode={handleEditMode} data={data} />
     </>
   );
 }
 
-function MyHeader({hasAuth}: any) {
+function MyHeader({hasAuth, setEditMode}: any) {
   const {pathname} = useLocation();
   const {historyid} = useParams();
   const navigate = useNavigate();
   const handlePrev = () => {
     navigate(-1);
   };
+  //FIXME: Modal로 변경
   const onClickEdit = () => {
     if (historyid) {
-      navigate(`/history/${historyid}/edit`);
+      setEditMode(true);
+      // navigate(`/history/${historyid}/edit`);
     }
   };
   return (
@@ -165,6 +183,7 @@ function MyHeader({hasAuth}: any) {
           )}
         </Toolbar>
       </AppBar>
+      {/* <HistoryEditDialog historyid={historyid} editMode={editMode} setEditMode={setEditMode} /> */}
     </>
   );
 }
