@@ -218,14 +218,14 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
           historyid ? styles.mobile.container : styles.web.container,
           styles.web.writeform,
           {
-            ".row": {display: "flex", alignItems: "center", marginTop: "5px"},
-            ".header": {minWidth: "95px", textAlign: "right", paddingRight: "10px", fontSize: "16px"},
+            ".row": {display: "flex", alignItems: "center", marginTop: "20px"},
+            ".header": {minWidth: "95px", textAlign: "left", paddingRight: "10px", fontSize: "16px"},
             ".value": {width: "100%"},
           },
         ]}>
         <Box className="row">
           <Box className="header">
-            <Button variant="outlined" onClick={onChangeSoonjang}>
+            <Button sx={{background: "#3d99fc"}} variant="contained" onClick={onChangeSoonjang}>
               순장선택
             </Button>
           </Box>
@@ -271,7 +271,7 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
         <Box className="row">
           {/* 선택방법.. 사용자 선택 */}
           <Box className="header">
-            <Button variant="outlined" onClick={onChangeSoonwon}>
+            <Button sx={{background: "#3d99fc"}} variant="contained" onClick={onChangeSoonwon}>
               받은 사람
             </Button>
           </Box>
@@ -329,9 +329,9 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
                 />
                 <Box sx={{display: "flex", alignItems: "center", minWidth: "105px", marginLeft: "10px"}}>
                   <FormControlLabel
-                    sx={{minWidth: "75px"}}
+                    sx={{minWidth: "75px",}}
                     control={
-                      <Checkbox
+                      <Checkbox sx={{svg:{color:"#3d99fc !important"}}}
                         checked={value.publicyn == "Y" ? true : false}
                         onChange={event => handlPublicynChange(event, index)}
                         name={`publicyn-${index}`}
@@ -339,15 +339,15 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
                     }
                     label="공개"
                   />
-                  <RemoveCircleOutlineIcon onClick={() => handleDeletePrayerField(index)} />
+                  <RemoveCircleOutlineIcon sx={{svg:{color:"#3d99fc !important"}}} onClick={() => handleDeletePrayerField(index)} />
                 </Box>
               </Box>
             ))}
           </Box>
         </Box>
-        <Button variant="outlined" fullWidth onClick={handleAddPrayerField}>
+        <Box sx={{display:"flex", justifyContent:"center", paddingTop: "15px"}}><Button sx={{fontSize: 15, background: "#cad1d9"}} variant="contained" onClick={handleAddPrayerField}>
           기도제목 추가
-        </Button>
+        </Button></Box>
 
         {SubmitButton}
         {InitButton()}
