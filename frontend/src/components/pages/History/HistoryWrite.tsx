@@ -151,7 +151,7 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
     setSoonjang(newSoonjang);
     setSeletedSoonjang(newSoonjang);
     setSeletedUsers([]);
-    setSoonwon([])
+    setSoonwon([]);
   };
   const handleSoonwon = (newSoonwon: any[]) => {
     setSoonwon(newSoonwon);
@@ -197,7 +197,7 @@ function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
     params.prays = prayers;
     params.sjid = soonjang?.userid;
     //FIXME: 순원 ids 추가 바람
-    params.swids = [];
+    params.swids = soonwon.map(({userid}: any) => userid);
 
     const result = await postSoonHistory(params);
     if (result) {
