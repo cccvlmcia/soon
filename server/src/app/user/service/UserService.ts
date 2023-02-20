@@ -149,6 +149,5 @@ export async function removeUser(userid: number) {
     }
     await soonHistoryRepository.delete({sjid: userid});
     return await repository.delete({userid});
-    // return repository.delete({userid});
   });
 }

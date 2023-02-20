@@ -17,12 +17,12 @@ function SoonCardHeader({nickname, major, sid, campusList}: any) {
     </option>
   ));
   return (
-    <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", marginBottom: "50px"}}>
-      <Box sx={{width: "340px", margin: "10px", div: {marginTop: "10px"}}}>
+    <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "200px"}}>
+      {/* <Box sx={{width: "340px", margin: "10px", div: {marginTop: "10px"}}}>
         <Select fullWidth native size="small">
           {items}
         </Select>
-      </Box>
+      </Box> */}
       {/* <Box sx={{marginTop: "40px", borderRadius: "50%", width: "100px"}} component={"img"} src={avatar}></Box> */}
       <AccountCircleIcon sx={{width: 80, height: 80, opacity: "0.5"}} />
       <Box sx={{textAlign: "center"}}>

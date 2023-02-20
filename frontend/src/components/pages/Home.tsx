@@ -65,35 +65,39 @@ function MySoon({userid}: any) {
     return <NoData height={"140px"} />;
   }
   return (
-    <Box sx={{width: "90%", margin: "0 auto"}}>
-      <Box sx={{fontSize: "16px", width: "100%", margin: "25px 0 5px"}}>나의 순원</Box>
-      <Box
-        sx={{
-          width: "100%",
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(calc(90% / 3),1fr))",
-          gridGap: "10px",
-        }}>
-        {data?.map(({soonwon}: any) => {
-          return (
-            <Box
-              key={soonwon?.userid}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                padding: "20px 0",
-                borderRadius: "5px",
-                background: "rgba(41, 41, 41, 0.15)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClick(soonwon?.userid)}>
-              <PersonIcon sx={{width: 80, heigth: 80}} />
-              {soonwon?.nickname}
-            </Box>
-          );
-        })}
+    <Box sx={{width: "100%", margin: "0 auto"}}>
+      <Box sx={{">div": {background: "#F7F9FA", padding: "10px 20px", fontWeight: "700"}}}>
+        <Box>나의 순원</Box>
+      </Box>
+      <Box sx={{padding: "0 20px", marginTop: "25px"}}>
+        <Box
+          sx={{
+            width: "100%",
+            margin: "0 auto",
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(calc(90% / 3),1fr))",
+            gridGap: "10px",
+          }}>
+          {data?.map(({soonwon}: any) => {
+            return (
+              <Box
+                key={soonwon?.userid}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "20px 0",
+                  borderRadius: "5px",
+                  background: "rgba(41, 41, 41, 0.15)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClick(soonwon?.userid)}>
+                <PersonIcon sx={{width: 80, heigth: 80}} />
+                {soonwon?.nickname}
+              </Box>
+            );
+          })}
+        </Box>
       </Box>
     </Box>
   );
@@ -171,7 +175,7 @@ function MyImage({userid}: any) {
 function MoveHistory({navigate}: any) {
   return (
     <Box sx={{position: "absolute", bottom: "20px", right: "20px"}} onClick={() => navigate("/history")}>
-      <AddCircleIcon sx={{color: "#000000", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px"}} />
+      <AddCircleIcon sx={{color: "#292929", borderRadius: "50%", cursor: "pointer", width: "56px", height: "56px"}} />
     </Box>
   );
 }

@@ -37,9 +37,9 @@ export default async function (fastify: FastifyInstance) {
       1. ssoid, userid로 사용자 정보를 조회
       1-1. access있으면 jwt sign {userid, ssoid, email}
       1-2. 없으면 error 던짐
-      
+
       2. jwt sign하고, encrypted(access)
-      
+
       3. user가 refresh_token 가지고 있는지 확인
       3-1. refresh_token 있으면 복호화 해서 검증
       3-1-1. 검증결과 문제 없으면 발급
@@ -70,13 +70,13 @@ export default async function (fastify: FastifyInstance) {
     let refreshToken = user?.user?.refresh_token || "";
     if (refreshToken) {
       // refresh 토큰이 있다면 복호화하고 검증한다
-      console.log("Refresh Token : ", refreshToken);
+      // console.log("Refresh Token : ", refreshToken);
       try {
         const decryptStr = decrypted(refreshToken);
         await verifyJWT(decryptStr);
       } catch (err) {
         // 유효하지 않은 토큰이 있다면 다시 업데이트 한다
-        console.log("Token is expired");
+        // console.log("Token is expired");
         const refresh = await signJWT({userid: userId, ssoid, email}, "30d");
         refreshToken = encrypted(refresh);
         await editUserRefresh(userId, {refresh_token: refreshToken});
