@@ -107,7 +107,7 @@ export default function HistoryCampusDialogMulti({
 function CampusUserList({campusUserList, handleSelectedUser, selected, soonjang}: any) {
   // console.log("campusUserList  : ", campusUserList);
   return (
-    <List>
+    <List sx={{padding: 0}}>
       {campusUserList?.map(({users, campus}: any) => (
         <Box key={campus?.campusid}>
           <ListItem sx={{backgroundColor: "#ccc"}}>{campus.name}</ListItem>
