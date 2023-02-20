@@ -16,18 +16,9 @@ export default class SoonHistory extends BaseEntity {
   @Column()
   sjid: number;
 
-  //FIXME: @deprecated
-  @Column({default: 102})
-  swid: number;
-
   @ManyToOne(() => User, user => user.userid)
   @JoinColumn({name: "sjid"})
   soonjang: User;
-
-  //FIXME: @deprecated
-  @ManyToOne(() => User, user => user.userid)
-  @JoinColumn({name: "swid"})
-  soonwon: User;
 
   @Column({type: COLUMN_TYPE_ENUM, enum: SoonType, default: SoonType.soon})
   kind: string;
