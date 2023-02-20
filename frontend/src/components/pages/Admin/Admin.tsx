@@ -74,6 +74,7 @@ function SoonSetting({campus, sjopen, setSjOpen}: any) {
   const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campus?.campusid);
   const [campusUserList, setCampusUserList] = useState([]);
   const [sjList, setSJList] = useState([]);
+
   //캠퍼스 바뀔 때 마다 refetch해서 다시 가져옴
   useEffect(() => {
     refetch();
@@ -99,7 +100,13 @@ function SoonSetting({campus, sjopen, setSjOpen}: any) {
   const itemList = campusUserList?.map((item: any) => (
     <Fragment key={item?.userid}>
       <ListItemButton>
-        <ListItemText primary={item?.user?.nickname} secondary={item?.user?.sj?.map(({soonwon}: any) => soonwon?.nickname).join(", ")} />
+        <ListItemText
+          primary={item?.user?.nickname}
+          secondary={item?.user?.sj
+            ?.filter(({soonwon}: any) => soonwon?.campus?.filter((seletedCampus: any) => seletedCampus?.campusid == campus?.campusid)?.length > 0)
+            .map(({soonwon}: any) => soonwon?.nickname)
+            .join(", ")}
+        />
       </ListItemButton>
       <Divider />
     </Fragment>
