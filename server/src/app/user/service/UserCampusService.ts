@@ -5,6 +5,7 @@ import User from "@user/entity/User";
 import UserCampus from "@user/entity/UserCampus";
 import UserCampusRequest from "@user/entity/UserCampusRequest";
 import UserConfig from "@user/entity/UserConfig";
+import {In} from "typeorm";
 
 export async function editUserCampus(userid: number, campus: {campusid: string; major: string; sid: number}) {
   return await txProcess(async manager => {
@@ -28,10 +29,23 @@ export async function addUserCampus(campus: {userid: number; campusid: string; m
   });
 }
 export async function getUserCampus(userid: number) {
-  return await UserCampus.find({where: {userid}, relations: {campus: true}});
+  return await UserCampus.find({where: {userid}, relations: {campus: true, user: true}});
 }
 export async function getCampusUser(campusid: string) {
   return await UserCampus.find({where: {campusid}, relations: {user: {auth: true, sj: {soonwon: true}, sw: {soonjang: true}}, campus: true}});
+}
+export async function getCampusUserList(userid: number) {
+  const result = await UserCampus.find({where: {userid}, relations: {campus: true}});
+  // console.log("result : ", result[0].campus);
+  const campuses = result?.map(({campus}) => campus);
+  const users = await UserCampus.find({
+    where: {campusid: In(campuses.map(({campusid}) => campusid))},
+    relations: {user: {sw: {soonjang: true}}},
+  });
+  return campuses.map(campus => ({
+    campus,
+    users: users.filter(item => item.campusid == campus.campusid).map(({user}) => user),
+  }));
 }
 export async function getCampusSJList(campusid: string) {
   const list = await UserCampus.find({where: {campusid}, relations: {user: true, campus: true}});

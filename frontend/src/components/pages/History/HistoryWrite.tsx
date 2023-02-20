@@ -22,7 +22,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import Loading from "react-loading";
 import Error from "components/Error/Error";
 import HistoryCampusDialog from "./modal/HistoryCampusDialog";
-import {getCampusUserQuery} from "@recoils/campus/query";
+import {getCampusUserByUserIdQuery} from "@recoils/campus/query";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import {getTitle} from "@layout/header/HeaderConstants";
 import CheckIcon from "@mui/icons-material/Check";
@@ -35,6 +35,7 @@ import {categoryState} from "@recoils/history/state";
 import {HistoryForm, Prayer, User} from "@recoils/types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {postSoonHistory} from "@recoils/history/axios";
+import HistoryCampusDialogMulti from "./modal/HistoryCampusDialogMulti";
 
 //받은 사람 명단 수정해야 함.
 /*
@@ -44,21 +45,23 @@ import {postSoonHistory} from "@recoils/history/axios";
   3. 선택된 사람들 checkbox로 표기
   4. 다른캠퍼스소속의 내 순원도 선택 할 수 있어야 함.(여러명 순모임)
 */
+
+// 순장 바뀌면 순원 바뀌게
 export default function HistoryWrite() {
   const ref = useRef(null);
   const campusRef = useRef(null);
   const loginUser: any = useRecoilValue(userState);
   const [campusid, setCampusid] = useState(loginUser?.campus[0]?.campusid);
   const [campusList, setCampusList] = useState([]);
-  const [campus, setCampus]: any = useRecoilState(selectedCampusState);
+  // const [campus, setCampus]: any = useRecoilState(selectedCampusState);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const list = loginUser?.campus?.map(({campus}: any) => campus);
     setCampusList(list);
-    if (campus == null && list?.length > 0) {
-      setCampus(list[0]);
-    }
-  }, [loginUser, campus]);
+    // if (campus == null && list?.length > 0) {
+    // setCampus(list[0]);
+    // }
+  }, [loginUser]);
 
   //forwarRef로 초기화 하는거 만들어서, 안에서 클릭할 버튼을 만들고, 실제 이벤트는 initRef/fowardRef  , init 이벤트 초기화 ㄱㄱ
   const SubmitButton = forwardRef((props: any, ref: any) => {
@@ -70,7 +73,6 @@ export default function HistoryWrite() {
     );
   });
   const InitButton = forwardRef((props: any, ref: any) => {
-    // console.log("props?.campusid >", props?.campusid);
     return (
       <Button
         ref={ref}
@@ -83,11 +85,6 @@ export default function HistoryWrite() {
       </Button>
     );
   });
-  const handleCampus = (campus: any) => {
-    initHistoryForm(campus);
-    setCampus(campus);
-    setCampusid(campus?.campusid);
-  };
 
   const onConfirm = () => {
     console.log("HistoryWrite onConfirm >");
@@ -95,36 +92,23 @@ export default function HistoryWrite() {
     target?.click();
   };
 
-  const initHistoryForm = (campus: any) => {
-    console.log("캠퍼스를 변경했으므로 폼을 초기화 합니다", campus, campus?.campusid);
-    const target: any = campusRef.current;
-    target?.click();
-  };
-
   return (
     <>
       <MyHeader onConfirm={onConfirm} />
-      <Box sx={{textAlign: "center", fontSize: "20px", padding: "20px 0", borderBottom: "1px solid gray"}}>
-        <Box onClick={() => setOpen(true)} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-          <Box>{campus?.name}</Box>
-          <KeyboardArrowDownIcon sx={{width: 20, height: 20}} />
-        </Box>
-      </Box>
 
       <HistoryWriteContents
         SubmitButton={<SubmitButton ref={ref} />}
-        InitButton={(handleClick: any) => <InitButton ref={campusRef} onClick={handleClick} campusid={campusid} />}
-        campus={campus}
+        InitButton={(handleClick: any) => <InitButton ref={campusRef} onClick={handleClick} />}
+        userid={loginUser?.userid}
       />
-      <CampusDialog open={open} setOpen={setOpen} items={campusList} campusSelected={campus} handleCampus={handleCampus} />
     </>
   );
 }
-
-function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
+// 순장 선택하면, 캠퍼스 유저 갱신, useeffect
+function HistoryWriteContents({SubmitButton, InitButton, userid}: any) {
   const {historyid} = useParams();
   const navigate = useNavigate();
-  const {isLoading, isError, data, error, refetch} = getCampusUserQuery(campus?.campusid);
+  const {isLoading, isError, data, error, refetch} = getCampusUserByUserIdQuery(userid);
   const loginUser: any = useRecoilValue(userState);
   const categoryList = useRecoilValue(categoryState);
 
@@ -134,17 +118,21 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
   const [date, setDate]: any = useState(new Date());
   const [categorySelected, setCategorySelected]: any = useState({id: "soon", name: "순모임"});
   const [prayers, setPrayers] = useState<Prayer[]>([{pray: "", publicyn: "Y"}]);
+  //순장은 현재 내가 가지고 있는 캠퍼스의 유저 id로 가져온다. 나랑 같은 캠퍼스
+  // 순원은 부모 campus id를 가지고, 가져와서 뿌려줘야 한다.
 
   //FIXME: 해주는 사람과 받는 사람이 일단 단일이니까, 한명씩으로 구현, 추후 인원 늘리면 수정 바람
   const [soonjang, setSoonjang] = useState<User>({userid: loginUser?.userid, nickname: loginUser?.nickname});
-  const [soonwon, setSoonwon] = useState<User>({userid: "0", nickname: ""});
+  const [soonwon, setSoonwon] = useState<User[]>([]);
   const [progress, setProgress] = useState("");
   const [contents, setContents] = useState("");
   //선택 된 유저는 공통 관리
-  const [selectedUsers, setSeletedUsers] = useState<User[]>([soonjang, soonwon]);
+  const [selectedUsers, setSeletedUsers] = useState<User[]>([]);
+  const [selectedSoonjang, setSeletedSoonjang] = useState<User>(soonjang);
   useEffect(() => {
     refetch();
-  }, [campus, data]);
+    console.log("getCampusUserByUserIdQuery : ", data);
+  }, [data, userid]);
 
   if (isLoading) return <Loading />;
   if (isError) {
@@ -161,11 +149,13 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
 
   const handleSoonjang = (newSoonjang: User) => {
     setSoonjang(newSoonjang);
-    setSeletedUsers([newSoonjang, soonwon]);
+    setSeletedSoonjang(newSoonjang);
+    setSeletedUsers([]);
+    setSoonwon([])
   };
-  const handleSoonwon = (newSoonwon: User) => {
+  const handleSoonwon = (newSoonwon: any[]) => {
     setSoonwon(newSoonwon);
-    setSeletedUsers([newSoonwon, soonjang]);
+    setSeletedUsers([...newSoonwon]);
   };
   const handleDateChange = (newValue: Dayjs | null) => setDate(newValue);
   const handlePrayerFieldChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -198,15 +188,16 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
   const sendHistory: SubmitHandler<HistoryForm> = async (params: HistoryForm) => {
     console.log("순장 순원 ", soonjang, soonwon);
     //FIXME: soonjang/soonwon id 디폴트 값 0 이라 예외처리 함. 추후 모달 창이나, 백에서 처리하도록 수정 바람
-    if (soonjang.userid == "0" || soonwon.userid == "0") {
+    if (soonjang == null || soonwon?.length == 0) {
       alert("순장/순원 선택 바랍니다");
       return;
     }
     params.kind = categorySelected?.id;
     params.historydate = new Date(dayjs(date).format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ"));
     params.prays = prayers;
-    params.sjid = soonjang.userid;
-    params.swid = soonwon.userid;
+    params.sjid = soonjang?.userid;
+    //FIXME: 순원 ids 추가 바람
+    params.swids = [];
 
     const result = await postSoonHistory(params);
     if (result) {
@@ -216,21 +207,8 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
       console.log("SERVER에서 응답하지 않습니다");
     }
   };
-  const userList: User[] = data?.map(({user}: {user: User}) => {
-    return {userid: user.userid, nickname: user.nickname};
-  });
+  const userList: any = data;
 
-  const handleInit = (id: any) => {
-    const sj = {userid: loginUser?.userid, nickname: loginUser?.nickname};
-    setSoonjang(sj);
-    setSoonwon({userid: "0", nickname: ""});
-    setPrayers([{pray: "", publicyn: "Y"}]);
-    setCategorySelected({id: "soon", name: "순모임"});
-    setSeletedUsers([sj]);
-    setProgress("");
-    setContents("");
-    setDate(new Date());
-  };
   return (
     <>
       <Box
@@ -258,7 +236,7 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
             open={SoonjangOpen}
             setOpen={setSoonjangOpen}
             users={userList}
-            selectedUsers={selectedUsers}
+            selectedSoonjang={selectedSoonjang}
             handleUser={handleSoonjang}
           />
         </Box>
@@ -298,12 +276,12 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
             </Button>
           </Box>
           <Box className="value">
-            <TextField fullWidth size="small" value={soonwon.nickname} InputProps={{readOnly: true}} />
+            <TextField fullWidth size="small" value={soonwon.map(({nickname}: any) => nickname).join(", ")} InputProps={{readOnly: true}} />
           </Box>
-          <HistoryCampusDialog
+          <HistoryCampusDialogMulti
             open={SoonwonOpen}
             setOpen={setSoonwonOpen}
-            users={userList}
+            soonjang={soonjang}
             selectedUsers={selectedUsers}
             handleUser={handleSoonwon}
           />
@@ -370,9 +348,9 @@ function HistoryWriteContents({SubmitButton, InitButton, campus}: any) {
         <Button variant="outlined" fullWidth onClick={handleAddPrayerField}>
           기도제목 추가
         </Button>
-        <HistoryCampusDialog open={SoonwonOpen} setOpen={setSoonwonOpen} users={userList} selectedUsers={selectedUsers} handleUser={handleSoonwon} />
+
         {SubmitButton}
-        {InitButton(handleInit)}
+        {InitButton()}
       </Box>
     </>
   );
