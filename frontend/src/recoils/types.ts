@@ -15,7 +15,7 @@ export type Prayer = {
 };
 export type HistoryForm = {
   sjid: string;
-  swid: string;
+  swids: string[];
   kind: string;
   progress: string;
   historydate: Date;

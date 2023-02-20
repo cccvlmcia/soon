@@ -10,9 +10,10 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import {TransitionProps} from "@mui/material/transitions";
-import {Box, ListItemButton} from "@mui/material";
+import {Box, ListItem, ListItemButton} from "@mui/material";
 import NoData from "@common/NoData";
-
+import {CheckBox} from "@mui/icons-material";
+import CheckIcon from "@mui/icons-material/Check";
 type User = {
   userid: string;
   nickname: string;
@@ -31,13 +32,13 @@ export default function HistoryCampusDialog({
   open,
   setOpen,
   users,
-  selectedUsers,
+  selectedSoonjang,
   handleUser,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   users: any[];
-  selectedUsers: User[];
+  selectedSoonjang: User;
   handleUser: any;
 }) {
   const handleClose = () => {
@@ -48,9 +49,9 @@ export default function HistoryCampusDialog({
     handleUser(user);
   };
   //FIXME: 시간 복잡도가 문제 때문에, set을 사용했습니다.
-  const selectedUserSet = new Set(selectedUsers?.map(user => user.userid));
-  const filteredUsers = users?.filter(user => !selectedUserSet.has(user.userid));
-
+  // const selectedUserSet = new Set(selectedUsers?.map(user => user.userid));
+  // const filteredUsers = users?.filter(user => !selectedUserSet.has(user.userid));
+  console.log("users - history dialog :", users);
   return (
     <Box>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -64,24 +65,10 @@ export default function HistoryCampusDialog({
             </Typography>
           </Toolbar>
         </AppBar>
-        {filteredUsers?.length ? <UserList filteredUsers={filteredUsers} handleSelectedUser={handleSelectedUser} /> : <NoData height="140px" />}
+        <CampusUserList campusUserList={users} handleSelectedUser={handleSelectedUser} selectedSoonjang={selectedSoonjang} />
+        {/* {filteredUsers?.length ? <UserList filteredUsers={filteredUsers} handleSelectedUser={handleSelectedUser} /> : <NoData height="140px" />} */}
       </Dialog>
     </Box>
-    // <div>
-    //   <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-    //     <AppBar sx={{position: "relative"}}>
-    //       <Toolbar>
-    //         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-    //           <CloseIcon />
-    //         </IconButton>
-    //         <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
-    //           캠퍼스 선택
-    //         </Typography>
-    //       </Toolbar>
-    //     </AppBar>
-    //     {/* <List>{itemList}</List> */}
-    //   </Dialog>
-    // </div>
   );
 }
 
@@ -97,5 +84,34 @@ function UserList({filteredUsers, handleSelectedUser}: any) {
         </Box>
       ))}
     </List>
+  );
+}
+function CampusUserList({campusUserList, handleSelectedUser, selectedSoonjang}: any) {
+  console.log("campusUserList  : ", campusUserList);
+  return (
+    <List>
+      {campusUserList?.map(({users, campus}: any) => (
+        <Box key={campus?.campusid}>
+          <ListItem sx={{backgroundColor: "#ccc"}}>{campus.name}</ListItem>
+          <UserItems users={users} handleSelectedUser={handleSelectedUser} selectedSoonjang={selectedSoonjang} />
+
+          <Divider />
+        </Box>
+      ))}
+    </List>
+  );
+}
+
+function UserItems({users, handleSelectedUser, selectedSoonjang}: any) {
+  return (
+    <>
+      {/* {users.map(({userid, nickname, sw}: any) => ( */}
+      {users.map((user: any) => (
+        <ListItemButton key={user?.userid} onClick={() => handleSelectedUser(user)}>
+          {user?.userid == selectedSoonjang?.userid && <CheckIcon />}
+          <ListItemText primary={user?.nickname} />
+        </ListItemButton>
+      ))}
+    </>
   );
 }
