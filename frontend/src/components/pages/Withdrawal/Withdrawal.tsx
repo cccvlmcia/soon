@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {Box} from "@mui/material";
 import {useGoogleLogin} from "@react-oauth/google";
-import {getGoogleInfoAxios} from "@recoils/login/axios";
+import {getGoogleInfoAxios} from "@recoils/Login/axios";
 import {userState} from "@recoils/user/state";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import ModalDialog from "./modal/ModalDialog";
@@ -57,7 +57,9 @@ export default function Withdrawal() {
 
   return (
     <Box>
-      <Box sx={{display: "flex", alignItems: "center", width: "100%", height: "300px", justifyContent: "center"}}>
+      <Box
+        sx={{display: "flex", alignItems: "center", gap: "30px", width: "100%", height: "300px", justifyContent: "center", flexDirection: "column"}}>
+        <Box component="img" src="/public/images/goodbye.jpg" sx={{maxWidth: "100%", maxHeight: "100%"}}></Box>
         <GoogleButton onClick={googleSocialLogin} />
       </Box>
       <ModalDialog open={open} setOpen={setOpen} handleOK={handleOK} />
