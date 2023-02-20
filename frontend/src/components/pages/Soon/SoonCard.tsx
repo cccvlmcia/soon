@@ -124,10 +124,8 @@ function SoonHistorySJ({sjid}: any) {
     return <Error error={error} />;
   }
   //TODO: id => nickname
-  console.log("data >", data);
   const soonHistorySJ = data?.map(({historyid, users, kind, progress, historydate}: any) => {
     const user = {nickname: users?.map(({nickname}: any) => nickname).join(", ")};
-    console.log("user >", user);
     return <SoonHistoryCard key={historyid} historyid={historyid} user={user} kind={kind} progress={progress} historydate={historydate} />;
   });
   return (
