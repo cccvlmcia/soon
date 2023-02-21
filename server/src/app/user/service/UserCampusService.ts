@@ -29,12 +29,13 @@ export async function addUserCampus(campus: {userid: number; campusid: string; m
   });
 }
 export async function getUserCampus(userid: number) {
-  return await UserCampus.find({where: {userid}, relations: {campus: true, user: true}});
+  return await UserCampus.find({where: {userid}, relations: {campus: true, user: true}, order: {sid: "ASC", user: {nickname: "ASC"}}});
 }
 export async function getCampusUser(campusid: string) {
   return await UserCampus.find({
     where: {campusid},
     relations: {user: {auth: true, sj: {soonwon: {campus: true}}, sw: {soonjang: true}}, campus: true},
+    order: {sid: "ASC", user: {nickname: "ASC"}},
   });
 }
 export async function getCampusUserList(userid: number) {
@@ -44,6 +45,7 @@ export async function getCampusUserList(userid: number) {
   const users = await UserCampus.find({
     where: {campusid: In(campuses.map(({campusid}) => campusid))},
     relations: {user: {sw: {soonjang: true}}},
+    order: {sid: "ASC", user: {nickname: "ASC"}},
   });
   return campuses.map(campus => ({
     campus,
