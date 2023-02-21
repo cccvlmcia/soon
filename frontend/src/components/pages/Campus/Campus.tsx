@@ -59,12 +59,12 @@ function CampusUserList({campus}: any) {
       setUsers(data);
     }
   }, [campus, data]);
-  const newData =
-    data &&
-    data.sort((prev: any, next: any) => {
-      if (prev["sid"] > next["sid"]) return -1;
-      if (prev["sid"] < next["sid"]) return 1;
-    });
+  const newData = data;
+  // data &&
+  // data.sort((prev: any, next: any) => {
+  //   if (prev["sid"] > next["sid"]) return -1;
+  //   if (prev["sid"] < next["sid"]) return 1;
+  // });
   const userList = newData?.map(({userid, user, campus, major, sid}: any) => {
     return (
       <UserCard

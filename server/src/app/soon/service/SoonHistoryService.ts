@@ -11,17 +11,18 @@ export async function getSoonHistory(historyid: number) {
 }
 
 export async function getSoonHistorySWList(swid: number) {
-  return await SoonHistory.find({where: {users: {swid}}, relations: {soonjang: true, users: true}});
+  return await SoonHistory.find({where: {users: {swid}}, relations: {soonjang: true, users: true}, order: {historydate: "DESC"}});
 }
 
 export async function getSoonHistorySJList(sjid: number) {
-  return await SoonHistory.find({where: {sjid}, relations: {soonjang: true, users: true}});
+  return await SoonHistory.find({where: {sjid}, relations: {soonjang: true, users: true}, order: {historydate: "DESC"}});
 }
 export async function getSoonHistorySJListNotMe(sjid: number, campues: string[]) {
   return await SoonHistory.find({
     // select: {historyid: true, soonwon: {nickname: true}},
     where: {sjid, users: {campusid: In(campues)}},
     relations: {users: true},
+    order: {historydate: "DESC"},
   });
 }
 
