@@ -44,6 +44,49 @@ export default function Home() {
   );
 }
 
+type Soon = {
+  soonid: number;
+  sjid: string;
+  swid: string;
+  createdate: Date;
+  soonjang: {
+    userid: string;
+    nickname: string;
+    status: string;
+    gender: string;
+    refresh_token: string;
+    createdate: Date;
+    campus: {
+      campusid: string;
+      userid: string;
+      major: string;
+      sid: string;
+      defaultyn: string;
+      createdate: Date;
+      updatedate: Date;
+      campus: {areaid: string; campusid: string; name: string; useyn: string; createdate: Date};
+    };
+  };
+  soonwon: {
+    userid: string;
+    nickname: string;
+    status: string;
+    gender: string;
+    refresh_token: string;
+    createdate: Date;
+    campus: {
+      campusid: string;
+      userid: string;
+      major: string;
+      sid: string;
+      defaultyn: string;
+      createdate: Date;
+      updatedate: Date;
+      campus: {areaid: string; campusid: string; name: string; useyn: string; createdate: Date};
+    };
+  };
+};
+
 function MySoon({userid}: any) {
   const {isLoading, isError, data, error, refetch} = getSoonListQuery(userid);
   const navigate = useNavigate();
@@ -58,6 +101,7 @@ function MySoon({userid}: any) {
   if (isError) {
     return <Error error={error} />;
   }
+  console.log("data >> ", data);
   const handleClick = (swid: number) => {
     navigate(`soon/card/${swid}`);
   };
